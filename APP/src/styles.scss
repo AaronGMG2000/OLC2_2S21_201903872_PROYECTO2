@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/idea.css';
+@import '~codemirror/addon/fold/foldgutter.css';
+@import '~codemirror/addon/lint/lint.css';
+
+.diseñoTabla tr:nth-child(even) {
+  background-color: #263238;
+}
+
+.diseñoTabla tbody tr:nth-child(odd) {
+  background-color: #454d55;
+}
+
+.scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+.graphContainer {
+  width: 100%;
+  height: 100%;
+
+}
+
+
