@@ -6,6 +6,8 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/mode/julia/julia';
+import 'codemirror/mode/go/go';
+
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';

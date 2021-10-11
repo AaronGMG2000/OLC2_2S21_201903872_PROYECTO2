@@ -12,7 +12,7 @@ class Generador(object):
         self.in_native = False
         self.temps = []
         self.native_true = []
-
+        self.imports = []
 
     def limpiar(self):
         self.temp_counter = 0
@@ -24,6 +24,7 @@ class Generador(object):
         self.in_native = False
         self.temps = []
         self.native_true = []
+        self.imports = []
         Generador.generador = Generador()
 
     
@@ -31,14 +32,20 @@ class Generador(object):
     CODIGO
     '''
     def generate_header(self) -> str:
-        c = 'package main;\n\nimport (\n\t"fmt"\n)\n\n'
+        if len(self.imports) == 0:
+            c = 'package main;\n\nimport (\n\t"fmt"\n)\n\n'
+        else:
+            c = 'package main;\n\nimport (\n\t"fmt"\n'
+            for im in self.imports:
+                c+=f'\t"{im}"\n'
+            c += ')\n\n'
         if len(self.temps) > 0:
             c += 'var '
             for temp in range(len(self.temps)):
                 c += self.temps[temp]
                 if temp != (len(self.temps) - 1):
                     c += ", "
-            c += " float64\n"
+            c += " float64;\n"
         c += "var P, H float64;\nvar stack [30101999]float64;\nvar heap [30101999]float64;\n\n"
         return c
 
@@ -252,10 +259,126 @@ class Generador(object):
         self.place_label(salir)
         self.end_function()
         self.in_native = False
+        
+    def potencia(self):
+        if "potencia" in self.native_true:
+            return
+        self.native_true.append("potencia")
+        self.in_native = True
+        self.new_function('potencia')
+        ret = self.new_temporal()
+        self.place_operation(ret, 'P','','')
+        pos_value = self.new_temporal()
+        pos_pot = self.new_temporal()
+        self.place_operation(pos_value, 'P', 1, '+')
+        self.place_operation(pos_pot, 'P', 2, '+')
+        exit = self.new_label()
+        w1 = self.new_label()
+        value = self.new_temporal()
+        self.get_stack(value, pos_value)
+        pot = self.new_temporal()
+        self.get_stack(pot, pos_pot)
+        comp = self.new_temporal()
+        self.place_operation(comp, 1, '','')
+        self.place_label(w1)
+        self.place_if(comp, pot, '==', exit)
+        mult = self.new_temporal()
+        self.get_stack(mult, pos_value)
+        self.place_operation(value, mult, value, '*')
+        self.place_operation(comp, comp, 1, '+')
+        self.place_goto(w1)
+        self.place_label(exit)
+        self.insert_stack(ret, value)
+        self.end_function()
+        self.in_native = False
+        
+        
+
+    def mult_string(self):
+        if "mult_string" in self.native_true:
+            return
+        self.native_true.append("mult_string")
+        self.in_native = True
+        self.new_function('mult_string')
+        ret = self.new_temporal()
+        self.place_operation(ret, 'H','','')
+        pos_str = self.new_temporal()
+        pos_value = self.new_temporal()
+        self.place_operation(pos_str, 'P', 1, '+')
+        self.place_operation(pos_value, 'P', 2, '+')
+        exit = self.new_label()
+        w1 = self.new_label()
+        w2 = self.new_label()
+        resta = self.new_label()
+        #obtenemos el valor
+        value = self.new_temporal()
+        self.get_stack(value, pos_value)
+        #primer while
+        self.place_label(w1)
+        str = self.new_temporal()
+        self.get_stack(str, pos_str)
+        self.place_if(value, 0, '==', exit)
+        self.place_label(w2)
+        #vamos colocando el nuevo string
+        comp = self.new_temporal()
+        self.get_heap(comp, str)
+        self.place_if(comp, -1, '==', resta)
+        self.insert_heap('H', comp)
+        self.next_heap()
+        self.place_operation(str, str, 1, '+')
+        self.place_goto(w2)
+        self.place_label(resta)
+        self.place_operation(value, value, 1, '-')
+        self.place_goto(w1)
+        self.place_label(exit)
+        self.insert_heap('H',-1)
+        self.next_heap()
+        self.insert_stack('P', ret)
+        self.end_function()
+        self.in_native = False
 
     def concat_string(self):
+        if "concat_string" in self.native_true:
+            return
+        self.native_true.append("concat_string")
+        self.in_native = True
+        self.new_function('concat_string')
         temp = self.new_temporal()
-        temp = self.new_temporal()
-        
-        
+        self.place_operation(temp, 'H','','')
+        temp2 = self.new_temporal()
+        temp4 = self.new_temporal()
+        self.place_operation(temp2, 'P', 1, '+')
+        self.place_operation(temp4, 'P', 2, '+')
+        temp3 = self.new_temporal()
+        self.get_stack(temp3, temp2)
+        exit = self.new_label()
+        label = self.new_label()
+        self.place_label(label)
+        temp5 = self.new_temporal()
+        self.get_heap(temp5, temp3)
+        label2 = self.new_label()
+        self.place_if(temp5, -1, '==', label2)
+        self.insert_heap('H', temp5)
+        self.next_heap()
+        self.place_operation(temp3, temp3, 1, '+')
+        self.place_goto(label)
+        self.place_label(label2)
+        temp6 = self.new_temporal()
+        self.get_stack(temp6, temp4)
+        label3 = self.new_label()
+        self.place_label(label3)
+        #-------#
+        comp = self.new_temporal()
+        self.get_heap(comp, temp6)
+        self.place_if(comp, -1, '==', exit)
+        self.insert_heap('H', comp)
+        self.next_heap()
+        self.place_operation(temp6, temp6, 1, '+')
+        self.place_goto(label3)
+        self.place_label(exit)
+        self.insert_heap('H',-1)
+        self.next_heap()
+        self.insert_stack('P', temp)
+        self.end_function()
+        self.in_native = False
 

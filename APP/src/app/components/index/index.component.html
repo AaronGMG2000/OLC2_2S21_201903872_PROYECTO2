@@ -188,14 +188,19 @@
               [(ngModel)]="CONSOLA"
               [options]="{
                 theme: 'material',
-                mode: 'julia',
-                readOnly: true,
+                mode: 'go',
+                styleActiveLine: true,
                 lineNumbers: true,
-                lineWrapping: true,
+                indentUnit: 2,
+                indentWithTabs: true,
+                autoCloseTags: true,
+                matchTags: false,
                 foldGutter: true,
+                lineWrapping: true,
                 gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
                 autoCloseBrackets: true,
-                matchBrackets: true
+                matchBrackets: true,
+                lint: true
               }"
               ></ngx-codemirror>
             </div>
