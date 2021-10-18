@@ -26,105 +26,142 @@ class Imprimir(Instruccion):
                 if isinstance(exp, Instruccion):
                     retorno = exp.Ejecutar(arbol, tabla)
                     if isinstance (retorno, Error):
+                        print(retorno.descripcion)
+                        generador.error_code()
                         return retorno
                     if retorno.type == Tipos.ENTERO:
                         generador.place_print('d', retorno.value)
-                        continue
-                    if retorno.type == Tipos.FLOAT:
+                        
+                    elif retorno.type == Tipos.FLOAT:
                         generador.place_print('f', retorno.value)
-                        continue
-                    if retorno.type == Tipos.CHAR:
+                        
+                    elif retorno.type == Tipos.CHAR:
                         generador.place_print('c', retorno.value)
-                        continue
-                    if retorno.type == Tipos.NOTHING:
+                        
+                    elif retorno.type == Tipos.NOTHING:
                         generador.nothing()
-                        continue  
-                    if retorno.type == Tipos.BOOL:
+                          
+                    elif retorno.type == Tipos.BOOL:
                         etiqueta_temporal = generador.new_label()
-                        if retorno.value:
-                            generador.place_goto(retorno.true_tag)
-                            generador.place_goto(retorno.false_tag)
-                        else:
-                            generador.place_goto(retorno.false_tag)
-                            generador.place_goto(retorno.true_tag)
                         generador.place_label(retorno.true_tag)
                         generador.print_true()
                         generador.place_goto(etiqueta_temporal)
-
                         generador.place_label(retorno.false_tag)
                         generador.print_false()
-
                         generador.place_label(etiqueta_temporal)
-                        continue
-                    if retorno.type == Tipos.STRING:
+                        
+                    elif retorno.type == Tipos.STRING:
                         generador.F_print()
                         temp = generador.new_temporal()
-                        temp2 = generador.new_temporal()
-                        generador.place_operation(temp, "P","0","+")
-                        generador.place_operation(temp2, temp,"1","+")
-                        generador.insert_stack(temp2, retorno.value)
-                        generador.new_env(0)
+                        generador.place_operation(temp, "P",tabla.size,"+")
+                        generador.place_operation(temp, temp,"1","+")
+                        generador.insert_stack(temp, retorno.value)
+                        generador.set_unused_temp(retorno.value)
+                        generador.new_env(tabla.size)
                         generador.call_function("F_print")
                         temp3 = generador.new_temporal()
-                        generador.get_stack(temp3, temp)
-                        generador.return_evn(0)
+                        generador.get_stack(temp3, 'P')
+                        generador.return_evn(tabla.size)
+                        generador.set_unused_temp(temp)
+                        generador.set_unused_temp(temp3)
                         continue
+                    elif retorno.type == Tipos.ARRAY:
+                        generador.comment("inicio de impresión array")
+                        self.print_multi_array(retorno.types, retorno.value, tabla)
+                        generador.comment("final de impresión array")
+                    
+                    if retorno.is_temporal:
+                        generador.set_unused_temp(retorno.value)
+        genAux = Generador()
+        generador = genAux.get_instance()             
         if self.println:
-            genAux = Generador()
-            generador = genAux.get_instance()
             if isinstance(generador, Generador):
-                generador.place_print('c',ord('\n'))            
-    def getStruct(self, val, struct):
-        val += struct[1] + "("
-        lista = list(struct.keys())
-        for key in lista:
-            if key == 1 or key == 2:
-                continue
-            if key != lista[2]:
-                val +=","
-            valor = struct[key]
-            if valor[1] == Tipos.OBJECT:
-                val = self.getStruct(val, valor[0])
-            elif valor[1] == Tipos.ARRAY:
-                val = str(self.getArrayValue(valor[0], val))
-            elif valor[1] == Tipos.STRING:
-                val +='"'+valor[0]+'"'
-            elif valor[1] == Tipos.CHAR:
-                val +='"'+valor[0]+'"'
-            elif valor[1] == Tipos.BOOL:
-                val += str(valor[0]).lower()
-            elif valor[1].tipo == Tipos.FUNCTION:
-                val = valor[2]
-            else:
-                val += str(valor[0])
-        val += ")"
-        return val
+                generador.place_print('c',ord('\n'))
+        generador.set_anterior()              
     
-    def getArrayValue(self, simb, val):
-        val += '['
-        for sim in simb:
-            if sim != simb[0]:
-                val+=","
-            if not isinstance(sim, Simbolo):
-                val = self.getArrayValue(sim, val)
-            else:
-                valor = sim.getValor()
-                if sim.getTipo() == Tipos.OBJECT:
-                    val = self.getStruct(val, valor)
-                else:
-                    if sim.getTipo() == Tipos.STRING:
-                        val +='"'+valor+'"'
-                    elif sim.getTipo() == Tipos.CHAR:
-                        val +="'"+valor+"'"
-                    elif sim.getTipo() == Tipos.FUNCTION:
-                        val = valor[2]
-                    elif sim.getTipo() == Tipos.BOOL:
-                        val = str(valor).lower()
+    def print_multi_array(self, types, variable, tabla):
+        genAux = Generador()
+        generador = genAux.get_instance()
+        if type(types) == type([]):
+            temp = generador.new_temporal()
+            generador.place_operation(temp, variable, 1, '+')
+            a = 1
+            generador.place_print('c', 91)
+            generador.comment("inicio de impresión array interno")
+            for x in types:
+                vari = generador.new_temporal()
+                generador.get_heap(vari,temp)
+                if a != len(types):
+                    if type(x) == type([]):
+                        self.print_multi_array(x, vari, tabla)
+                        generador.place_print("c","44")
                     else:
-                        val+=str(valor)
-        val += ']'
-        return val
-        
+                        self.print_primitive(x, vari, True, tabla)
+                else:
+                    if type(x) == type([]):
+                        self.print_multi_array(x, vari, tabla)
+                    else:
+                        self.print_primitive(x, vari, False, tabla)
+                a = a + 1
+                generador.set_unused_temp(vari)
+                generador.place_operation(temp, temp, 1, '+')
+            generador.place_print('c', 93)
+            generador.comment("Fin de impresión array interno")
+
+    def print_primitive(self,x, variable,  condicion, tabla):
+        genAux = Generador()
+        generador = genAux.get_instance()
+        if x == Tipos.ENTERO:
+            generador.place_print('d', variable)
+            if condicion:
+                generador.place_print('c', 44)
+        elif x == Tipos.STRING:
+            generador.place_print('c', 34)
+            generador.F_print()
+            temp = generador.new_temporal()
+            generador.place_operation(temp, "P",tabla.size,"+")
+            generador.place_operation(temp, temp,"1","+")
+            generador.insert_stack(temp, variable)
+            generador.set_unused_temp(variable)
+            generador.new_env(tabla.size)
+            generador.call_function("F_print")
+            temp3 = generador.new_temporal()
+            generador.get_stack(temp3, 'P')
+            generador.return_evn(tabla.size)
+            generador.set_unused_temp(temp)
+            generador.set_unused_temp(temp3)
+            generador.place_print('c', 34)
+            if condicion:
+                generador.place_print('c', 44)
+        elif x == Tipos.FLOAT:
+            generador.place_print('f', variable)
+            if condicion:
+                generador.place_print('c', 44)
+            
+        elif x == Tipos.BOOL:
+            aux = generador.new_label()
+            true_flag = generador.new_label()
+            false_flag = generador.new_label()
+            generador.place_if(variable, 1, '==', true_flag)
+            generador.place_goto(false_flag)
+            generador.place_label(true_flag)
+            generador.print_true()
+            generador.place_goto(aux)
+            generador.place_label(false_flag)
+            generador.print_false()
+            generador.place_label(aux)
+            if condicion:
+                generador.place_print('c', 44)
+        elif x == Tipos.CHAR:
+            generador.place_print('c', 39)
+            generador.place_print('c', variable)
+            generador.place_print('c', 39)
+            if condicion:
+                generador.place_print('c', 44)
+        elif x == Tipos.NOTHING:
+            generador.nothing()
+    
+
     def getNodo(self) -> NodoAST:
         nodo = NodoAST('PRINT')
         nodo.agregarHijo('PRINT')

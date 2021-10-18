@@ -36,13 +36,13 @@ Rule 30    LOCAL -> r_local id igualT expresion
 Rule 31    LOCAL -> r_local id igualT expresion dospuntos dospuntos tipo
 Rule 32    LOCAL -> r_local id igualT expresion dospuntos dospuntos id
 Rule 33    condicional -> if r_else instrucciones
-Rule 34    condicional -> if
-Rule 35    BREAKk -> r_break
-Rule 36    CONTINUEE -> r_continue
-Rule 37    RETURNN -> r_return
-Rule 38    RETURNN -> r_return expresion
-Rule 39    if -> r_if expresion instrucciones
-Rule 40    if -> if r_elseif expresion instrucciones
+Rule 34    if -> r_if expresion instrucciones
+Rule 35    if -> if r_elseif expresion instrucciones
+Rule 36    condicional -> if
+Rule 37    BREAKk -> r_break
+Rule 38    CONTINUEE -> r_continue
+Rule 39    RETURNN -> r_return
+Rule 40    RETURNN -> r_return expresion
 Rule 41    whilee -> r_while expresion instrucciones
 Rule 42    forr -> r_for id r_in expresion instrucciones
 Rule 43    asignacion -> id igualT expresion
@@ -169,12 +169,12 @@ pizq                 : 22 23 24 53 54 55 56 70 71 72 73 92 93 94 95 96 97 98 99 
 ptcoma               : 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 67 68 69
 punto                : 49 50 51 52 83 84
 r_bool               : 79
-r_break              : 35
+r_break              : 37
 r_char               : 81
-r_continue           : 36
+r_continue           : 38
 r_cos                : 107
 r_else               : 33
-r_elseif             : 40
+r_elseif             : 35
 r_end                : 7 8 9 11 63 64
 r_false              : 132
 r_float              : 100
@@ -182,7 +182,7 @@ r_float64            : 77
 r_for                : 42
 r_function           : 55 56
 r_global             : 25 26 27 28
-r_if                 : 39
+r_if                 : 34
 r_in                 : 42
 r_int64              : 76
 r_length             : 24 98
@@ -198,7 +198,7 @@ r_pop                : 23 97
 r_print              : 70 72
 r_println            : 71 73
 r_push               : 22 96
-r_return             : 37 38
+r_return             : 39 40
 r_sin                : 106
 r_sqrt               : 109
 r_string             : 101
@@ -228,14 +228,14 @@ array                : 13
 asignacion           : 6
 condicional          : 7
 exp_struct           : 82 83 84
-expresion            : 22 22 23 24 26 27 28 30 31 32 38 39 40 41 42 43 44 45 46 47 48 74 75 87 88 90 91 93 94 95 95 96 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 110 112 112 113 113 114 114 115 115 116 116 117 117 118 118 119 119 120 120 121 121 122 122 123 123 124 124 125 125 126 127 135
+expresion            : 22 22 23 24 26 27 28 30 31 32 34 35 40 41 42 43 44 45 46 47 48 74 75 87 88 90 91 93 94 95 95 96 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 110 112 112 113 113 114 114 115 115 116 116 117 117 118 118 119 119 120 120 121 121 122 122 123 123 124 124 125 125 126 127 135
 expresion_exp        : 89 90
 forr                 : 9
 funtionn             : 11
-if                   : 33 34 40
+if                   : 33 35 36
 init                 : 0
 instruccion          : 2 3
-instrucciones        : 1 2 33 39 40 41 42 55 56
+instrucciones        : 1 2 33 34 35 41 42 55 56
 lista_id             : 46 48 49 50
 llamada              : 12
 number_array         : 46 47 50 52 84 86 88
@@ -284,7 +284,7 @@ state 0
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -295,10 +295,10 @@ state 0
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -310,8 +310,8 @@ state 0
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_print         shift and go to state 22
     r_println       shift and go to state 23
@@ -391,7 +391,7 @@ state 2
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -402,10 +402,10 @@ state 2
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -417,8 +417,8 @@ state 2
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     $end            reduce using rule 1 (init -> instrucciones .)
     r_print         shift and go to state 22
@@ -657,11 +657,11 @@ state 24
 state 25
 
     (33) condicional -> if . r_else instrucciones
-    (34) condicional -> if .
-    (40) if -> if . r_elseif expresion instrucciones
+    (36) condicional -> if .
+    (35) if -> if . r_elseif expresion instrucciones
 
     r_else          shift and go to state 67
-    r_end           reduce using rule 34 (condicional -> if .)
+    r_end           reduce using rule 36 (condicional -> if .)
     r_elseif        shift and go to state 68
 
 
@@ -783,15 +783,15 @@ state 30
 
 state 31
 
-    (35) BREAKk -> r_break .
+    (37) BREAKk -> r_break .
 
-    ptcoma          reduce using rule 35 (BREAKk -> r_break .)
+    ptcoma          reduce using rule 37 (BREAKk -> r_break .)
 
 
 state 32
 
-    (37) RETURNN -> r_return .
-    (38) RETURNN -> r_return . expresion
+    (39) RETURNN -> r_return .
+    (40) RETURNN -> r_return . expresion
     (82) expresion -> . exp_struct
     (89) expresion -> . cizq expresion_exp cder
     (92) expresion -> . id pizq parametro_print pder
@@ -843,7 +843,7 @@ state 32
     (85) exp_struct -> . id
     (86) exp_struct -> . id number_array
 
-    ptcoma          reduce using rule 37 (RETURNN -> r_return .)
+    ptcoma          reduce using rule 39 (RETURNN -> r_return .)
     cizq            shift and go to state 71
     id              shift and go to state 72
     r_parse         shift and go to state 74
@@ -879,9 +879,9 @@ state 32
 
 state 33
 
-    (36) CONTINUEE -> r_continue .
+    (38) CONTINUEE -> r_continue .
 
-    ptcoma          reduce using rule 36 (CONTINUEE -> r_continue .)
+    ptcoma          reduce using rule 38 (CONTINUEE -> r_continue .)
 
 
 state 34
@@ -927,7 +927,7 @@ state 38
 
 state 39
 
-    (39) if -> r_if . expresion instrucciones
+    (34) if -> r_if . expresion instrucciones
     (82) expresion -> . exp_struct
     (89) expresion -> . cizq expresion_exp cder
     (92) expresion -> . id pizq parametro_print pder
@@ -1963,7 +1963,7 @@ state 67
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -1974,10 +1974,10 @@ state 67
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -1989,8 +1989,8 @@ state 67
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_print         shift and go to state 22
     r_println       shift and go to state 23
@@ -2034,7 +2034,7 @@ state 67
 
 state 68
 
-    (40) if -> if r_elseif . expresion instrucciones
+    (35) if -> if r_elseif . expresion instrucciones
     (82) expresion -> . exp_struct
     (89) expresion -> . cizq expresion_exp cder
     (92) expresion -> . id pizq parametro_print pder
@@ -2166,7 +2166,7 @@ state 69
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -2177,10 +2177,10 @@ state 69
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -2192,8 +2192,8 @@ state 69
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     dospuntos       shift and go to state 133
     suma            shift and go to state 134
@@ -3183,7 +3183,7 @@ state 103
 
 state 104
 
-    (38) RETURNN -> r_return expresion .
+    (40) RETURNN -> r_return expresion .
     (110) expresion -> expresion . dospuntos expresion
     (112) expresion -> expresion . suma expresion
     (113) expresion -> expresion . resta expresion
@@ -3200,7 +3200,7 @@ state 104
     (124) expresion -> expresion . and expresion
     (125) expresion -> expresion . or expresion
 
-    ptcoma          reduce using rule 38 (RETURNN -> r_return expresion .)
+    ptcoma          reduce using rule 40 (RETURNN -> r_return expresion .)
     dospuntos       shift and go to state 133
     suma            shift and go to state 134
     resta           shift and go to state 135
@@ -3343,7 +3343,7 @@ state 109
 
 state 110
 
-    (39) if -> r_if expresion . instrucciones
+    (34) if -> r_if expresion . instrucciones
     (110) expresion -> expresion . dospuntos expresion
     (112) expresion -> expresion . suma expresion
     (113) expresion -> expresion . resta expresion
@@ -3388,7 +3388,7 @@ state 110
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -3399,10 +3399,10 @@ state 110
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -3414,8 +3414,8 @@ state 110
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     dospuntos       shift and go to state 133
     suma            shift and go to state 134
@@ -4065,7 +4065,7 @@ state 130
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -4076,10 +4076,10 @@ state 130
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -4091,8 +4091,8 @@ state 130
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_end           reduce using rule 33 (condicional -> if r_else instrucciones .)
     r_print         shift and go to state 22
@@ -4136,7 +4136,7 @@ state 130
 
 state 131
 
-    (40) if -> if r_elseif expresion . instrucciones
+    (35) if -> if r_elseif expresion . instrucciones
     (110) expresion -> expresion . dospuntos expresion
     (112) expresion -> expresion . suma expresion
     (113) expresion -> expresion . resta expresion
@@ -4181,7 +4181,7 @@ state 131
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -4192,10 +4192,10 @@ state 131
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -4207,8 +4207,8 @@ state 131
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     dospuntos       shift and go to state 133
     suma            shift and go to state 134
@@ -4296,7 +4296,7 @@ state 132
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -4307,10 +4307,10 @@ state 132
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -4322,8 +4322,8 @@ state 132
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_end           reduce using rule 41 (whilee -> r_while expresion instrucciones .)
     r_print         shift and go to state 22
@@ -7760,7 +7760,7 @@ state 182
 
 state 183
 
-    (39) if -> r_if expresion instrucciones .
+    (34) if -> r_if expresion instrucciones .
     (2) instrucciones -> instrucciones . instruccion
     (4) instruccion -> . print ptcoma
     (5) instruccion -> . println ptcoma
@@ -7789,7 +7789,7 @@ state 183
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -7800,10 +7800,10 @@ state 183
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -7815,12 +7815,12 @@ state 183
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
-    r_else          reduce using rule 39 (if -> r_if expresion instrucciones .)
-    r_elseif        reduce using rule 39 (if -> r_if expresion instrucciones .)
-    r_end           reduce using rule 39 (if -> r_if expresion instrucciones .)
+    r_else          reduce using rule 34 (if -> r_if expresion instrucciones .)
+    r_elseif        reduce using rule 34 (if -> r_if expresion instrucciones .)
+    r_end           reduce using rule 34 (if -> r_if expresion instrucciones .)
     r_print         shift and go to state 22
     r_println       shift and go to state 23
     id              shift and go to state 24
@@ -8325,7 +8325,7 @@ state 195
 
 state 196
 
-    (40) if -> if r_elseif expresion instrucciones .
+    (35) if -> if r_elseif expresion instrucciones .
     (2) instrucciones -> instrucciones . instruccion
     (4) instruccion -> . print ptcoma
     (5) instruccion -> . println ptcoma
@@ -8354,7 +8354,7 @@ state 196
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -8365,10 +8365,10 @@ state 196
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -8380,12 +8380,12 @@ state 196
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
-    r_else          reduce using rule 40 (if -> if r_elseif expresion instrucciones .)
-    r_elseif        reduce using rule 40 (if -> if r_elseif expresion instrucciones .)
-    r_end           reduce using rule 40 (if -> if r_elseif expresion instrucciones .)
+    r_else          reduce using rule 35 (if -> if r_elseif expresion instrucciones .)
+    r_elseif        reduce using rule 35 (if -> if r_elseif expresion instrucciones .)
+    r_end           reduce using rule 35 (if -> if r_elseif expresion instrucciones .)
     r_print         shift and go to state 22
     r_println       shift and go to state 23
     id              shift and go to state 24
@@ -10533,7 +10533,7 @@ state 240
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -10544,10 +10544,10 @@ state 240
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -10559,8 +10559,8 @@ state 240
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     dospuntos       shift and go to state 133
     suma            shift and go to state 134
@@ -10704,7 +10704,7 @@ state 247
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -10715,10 +10715,10 @@ state 247
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -10730,8 +10730,8 @@ state 247
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_print         shift and go to state 22
     r_println       shift and go to state 23
@@ -12106,7 +12106,7 @@ state 279
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -12117,10 +12117,10 @@ state 279
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -12132,8 +12132,8 @@ state 279
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_end           reduce using rule 42 (forr -> r_for id r_in expresion instrucciones .)
     r_print         shift and go to state 22
@@ -12242,7 +12242,7 @@ state 283
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -12253,10 +12253,10 @@ state 283
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -12268,8 +12268,8 @@ state 283
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_end           reduce using rule 55 (funtionn -> r_function id pizq pder instrucciones .)
     r_print         shift and go to state 22
@@ -12343,7 +12343,7 @@ state 284
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -12354,10 +12354,10 @@ state 284
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -12369,8 +12369,8 @@ state 284
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_print         shift and go to state 22
     r_println       shift and go to state 23
@@ -13013,7 +13013,7 @@ state 300
     (45) asignacion -> . id igualT expresion dospuntos dospuntos id
     (48) asignacion -> . id lista_id igualT expresion
     (33) condicional -> . if r_else instrucciones
-    (34) condicional -> . if
+    (36) condicional -> . if
     (41) whilee -> . r_while expresion instrucciones
     (42) forr -> . r_for id r_in expresion instrucciones
     (63) struct -> . r_struct id parametros_struct r_end
@@ -13024,10 +13024,10 @@ state 300
     (54) llamada -> . id pizq pder
     (46) array -> . id number_array lista_id igualT expresion
     (47) array -> . id number_array igualT expresion
-    (35) BREAKk -> . r_break
-    (37) RETURNN -> . r_return
-    (38) RETURNN -> . r_return expresion
-    (36) CONTINUEE -> . r_continue
+    (37) BREAKk -> . r_break
+    (39) RETURNN -> . r_return
+    (40) RETURNN -> . r_return expresion
+    (38) CONTINUEE -> . r_continue
     (25) GLOBAL -> . r_global id
     (26) GLOBAL -> . r_global id igualT expresion
     (27) GLOBAL -> . r_global id igualT expresion dospuntos dospuntos tipo
@@ -13039,8 +13039,8 @@ state 300
     (22) PUSHH -> . r_push not pizq expresion coma expresion pder
     (23) POPP -> . r_pop not pizq expresion pder
     (24) LENGHTT -> . r_length pizq expresion pder
-    (39) if -> . r_if expresion instrucciones
-    (40) if -> . if r_elseif expresion instrucciones
+    (34) if -> . r_if expresion instrucciones
+    (35) if -> . if r_elseif expresion instrucciones
 
     r_end           reduce using rule 56 (funtionn -> r_function id pizq parametros_function pder instrucciones .)
     r_print         shift and go to state 22

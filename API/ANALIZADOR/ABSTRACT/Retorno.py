@@ -6,3 +6,5 @@ class Retorno(object):
         self.is_temporal = is_temporal
         self.true_tag = true_tag
         self.false_tag = false_tag
+        self.valor = ""
+        self.types = []

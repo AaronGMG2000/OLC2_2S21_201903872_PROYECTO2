@@ -1,4 +1,5 @@
 
+from ..GENERAL.error import Error
 from ..GENERAL.table import Tabla
 from ..ABSTRACT.NodoAST import NodoAST
 import re
@@ -11,12 +12,15 @@ class Arbol(object):
         self.errors = []
         self.root = NodoAST("INIT")
         self.graph = ""
+        self.function = []
         self.c = 0
         
     def ejecutar(self):
         instructions = NodoAST("INSTRUCCIONES")
         for inst in self.getInstrucciones():
             res = inst.Ejecutar(self, self.getGlobal())
+            if isinstance(res, Error):
+                self.errors.append(res)
         #     try:
         #         nodoInstruction = NodoAST("INSTRUCCION")
         #         nodoInstruction.agregarHijoNodo(inst.getNodo())
@@ -24,7 +28,10 @@ class Arbol(object):
         #     except Exception as e:
         #         print(e)
         # self.root.agregarHijoNodo(instructions)
-    
+        x = 1
+        for er in self.errors:
+            er.numero = x
+            x+=1
     def getInstrucciones(self):
         return self.instructions
 

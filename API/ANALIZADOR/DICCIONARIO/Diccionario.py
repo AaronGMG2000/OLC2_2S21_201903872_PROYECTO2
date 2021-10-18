@@ -34,9 +34,9 @@ D_Aritmetica = {
     "FLOAT64%FLOAT64":[Tipos.FLOAT, Aritmeticos.MODULO],
     #elevado
     "INT64^INT64":[Tipos.ENTERO, Aritmeticos.POTENCIA],
-    # "INT64^FLOAT64":[Tipos.FLOAT, Aritmeticos.POTENCIA],
+    "INT64^FLOAT64":[Tipos.FLOAT, Aritmeticos.POTENCIA],
     "FLOAT64^INT64":[Tipos.FLOAT, Aritmeticos.POTENCIA],
-    # "FLOAT64^FLOAT64":[Tipos.FLOAT, Aritmeticos.POTENCIA]
+    "FLOAT64^FLOAT64":[Tipos.FLOAT, Aritmeticos.POTENCIA]
 }
 
 D_Relacional = {

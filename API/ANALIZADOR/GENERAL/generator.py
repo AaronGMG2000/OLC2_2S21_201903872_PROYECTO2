@@ -8,11 +8,16 @@ class Generador(object):
         self.code = ''
         self.functions = ''
         self.natives = ''
+        self.previous_code = ''
+        self.previous_functions = ''
+        self.previous_natives = ''
         self.in_function = False
         self.in_native = False
         self.temps = []
         self.native_true = []
         self.imports = []
+        self.use_temps = {}
+        self.unused_temps = {}
 
     def limpiar(self):
         self.temp_counter = 0
@@ -49,7 +54,16 @@ class Generador(object):
         c += "var P, H float64;\nvar stack [30101999]float64;\nvar heap [30101999]float64;\n\n"
         return c
 
-
+    def error_code(self):
+        self.code = self.previous_code
+        self.functions = self.previous_functions
+        self.natives = self.previous_natives
+    
+    def set_anterior(self):
+        self.previous_code = self.code
+        self.previous_functions = self.functions
+        self.previous_natives = self.natives
+    
     def get_code(self):
         return f'{self.generate_header()}{self.natives}\n{self.functions}\nfunc main(){{\n\tP = 0;\n\tH = 0;\n{self.code}\n}}'
 
@@ -85,12 +99,23 @@ class Generador(object):
     TEMPORALES
     '''
     def new_temporal(self) -> str:
-        temporal = f't{self.temp_counter}'
-        self.temp_counter += 1
-        self.temps.append(temporal)
-        return temporal
+        if len(self.unused_temps.keys()) >0:
+            temp = self.unused_temps.pop(list(self.unused_temps.keys())[0], None)
+            self.use_temps[temp] = temp
+            return temp
+        else:
+            temporal = f't{self.temp_counter}'
+            self.use_temps[temporal] = temporal
+            self.temp_counter += 1
+            self.temps.append(temporal)
+            return temporal
 
-
+    def set_unused_temp(self, T):
+        if len(self.use_temps.keys())>0:
+            temp = self.use_temps.get(T)
+            if temp is not None:
+                unused = self.use_temps.pop(temp, None)
+                self.unused_temps[unused] = unused
     '''
     ETIQUETAS
     '''
@@ -131,7 +156,7 @@ class Generador(object):
 
 
     def end_function(self):
-        self.inser_code('return;\n}\n')
+        self.inser_code('return;\n}\n\n')
         if not self.in_native:
             self.in_function = False
 
@@ -176,7 +201,6 @@ class Generador(object):
     def return_evn(self, tamano):
         self.inser_code(f'P=P-{tamano};\n')
 
-
     # Añadir print de go 
     def place_print(self, tipo, valor):
         if tipo != 'f':
@@ -193,14 +217,12 @@ class Generador(object):
         self.place_print('c', 117)#u
         self.place_print('c', 101)#e
 
-
     def print_false(self):
         self.place_print('c', 102)#f
         self.place_print('c', 97) #a
         self.place_print('c', 108)#l
         self.place_print('c', 115)#s
         self.place_print('c', 101)#e
-
 
     def nothing(self):
         self.place_print('c', 110) #n
@@ -227,7 +249,6 @@ class Generador(object):
         self.place_print('c', 97)   #a
         self.place_print('c', 116)  #t
         self.place_print('c', 104)  #h
-        self.place_print('c', 32)   # 
         self.place_print('c', 69)   #E
         self.place_print('c', 114)  #r
         self.place_print('c', 114)  #r
@@ -237,6 +258,29 @@ class Generador(object):
         self.end_function()
         self.in_native = False
 
+    def print_BoundsError(self):
+        if "BoundsError" in self.native_true:
+            return
+        self.native_true.append("BoundsError")
+        self.in_native = True
+
+        self.new_function('BoundsError')
+        self.place_print('c', 66)   #B
+        self.place_print('c', 111)  #O
+        self.place_print('c', 117)  #U
+        self.place_print('c', 110)  #N
+        self.place_print('c', 100)  #D 
+        self.place_print('c', 115)  #S
+        self.place_print('c', 69)   #E
+        self.place_print('c', 114)  #R
+        self.place_print('c', 114)  #R
+        self.place_print('c', 111)  #O
+        self.place_print('c', 114)  #R
+        self.place_print('c', 10)   #Salto de linea
+        self.end_function()
+        self.in_native = False
+
+    
     def F_print(self):
         if "F_print" in self.native_true:
             return
@@ -249,6 +293,7 @@ class Generador(object):
         heap = self.new_temporal()
         self.place_operation(stack,'P','1','+')
         self.get_stack(heap, stack)
+        self.set_unused_temp(stack)
         comparar = self.new_temporal()
         self.place_label(loop)
         self.get_heap(comparar, heap)
@@ -258,6 +303,9 @@ class Generador(object):
         self.place_goto(loop)
         self.place_label(salir)
         self.end_function()
+        self.set_unused_temp(heap)
+        self.set_unused_temp(comparar)
+        
         self.in_native = False
         
     def potencia(self):
@@ -266,8 +314,6 @@ class Generador(object):
         self.native_true.append("potencia")
         self.in_native = True
         self.new_function('potencia')
-        ret = self.new_temporal()
-        self.place_operation(ret, 'P','','')
         pos_value = self.new_temporal()
         pos_pot = self.new_temporal()
         self.place_operation(pos_value, 'P', 1, '+')
@@ -278,21 +324,31 @@ class Generador(object):
         self.get_stack(value, pos_value)
         pot = self.new_temporal()
         self.get_stack(pot, pos_pot)
+        normal = self.new_label()
+        self.place_if(pot, 0, '>=', normal)
+        self.place_operation(pot, pot, -1, '*')
+        self.place_label(normal)
         comp = self.new_temporal()
         self.place_operation(comp, 1, '','')
         self.place_label(w1)
-        self.place_if(comp, pot, '==', exit)
         mult = self.new_temporal()
+        self.place_operation(mult, 1, '','')
+        self.place_if(comp, pot, '>=', exit)
         self.get_stack(mult, pos_value)
         self.place_operation(value, mult, value, '*')
         self.place_operation(comp, comp, 1, '+')
         self.place_goto(w1)
         self.place_label(exit)
-        self.insert_stack(ret, value)
+        self.insert_stack('P', value)
         self.end_function()
-        self.in_native = False
+        self.set_unused_temp(pos_value)
+        self.set_unused_temp(pos_pot)
+        self.set_unused_temp(value)
+        self.set_unused_temp(pot)
+        self.set_unused_temp(comp)
+        self.set_unused_temp(mult)
         
-        
+        self.in_native = False    
 
     def mult_string(self):
         if "mult_string" in self.native_true:
@@ -335,6 +391,12 @@ class Generador(object):
         self.next_heap()
         self.insert_stack('P', ret)
         self.end_function()
+        self.set_unused_temp(ret)
+        self.set_unused_temp(pos_str)
+        self.set_unused_temp(pos_value)
+        self.set_unused_temp(value)
+        self.set_unused_temp(str)
+        self.set_unused_temp(comp)
         self.in_native = False
 
     def concat_string(self):
@@ -351,6 +413,7 @@ class Generador(object):
         self.place_operation(temp4, 'P', 2, '+')
         temp3 = self.new_temporal()
         self.get_stack(temp3, temp2)
+        self.set_unused_temp(temp2)
         exit = self.new_label()
         label = self.new_label()
         self.place_label(label)
@@ -365,6 +428,7 @@ class Generador(object):
         self.place_label(label2)
         temp6 = self.new_temporal()
         self.get_stack(temp6, temp4)
+        self.set_unused_temp(temp4)
         label3 = self.new_label()
         self.place_label(label3)
         #-------#
@@ -380,5 +444,50 @@ class Generador(object):
         self.next_heap()
         self.insert_stack('P', temp)
         self.end_function()
+        self.set_unused_temp(temp)
+        self.set_unused_temp(temp3)
+        self.set_unused_temp(temp5)
+        self.set_unused_temp(temp6)
+        self.set_unused_temp(comp)
         self.in_native = False
 
+    def compare_string(self):
+        if "compare_string" in self.native_true:
+            return
+        self.native_true.append("compare_string")
+        self.in_native = True
+        self.new_function('compare_string')
+        temp = self.new_temporal()
+        temp2 = self.new_temporal()
+        self.place_operation(temp, 'P', 1, '+')
+        self.get_stack(temp2, temp)
+        self.place_operation(temp, temp, 1, '+')
+        temp3 = self.new_temporal()
+        self.get_stack(temp3, temp)
+        self.set_unused_temp(temp)
+        exit = self.new_label()
+        w = self.new_label()
+        self.place_label(w)
+        temp4 = self.new_temporal()
+        temp5 = self.new_temporal()
+        self.get_heap(temp4, temp2)
+        self.get_heap(temp5, temp3)
+        l_true = self.new_label()
+        l_false = self.new_label()
+        self.place_if(temp4, temp5, '!=', l_false)
+        self.place_if(temp4, -1, '==', l_true)
+        self.place_operation(temp2, temp2, 1, '+')
+        self.place_operation(temp3, temp3, 1, '+')
+        self.place_goto(w)
+        self.place_label(l_true)
+        self.insert_stack('P', 1)
+        self.place_goto(exit)
+        self.place_label(l_false)
+        self.insert_stack('P', 0)
+        self.place_label(exit)        
+        self.end_function()
+        self.set_unused_temp(temp2)
+        self.set_unused_temp(temp3)
+        self.set_unused_temp(temp4)
+        self.set_unused_temp(temp5)
+        self.in_native = False

@@ -23,14 +23,24 @@ class Primitivo(Instruccion):
         generador = genAux.get_instance()
         if isinstance(generador, Generador):
             if self.type == Tipos.ENTERO or self.type == Tipos.FLOAT:
-                return Retorno(self.value, self.type, False)
+                ret = Retorno(self.value, self.type, False)
+                ret.valor = self.value
+                return ret
             if self.type == Tipos.BOOL:
                 if self.true_tag == '':
                     self.true_tag = generador.new_label()
                 if self.false_tag == '':
                     self.false_tag = generador.new_label()
-
-                return Retorno(self.value, self.type, False, None, self.true_tag, self.false_tag)
+                
+                if self.value:
+                    generador.place_goto(self.true_tag)
+                    generador.place_goto(self.false_tag)
+                else:
+                    generador.place_goto(self.false_tag)
+                    generador.place_goto(self.true_tag)
+                ret = Retorno(None, self.type, False, None, self.true_tag, self.false_tag)
+                ret.valor = self.value
+                return ret
                 
             if self.type == Tipos.STRING:
                 temp_string = generador.new_temporal()
@@ -40,9 +50,15 @@ class Primitivo(Instruccion):
                     generador.next_heap()
                 generador.insert_heap('H', -1)
                 generador.next_heap()
-                return Retorno(temp_string, self.type, True) 
+                ret = Retorno(temp_string, self.type, True) 
+                ret.valor = self.value
+                return ret
             
             if self.type == Tipos.CHAR:
-                return Retorno(ord(self.value), self.type, False)
+                ret = Retorno(ord(self.value), self.type, False)
+                ret.valor = self.value
+                return ret
             if self.type == Tipos.NOTHING:
-                return Retorno("nothing", self.type, False)
+                ret = Retorno("nothing", self.type, False)
+                ret.valor = "nothing"
+                return ret

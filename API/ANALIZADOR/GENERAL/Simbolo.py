@@ -8,6 +8,7 @@ class Simbolo(object):
         self.is_global = is_global
         self.position = position
         self.in_Heap = in_Heap
+        self.types = []
         
     def getID(self):
         return self.id

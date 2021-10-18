@@ -175,6 +175,7 @@ def t_error(t):
 def col(token):
     return (token.lexpos - (to_parse.rfind('\n', 0, token.lexpos) + 1)) + 1
 
+
 from .PLY import lex
 lexer = lex.lex()
 
@@ -202,12 +203,22 @@ precedence = (
 
 # Importaciones
 import re
+from .EXPRESIONES.Logico import Logico
+from .EXPRESIONES.Relacional import Relacional
 from .GENERAL.error import Error
+from .INSTRUCCIONES.f_while import WHILE
 from .INSTRUCCIONES.print import Imprimir
-from .GENERAL.Tipo import Tipos
+from .INSTRUCCIONES.Asignacion_Variable import Asignar_Variable
+from .GENERAL.Tipo import Logicas, Relacionales, Tipos
+from .EXPRESIONES.variable_array import Variable_Array
 from .GENERAL.Tipo import Aritmeticos
+from .EXPRESIONES.variable import Variable
 from .EXPRESIONES.primitivo import Primitivo
 from .EXPRESIONES.Aritmetica import Aritmetica
+from .INSTRUCCIONES.IF import IF
+from .INSTRUCCIONES.condicion import CONDICION
+from .EXPRESIONES.Array import ARRAY
+
 start = 'init'
 lista = []
 
@@ -290,7 +301,16 @@ def p_local_tipo_id(t):
 # Condicionales
 def p_condicional_else(t):
     'condicional    : if r_else instrucciones'
+    t[0] = CONDICION(t[1], t.lineno(1), col(t.slice[2]), t[3])
 
+def p_if(t):
+    'if : r_if expresion instrucciones'
+    t[0] = IF(t[2], t[3], t.lineno(1), col(t.slice[1]))
+
+def p_if_elseif(t):
+    'if : if r_elseif expresion instrucciones'
+    t[0] = IF(t[3], t[4], t.lineno(1), col(t.slice[2]), t[1])
+    
 def p_condicional(t):
     'condicional    : if'
     t[0] = t[1]
@@ -308,11 +328,7 @@ def p_return_expresion(t):
     '''RETURNN : r_return expresion'''
 
   
-def p_if(t):
-    'if : r_if expresion instrucciones'
-    
-def p_if_elseif(t):
-    'if : if r_elseif expresion instrucciones'
+
 
 
 
@@ -321,19 +337,22 @@ def p_if_elseif(t):
 
 def p_ins_while(t):
     'whilee : r_while expresion instrucciones'
-
+    t[0] = WHILE(t[2], t[3], t.lineno(1), col(t.slice[1]))
+    
 def p_ins_for(t):
     'forr : r_for id r_in expresion instrucciones'
 
 #asignaciones 
 def p_asignacion(t):
     '''asignacion : id igualT expresion'''
-
+    t[0] = Asignar_Variable(t[1], t[3], t.lineno(1), col(t.slice[1]))
 def p_asignacionTipo(t):
     '''asignacion : id igualT expresion dospuntos dospuntos tipo'''
+    t[0] = Asignar_Variable(t[1], t[3], t.lineno(1), col(t.slice[1]), t[6])
     
 def p_asignacionTipo_id(t):
     '''asignacion : id igualT expresion dospuntos dospuntos id'''
+    t[0] = Asignar_Variable(t[1], t[3], t.lineno(1), col(t.slice[1]), t[6])
 
 #ASIGNACION ARRAY
 #Arrays
@@ -522,11 +541,12 @@ def p_Expresion_Struct_lista(t):
 
 def p_expresion_struct_id(t):
     '''exp_struct : id'''
+    t[0] = Variable(t[1], t.lineno(1), col(t.slice[1]))
 #Arrays
 #id array
 def p_expresion_array_id(t):
     '''exp_struct : id number_array'''
-    
+    t[0] = Variable_Array(t[1], t[2], t.lineno(1), col(t.slice[1]))
 #number array
 
 def p_expresion_id_content_unico(t):
@@ -545,7 +565,8 @@ def p_expresion_id_content(t):
 #Expresion_Array
 def p_expresion_Array(t):
     '''expresion : cizq expresion_exp cder'''
-
+    t[0] = ARRAY(t[2], t.lineno(1), col(t.slice[1]))
+    
 def p_coma_expresion(t):
     '''expresion_exp : expresion_exp coma expresion'''
     if t[3] != None:
@@ -622,18 +643,18 @@ def p_expresion(t):
                  | expresion or expresion'''
     if t[2] == '+' or t[2] == '-' or t[2] == '*' or t[2] == '/' or t[2] == '%' or t[2] == '^':
         t[0] = Aritmetica(Aritmeticos(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
-    # elif t[2] == '==' or t[2] == '!=' or t[2] == '>' or t[2] == '>=' or t[2] == '<' or t[2] == '<=':
-    #     t[0] = Relacional(Relacionales(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
-    # elif t[2] == '&&' or t[2] == '||':
-    #     t[0] = Logica(Logicas(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
+    elif t[2] == '==' or t[2] == '!=' or t[2] == '>' or t[2] == '>=' or t[2] == '<' or t[2] == '<=':
+        t[0] = Relacional(Relacionales(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
+    elif t[2] == '&&' or t[2] == '||':
+        t[0] = Logico(Logicas(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
 
 def p_expresion_unaria(t):
     '''expresion    :   resta expresion %prec UMENOS
                     |   not expresion %prec nnot'''
     if t[1] == '-':
         t[0] = Aritmetica(Aritmeticos(t[1]),t.lineno(1), col(t.slice[1]),t[2])
-    # else:
-    #     t[0] = Logica(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
+    else:
+        t[0] = Logico(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
 
 
    
