@@ -208,6 +208,7 @@ from .EXPRESIONES.Relacional import Relacional
 from .GENERAL.error import Error
 from .INSTRUCCIONES.f_while import WHILE
 from .INSTRUCCIONES.print import Imprimir
+from .INSTRUCCIONES.Asignar_Array import Asignar_Array
 from .INSTRUCCIONES.Asignacion_Variable import Asignar_Variable
 from .GENERAL.Tipo import Logicas, Relacionales, Tipos
 from .EXPRESIONES.variable_array import Variable_Array
@@ -215,6 +216,7 @@ from .GENERAL.Tipo import Aritmeticos
 from .EXPRESIONES.variable import Variable
 from .EXPRESIONES.primitivo import Primitivo
 from .EXPRESIONES.Aritmetica import Aritmetica
+from .EXPRESIONES.Rango import Rango
 from .INSTRUCCIONES.IF import IF
 from .INSTRUCCIONES.condicion import CONDICION
 from .EXPRESIONES.Array import ARRAY
@@ -361,6 +363,7 @@ def p_asignacion_array_struct(t):
 
 def p_asignacion_array(t):
     '''array : id number_array igualT expresion'''
+    t[0] = Asignar_Array(t[1], t[2], t[4], t.lineno(1), col(t.slice[1]))
     
 #Asignacion STRUCT
 def p_asignacion_STRUCT_variable(t):
@@ -620,10 +623,11 @@ def p_nativa_individual(t):
 #Expresion Rango
 def p_expresion_rango(t):
     '''expresion : expresion dospuntos expresion'''
-
+    t[0] = Rango(t[1], t[3], t.lineno(1), col(t.slice[2]))
 #Expresion Rango completo
 def p_expresion_rango_Todo(t):
     '''expresion : dospuntos'''
+    t[0] = Rango(None, None, t.lineno(1), col(t.slice[1]))
     
 #expresiones
 def p_expresion(t):

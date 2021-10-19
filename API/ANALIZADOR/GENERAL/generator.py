@@ -303,9 +303,6 @@ class Generador(object):
         self.place_goto(loop)
         self.place_label(salir)
         self.end_function()
-        self.set_unused_temp(heap)
-        self.set_unused_temp(comparar)
-        
         self.in_native = False
         
     def potencia(self):
@@ -324,6 +321,7 @@ class Generador(object):
         self.get_stack(value, pos_value)
         pot = self.new_temporal()
         self.get_stack(pot, pos_pot)
+        self.set_unused_temp(pos_pot)
         normal = self.new_label()
         self.place_if(pot, 0, '>=', normal)
         self.place_operation(pot, pot, -1, '*')
@@ -341,13 +339,6 @@ class Generador(object):
         self.place_label(exit)
         self.insert_stack('P', value)
         self.end_function()
-        self.set_unused_temp(pos_value)
-        self.set_unused_temp(pos_pot)
-        self.set_unused_temp(value)
-        self.set_unused_temp(pot)
-        self.set_unused_temp(comp)
-        self.set_unused_temp(mult)
-        
         self.in_native = False    
 
     def mult_string(self):
@@ -358,6 +349,8 @@ class Generador(object):
         self.new_function('mult_string')
         ret = self.new_temporal()
         self.place_operation(ret, 'H','','')
+        self.insert_stack('P', ret)
+        self.set_unused_temp(ret)
         pos_str = self.new_temporal()
         pos_value = self.new_temporal()
         self.place_operation(pos_str, 'P', 1, '+')
@@ -369,10 +362,12 @@ class Generador(object):
         #obtenemos el valor
         value = self.new_temporal()
         self.get_stack(value, pos_value)
+        self.set_unused_temp(pos_value)
         #primer while
         self.place_label(w1)
         str = self.new_temporal()
         self.get_stack(str, pos_str)
+        self.set_unused_temp(pos_str)
         self.place_if(value, 0, '==', exit)
         self.place_label(w2)
         #vamos colocando el nuevo string
@@ -389,14 +384,7 @@ class Generador(object):
         self.place_label(exit)
         self.insert_heap('H',-1)
         self.next_heap()
-        self.insert_stack('P', ret)
         self.end_function()
-        self.set_unused_temp(ret)
-        self.set_unused_temp(pos_str)
-        self.set_unused_temp(pos_value)
-        self.set_unused_temp(value)
-        self.set_unused_temp(str)
-        self.set_unused_temp(comp)
         self.in_native = False
 
     def concat_string(self):
@@ -407,6 +395,8 @@ class Generador(object):
         self.new_function('concat_string')
         temp = self.new_temporal()
         self.place_operation(temp, 'H','','')
+        self.insert_stack('P', temp)
+        self.set_unused_temp(temp)
         temp2 = self.new_temporal()
         temp4 = self.new_temporal()
         self.place_operation(temp2, 'P', 1, '+')
@@ -442,13 +432,7 @@ class Generador(object):
         self.place_label(exit)
         self.insert_heap('H',-1)
         self.next_heap()
-        self.insert_stack('P', temp)
         self.end_function()
-        self.set_unused_temp(temp)
-        self.set_unused_temp(temp3)
-        self.set_unused_temp(temp5)
-        self.set_unused_temp(temp6)
-        self.set_unused_temp(comp)
         self.in_native = False
 
     def compare_string(self):
@@ -486,8 +470,4 @@ class Generador(object):
         self.insert_stack('P', 0)
         self.place_label(exit)        
         self.end_function()
-        self.set_unused_temp(temp2)
-        self.set_unused_temp(temp3)
-        self.set_unused_temp(temp4)
-        self.set_unused_temp(temp5)
         self.in_native = False

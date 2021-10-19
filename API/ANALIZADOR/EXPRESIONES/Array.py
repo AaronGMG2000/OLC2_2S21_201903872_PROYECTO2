@@ -32,14 +32,15 @@ class ARRAY(Instruccion):
             res = exp.Ejecutar(arbol, tabla)
             if isinstance(res, Error): 
                 return res
-            t_type = exp.type
-            aux_type = res.auxiliar_type
-            if aux_type is not None:
-                self.types.append(exp.types)
-            else:
-                self.types.append(t_type)
-            # if exp.type != t_type or aux_type != res.auxiliar_type:
-                # return Error("Sintactico","Los arrays solo pueden contener un tipo", self.row, self.column)
+            if t_type == None:
+                t_type = exp.type
+                aux_type = res.auxiliar_type
+                if aux_type is not None:
+                    self.types.append(exp.types)
+                else:
+                    self.types.append(t_type)
+            if exp.type != t_type or aux_type != res.auxiliar_type:
+                return Error("Sintactico","Los arrays solo pueden contener un tipo", self.row, self.column)
             if exp.type != Tipos.BOOL:
                 generador.insert_heap(temp2, res.value)
             else:

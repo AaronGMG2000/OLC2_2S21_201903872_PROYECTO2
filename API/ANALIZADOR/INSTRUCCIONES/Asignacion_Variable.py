@@ -28,8 +28,10 @@ class Asignar_Variable(Instruccion):
             if isinstance(self.expresion, Instruccion):
                 valor = self.expresion.Ejecutar(arbol, tabla)
                 if isinstance(valor, Error):
+                    generador.error_code()
                     return valor
                 if self.expresion.type != self.required_type and self.required_type != None:
+                    generador.error_code()
                     return Error("Sintactico", "Se esperaba un valor tipo "+self.required_type.value+" y se obtuvo un valor tipo "+self.expresion.type.value, self.row, self.column)
                 self.type = self.expresion.type
                 if tabla.get_variable(self.id) == None:
@@ -59,10 +61,6 @@ class Asignar_Variable(Instruccion):
                             generador.insert_stack(temp, valor.value)
                             generador.set_unused_temp(temp)
                         variable.type = self.expresion.type
-                        if self.expresion.type == Tipos.STRING:
-                            variable.in_Heap = True
-                        else:
-                            variable.in_Heap = False
                         if valor.is_temporal:
                             generador.set_unused_temp(valor.value)
                         variable.setValor(valor.valor)
