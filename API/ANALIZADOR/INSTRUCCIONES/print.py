@@ -234,21 +234,3 @@ class Imprimir(Instruccion):
             nodo.agregarHijoNodo(nodoParametro)
         nodo.agregarHijo(')')
         return nodo
-
-
-        nodo = NodoAST('PRINT')
-        nodo.agregarHijo('PRINT')
-        nodo.agregarHijo('(')
-        anterior = None
-        nodoParametro = None
-        for ex in self.expresion:
-            nodoParametro = NodoAST("PARAMETROS")
-            if anterior is not None:
-                nodoParametro.agregarHijoNodo(anterior)
-                nodoParametro.agregarHijo(',')
-            nodoParametro.agregarHijoNodo(ex.getNodo())
-            anterior = nodoParametro
-        if nodoParametro is not None:
-            nodo.agregarHijoNodo(nodoParametro)
-        nodo.agregarHijo(')')
-        return nodo

@@ -206,16 +206,18 @@ import re
 from .EXPRESIONES.Logico import Logico
 from .EXPRESIONES.Relacional import Relacional
 from .GENERAL.error import Error
+from .INSTRUCCIONES.f_for import FOR
 from .INSTRUCCIONES.f_while import WHILE
 from .INSTRUCCIONES.print import Imprimir
 from .INSTRUCCIONES.Asignar_Array import Asignar_Array
 from .INSTRUCCIONES.Asignacion_Variable import Asignar_Variable
-from .GENERAL.Tipo import Logicas, Relacionales, Tipos
+from .GENERAL.Tipo import Logicas, Relacionales, Tipos, Tipos_Nativa
 from .EXPRESIONES.variable_array import Variable_Array
 from .GENERAL.Tipo import Aritmeticos
 from .EXPRESIONES.variable import Variable
 from .EXPRESIONES.primitivo import Primitivo
 from .EXPRESIONES.Aritmetica import Aritmetica
+from .EXPRESIONES.Nativa import Nativas
 from .EXPRESIONES.Rango import Rango
 from .INSTRUCCIONES.IF import IF
 from .INSTRUCCIONES.condicion import CONDICION
@@ -343,7 +345,8 @@ def p_ins_while(t):
     
 def p_ins_for(t):
     'forr : r_for id r_in expresion instrucciones'
-
+    t[0] = FOR(t[2], t[4],t[5],t.lineno(1), col(t.slice[1]))
+    
 #asignaciones 
 def p_asignacion(t):
     '''asignacion : id igualT expresion'''
@@ -595,14 +598,8 @@ def p_expresion_llamada(t):
 def p_nativa(t):
     '''expresion : r_parse pizq tipo coma expresion pder
                  | r_trunc pizq tipo coma expresion pder
-                 | r_log pizq expresion coma expresion pder
                  '''
 
-def p_push_expresion(t):
-    '''expresion : r_push not pizq expresion coma expresion pder'''
-
-def p_pop_expresion(t):
-    '''expresion : r_pop not pizq expresion pder'''
     
 def p_length_expresion(t):
     '''expresion : r_length pizq expresion pder'''
@@ -611,15 +608,9 @@ def p_nativa_individual(t):
     '''expresion    : r_trunc pizq expresion pder
                     | r_float pizq expresion pder
                     | r_string pizq expresion pder
-                    | r_typeof pizq expresion pder
                     | r_uppercase pizq expresion pder
-                    | r_lowercase pizq expresion pder
-                    | r_log10 pizq expresion pder
-                    | r_sin pizq expresion pder
-                    | r_cos pizq expresion pder
-                    | r_tan pizq expresion pder
-                    | r_sqrt pizq expresion pder'''    
-
+                    | r_lowercase pizq expresion pder'''    
+    t[0] = Nativas(t.lineno(1), col(t.slice[4]), t[3], Tipos_Nativa(t[1].upper()))  
 #Expresion Rango
 def p_expresion_rango(t):
     '''expresion : expresion dospuntos expresion'''

@@ -471,3 +471,183 @@ class Generador(object):
         self.place_label(exit)        
         self.end_function()
         self.in_native = False
+
+
+    def to_string_float(self):
+        if "to_string" in self.native_true:
+            return
+        self.native_true.append("to_string")
+        self.in_native = True
+        self.new_function('to_string')
+        if "math" not in self.imports:
+            self.imports.append('math')
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        t2 = self.new_temporal()
+        exit = self.new_label()
+        self.place_operation(t0, 'H', '', '')
+        self.place_operation(t1, 'P', 1, '+')
+        self.get_stack(t2, t1)
+        l0 = self.new_label()
+        self.place_if(t2, 0, '>', l0)
+        self.insert_heap('H', 45)
+        self.next_heap()
+        self.place_operation(t2, 0, t2, '-')
+        self.place_label(l0)
+        l1 = self.new_label()
+        self.place_if(t2, 1, '<', l1)
+        self.place_if(t2, 10, '<', l1)
+        t3 = self.new_temporal()
+        self.place_operation(t3, 1, '', '')
+        if "math" not in self.imports:
+            self.imports.append('math')
+        self.inser_code(f'{t1} = math.Mod({t2},{1});\n')
+        self.place_operation(t1, t2, t1, '-')
+        l3 = self.new_label()
+        l4 = self.new_label()
+        self.place_label(l3)
+        self.place_if(t1, 10, '<', l4)
+        self.place_operation(t1, t1, 10, '/')
+        t4 = self.new_temporal()
+        self.inser_code(f'{t4} = math.Mod({t1},{1});\n')
+        self.place_operation(t1, t1, t4, '-')
+        self.place_operation(t3, t3, 10, '*')
+        self.place_goto(l3)
+        self.place_label(l4)
+        self.place_operation(t4, t1, 48, '+')
+        self.insert_heap('H', t4)
+        self.next_heap()
+        self.place_operation(t1, t1, t3, '*')
+        self.place_operation(t2, t2, t1, '-')
+        self.place_goto(l0)
+        self.place_label(l1)
+        self.inser_code(f'{t3} = math.Mod({t2},{1});\n')
+        self.place_operation(t4, t2, t3, '-')
+        self.place_operation(t3, t4, 48, '+')
+        self.place_operation(t2, t2, t4, '-')
+        self.insert_heap('H', t3)
+        self.next_heap()
+        p0 = self.new_label()
+        self.place_if(t2, 0, '==', p0)
+        self.insert_heap('H', 46)
+        self.next_heap()
+        l6 = self.new_label()
+        t5 = self.new_temporal()
+        self.place_operation(t5, 0, '', '')
+        self.place_label(l6)
+        self.place_if(t2, 0, '==', exit)
+        self.place_if(t5, 6, '==', exit)
+        self.place_operation(t2, t2, 10, '*')
+        self.inser_code(f'{t3} = math.Mod({t2},{1});\n')
+        self.place_operation(t3, t2, t3, '-')
+        self.place_operation(t4, t3, 48, '+')
+        self.insert_heap('H', t4)
+        self.next_heap()
+        self.place_operation(t2, t2, t3, '-')
+        self.place_operation(t5, t5, 1, '+')
+        self.place_goto(l6)
+        self.place_label(p0)
+        self.insert_heap('H', 46)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        self.insert_heap('H', 48)
+        self.next_heap()
+        #final#
+        self.place_label(exit)
+        self.insert_heap('H',-1)
+        self.next_heap()
+        self.insert_stack('P', t0)
+        self.end_function()
+        self.in_native = False
+
+    def to_string_int(self):
+        if "to_string_int" in self.native_true:
+            return
+        self.native_true.append("to_string_int")
+        self.in_native = True
+        self.new_function('to_string_int')
+        if "math" not in self.imports:
+            self.imports.append('math')
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        t2 = self.new_temporal()
+        self.place_operation(t0, 'H', '', '')
+        self.place_operation(t1, 'P', 1, '+')
+        self.get_stack(t2, t1)
+        l0 = self.new_label()
+        self.place_if(t2, 0, '>', l0)
+        self.insert_heap('H', 45)
+        self.next_heap()
+        self.place_operation(t2, 0, t2, '-')
+        self.place_label(l0)
+        l1 = self.new_label()
+        self.place_if(t2, 1, '<', l1)
+        self.place_if(t2, 10, '<', l1)
+        t3 = self.new_temporal()
+        self.place_operation(t3, 1, '', '')
+        if "math" not in self.imports:
+            self.imports.append('math')
+        self.inser_code(f'{t1} = math.Mod({t2},{1});\n')
+        self.place_operation(t1, t2, t1, '-')
+        l3 = self.new_label()
+        l4 = self.new_label()
+        self.place_label(l3)
+        self.place_if(t1, 10, '<', l4)
+        self.place_operation(t1, t1, 10, '/')
+        t4 = self.new_temporal()
+        self.inser_code(f'{t4} = math.Mod({t1},{1});\n')
+        self.place_operation(t1, t1, t4, '-')
+        self.place_operation(t3, t3, 10, '*')
+        self.place_goto(l3)
+        self.place_label(l4)
+        self.place_operation(t4, t1, 48, '+')
+        self.insert_heap('H', t4)
+        self.next_heap()
+        self.place_operation(t1, t1, t3, '*')
+        self.place_operation(t2, t2, t1, '-')
+        self.place_goto(l0)
+        self.place_label(l1)
+        self.inser_code(f'{t3} = math.Mod({t2},{1});\n')
+        self.place_operation(t4, t2, t3, '-')
+        self.place_operation(t3, t4, 48, '+')
+        self.place_operation(t2, t2, t4, '-')
+        self.insert_heap('H', t3)
+        self.next_heap()
+        #final#
+        self.insert_heap('H',-1)
+        self.next_heap()
+        self.insert_stack('P', t0)
+        self.end_function()
+        self.in_native = False
+        
+   
+        
+    def parse_int(self):
+        if "math" not in self.imports:
+            self.imports.append('math')
+            
+    def parse_float(self):
+        pass
+    
+    def f_length(self):
+        pass
+    
+    def uppercase(self):
+        pass
+    
+    def lowercase(self):
+        pass
+    
+    def trunc(self):
+        pass
+    
+    

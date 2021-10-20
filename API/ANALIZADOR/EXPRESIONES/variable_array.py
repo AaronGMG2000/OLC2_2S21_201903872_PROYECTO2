@@ -55,11 +55,8 @@ class Variable_Array(Instruccion):
                     if (x.type == Tipos.RANGE and number.auxiliar_type!=Tipos.ENTERO):
                         return Error("Sintactico", "La posición de un array con un rango debe ser un valor Int64", self.row, self.column)
                     if x.type!=Tipos.RANGE:
-                        temp_number = number.valor-1
                         if a == 0:
                             aux = aux[0]
-                        if temp_number <0 and x.type!=Tipos.RANGE:
-                            error = True
                         if a != len(self.numbers)-1 and type(aux)!=type([]):
                             return Error("Sintactico","Se esperaba un Array", self.row, self.column)
                     types = number.types
@@ -93,6 +90,7 @@ class Variable_Array(Instruccion):
                 ret = Retorno(temp, self.type, True)
                 ret.types = types
                 self.types = types
+                ret.auxiliar_type = None
                 return ret
             else:
                 return Error("Sintactico","La variable indicada no existe", self.row, self.column)

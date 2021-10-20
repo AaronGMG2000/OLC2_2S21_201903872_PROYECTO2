@@ -107,56 +107,26 @@ D_LOGICA = {
 
 D_NATIVA = {
     #parse
-    'PARSE-INT64-STRING':['int(valor)', Tipos.ENTERO],
-    'PARSE-FLOAT64-STRING':['float(valor)', Tipos.FLOAT],
+    'PARSE-INT64-STRING':['int(valor.valor)', Tipos.ENTERO],
+    'PARSE-FLOAT64-STRING':['float(valor.valor)', Tipos.FLOAT],
     #trunc
-    'TRUNC-INT64-FLOAT64':['math.trunc(valor)', Tipos.ENTERO],
-    'TRUNC-FLOAT64':['float(math.trunc(valor))', Tipos.FLOAT],
+    'TRUNC-INT64-FLOAT64':['math.trunc(valor.valor)', Tipos.ENTERO],
+    'TRUNC-FLOAT64':['float(math.trunc(valor.valor))', Tipos.FLOAT],
     #float
-    'FLOAT-INT64':['float(valor)', Tipos.FLOAT],
+    'FLOAT-INT64':['float(valor.valor)', Tipos.FLOAT],
     #string
-    'STRING-INT64':['str(valor)',Tipos.STRING],
-    'STRING-FLOAT64':['str(valor)',Tipos.STRING],
-    'STRING-BOOL':['str(valor)',Tipos.STRING],
-    'STRING-NOTHING':['str(valor)',Tipos.STRING],
-    'STRING-CHAR':['str(valor)',Tipos.STRING],
-    'STRING-ARREGLO':['str(valor)',Tipos.STRING],
-    'STRING-STRING':['str(valor)',Tipos.STRING],
-    'STRING-STRUCT':['str(valor)',Tipos.STRING],
-    
-    #TYPEOF    
-    'TYPEOF-INT64':['"Int64"',Tipos.STRING],
-    'TYPEOF-FLOAT64':['"Float64"',Tipos.STRING],
-    'TYPEOF-BOOL':['"Bool"',Tipos.STRING],
-    'TYPEOF-NOTHING':['"NOTHING"',Tipos.STRING],
-    'TYPEOF-CHAR':['"Char"',Tipos.STRING],
-    'TYPEOF-ARREGLO':['"Arreglo"',Tipos.STRING],
-    'TYPEOF-STRING':['"String"',Tipos.STRING],
-    'TYPEOF-STRUCT':['"Struct"',Tipos.STRING],
-    'TYPEOF-RANGO':['"Struct"',Tipos.RANGE],
-    'TYPEOF-OBJECT':['"Struct"',Tipos.STRUCT],
+    'STRING-INT64':['str(valor.valor)',Tipos.STRING],
+    'STRING-FLOAT64':['str(valor.valor)',Tipos.STRING],
+    'STRING-BOOL':['str(valor.valor)',Tipos.STRING],
+    'STRING-NOTHING':['str(valor.valor)',Tipos.STRING],
+    'STRING-CHAR':['str(valor.valor)',Tipos.STRING],
+    'STRING-ARREGLO':['str(valor.valor)',Tipos.STRING],
+    'STRING-STRING':['str(valor.valor)',Tipos.STRING],
+    'STRING-STRUCT':['str(valor.valor)',Tipos.STRING],
     
     #uppercase y lowercase
-    'UPPERCASE-STRING':['valor.upper()',Tipos.STRING],
-    'LOWERCASE-STRING':['valor.lower()',Tipos.STRING],
+    'UPPERCASE-STRING':['valor.valor.upper()',Tipos.STRING],
+    'LOWERCASE-STRING':['valor.valor.lower()',Tipos.STRING],
     
-    #NUMERICAS
-    'LOG10-INT64':['math.log10(valor)',Tipos.FLOAT],
-    'LOG10-FLOAT64':['math.log10(valor)',Tipos.FLOAT],
-    'LOG-INT64-INT64' :['math.log(valor2, valor)',Tipos.FLOAT],
-    'LOG-FLOAT64-INT64' :['math.log(valor2, valor)',Tipos.FLOAT],
-    'LOG-INT64-FLOAT64' :['math.log(valor2, valor)',Tipos.FLOAT],
-    'LOG-FLOAT64-FLOAT64' :['math.log(valor2, valor)',Tipos.FLOAT],
-    'SIN-INT64' :['math.sin(valor)',Tipos.FLOAT],
-    'SIN-FLOAT64' :['math.sin(valor)',Tipos.FLOAT],
-    'COS-INT64':['math.cos(valor)',Tipos.FLOAT],
-    'COS-FLOAT64':['math.cos(valor)',Tipos.FLOAT],
-    'TAN-INT64':['math.tan(valor)',Tipos.FLOAT],
-    'TAN-FLOAT64':['math.tan(valor)',Tipos.FLOAT],
-    'SQRT-INT64':['math.sqrt(valor)',Tipos.FLOAT],
-    'SQRT-FLOAT64':['math.sqrt(valor)',Tipos.FLOAT],
-    #ARREGLOS
-    'PUSH-ARREGLO':['h'],
-    'POP-ARREGLO':['hh'],
     'LENGTH-ARREGLO':['hhh']
 }

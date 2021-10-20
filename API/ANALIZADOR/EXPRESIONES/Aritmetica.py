@@ -57,7 +57,8 @@ class Aritmetica(Instruccion):
                                         val2.value = val2.value*1.0
                                     generador.place_operation(temp, val1.value,val2.value,'/')
                                 else:
-                                    generador.imports.append('math')
+                                    if "math" not in generador.imports:
+                                        generador.imports.append('math')
                                     generador.inser_code(f'{temp} = math.Mod({val1.value},{val2.value});\n')
                                 generador.place_label(exit_flag)
                                 if val1.is_temporal:
@@ -158,7 +159,7 @@ class Aritmetica(Instruccion):
                             ret.valor = eval(f'val1.valor {operation.value} val2.valor')
                             return ret
                 except:
-                    pass
+                    return Error("Sintactico", f'No se pueden operar los tipos {self.val1.type.value} y el tipo {self.val2.type.value} con el operador {self.Operation.value}', self.row, self.column)
             else:
                 val1 = self.val1.Ejecutar(arbol, tabla)
                 if isinstance(val1, Error):
@@ -175,4 +176,4 @@ class Aritmetica(Instruccion):
                     ret.valor = eval(f'{operation.value} val1.valor')
                     return ret
                 except:
-                    pass
+                    return Error("Sintactico","No se puede operar el negativo con el tipo "+self.val1.type.value, self.row, self.column)

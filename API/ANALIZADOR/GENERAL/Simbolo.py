@@ -9,6 +9,7 @@ class Simbolo(object):
         self.position = position
         self.in_Heap = in_Heap
         self.types = []
+        self.auxiliar_type = None
         
     def getID(self):
         return self.id
