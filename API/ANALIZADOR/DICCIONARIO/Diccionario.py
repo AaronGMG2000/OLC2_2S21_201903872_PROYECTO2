@@ -123,6 +123,7 @@ D_NATIVA = {
     'STRING-ARREGLO':['str(valor.valor)',Tipos.STRING],
     'STRING-STRING':['str(valor.valor)',Tipos.STRING],
     'STRING-STRUCT':['str(valor.valor)',Tipos.STRING],
+    'STRING-RANGE':['str(valor.valor)',Tipos.STRING],
     
     #uppercase y lowercase
     'UPPERCASE-STRING':['valor.valor.upper()',Tipos.STRING],
