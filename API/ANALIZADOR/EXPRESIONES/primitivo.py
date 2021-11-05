@@ -59,6 +59,6 @@ class Primitivo(Instruccion):
                 ret.valor = self.value
                 return ret
             if self.type == Tipos.NOTHING:
-                ret = Retorno("nothing", self.type, False)
+                ret = Retorno(-1, self.type, False)
                 ret.valor = "nothing"
                 return ret

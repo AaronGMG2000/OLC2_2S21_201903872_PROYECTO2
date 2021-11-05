@@ -13,7 +13,8 @@ class Rango(Instruccion):
         super().__init__(Tipos.RANGE, fila, columna)
         self.valor1 = valor1
         self.valor2 = valor2
-
+        self.types = []
+        
     def getNodo(self) -> NodoAST:
         nodo = NodoAST('RANGE')
         nodo.agregarHijoNodo(self.valor1.getNodo())

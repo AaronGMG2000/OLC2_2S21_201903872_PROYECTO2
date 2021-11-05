@@ -13,6 +13,8 @@ class Instruccion(ABC):
         self.column = column
         self.false_tag = ""
         self.true_tag = ""
+        self.types = []
+        self.struct_type = ""
         super().__init__()
 
     @abstractmethod

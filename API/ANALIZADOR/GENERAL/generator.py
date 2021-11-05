@@ -293,7 +293,7 @@ class Generador(object):
         heap = self.new_temporal()
         self.place_operation(stack,'P','1','+')
         self.get_stack(heap, stack)
-        self.set_unused_temp(stack)
+        # self.set_unused_temp(stack)
         comparar = self.new_temporal()
         self.place_label(loop)
         self.get_heap(comparar, heap)
@@ -321,7 +321,7 @@ class Generador(object):
         self.get_stack(value, pos_value)
         pot = self.new_temporal()
         self.get_stack(pot, pos_pot)
-        self.set_unused_temp(pos_pot)
+        # self.set_unused_temp(pos_pot)
         normal = self.new_label()
         self.place_if(pot, 0, '>=', normal)
         self.place_operation(pot, pot, -1, '*')
@@ -350,7 +350,7 @@ class Generador(object):
         ret = self.new_temporal()
         self.place_operation(ret, 'H','','')
         self.insert_stack('P', ret)
-        self.set_unused_temp(ret)
+        # self.set_unused_temp(ret)
         pos_str = self.new_temporal()
         pos_value = self.new_temporal()
         self.place_operation(pos_str, 'P', 1, '+')
@@ -362,12 +362,12 @@ class Generador(object):
         #obtenemos el valor
         value = self.new_temporal()
         self.get_stack(value, pos_value)
-        self.set_unused_temp(pos_value)
+        # self.set_unused_temp(pos_value)
         #primer while
         self.place_label(w1)
         str = self.new_temporal()
         self.get_stack(str, pos_str)
-        self.set_unused_temp(pos_str)
+        # self.set_unused_temp(pos_str)
         self.place_if(value, 0, '==', exit)
         self.place_label(w2)
         #vamos colocando el nuevo string
@@ -632,22 +632,189 @@ class Generador(object):
    
         
     def parse_int(self):
-        if "math" not in self.imports:
-            self.imports.append('math')
+        if "parse_int" in self.native_true:
+            return
+        self.native_true.append("parse_int")
+        self.in_native = True
+        self.new_function('parse_int')
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.get_stack(t1, t0)
+        t2 = self.new_temporal()
+        t4 = self.new_temporal()
+        t5 = self.new_temporal()
+        self.place_operation(t4, 1, '', '')
+        exit = self.new_label()
+        l1 = self.new_label()
+        self.place_label(l1)
+        self.get_heap(t2, t1)
+        self.place_if(t2, 48, '<', exit)
+        self.place_if(t2, 57, '>', exit)
+        self.place_operation(t0, t2, 48, '-')
+        self.place_operation(t5, t5, 10, '*')
+        self.place_operation(t5, t5, t0, '+')
+        self.place_operation(t1, t1, 1, '+')
+        self.place_goto(l1)
+        self.place_label(exit)
+        self.place_operation(t5, t5, t4, '/')
+        self.insert_stack('P', t5)
+        self.end_function()
+        self.in_native = False
             
     def parse_float(self):
-        pass
-    
+        if "parse_float" in self.native_true:
+            return
+        self.native_true.append("parse_float")
+        self.in_native = True
+        self.new_function('parse_float')
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.get_stack(t1, t0)
+        t2 = self.new_temporal()
+        t3 = self.new_temporal()
+        t4 = self.new_temporal()
+        t5 = self.new_temporal()
+        self.place_operation(t4, 1, '', '')
+        exit = self.new_label()
+        l1 = self.new_label()
+        l2 = self.new_label()
+        l3 = self.new_label()
+        self.place_label(l1)
+        self.get_heap(t2, t1)
+        self.place_if(t2, 46, '==', l2)
+        self.place_if(t2, 48, '<', exit)
+        self.place_if(t2, 57, '>', exit)
+        self.place_if(t3, 1, '==', l3)
+        self.place_operation(t0, t2, 48, '-')
+        self.place_operation(t5, t5, 10, '*')
+        self.place_operation(t5, t5, t0, '+')
+        self.place_operation(t1, t1, 1, '+')
+        self.place_goto(l1)
+        self.place_label(l3)
+        self.place_operation(t0, t2, 48, '-')
+        self.place_operation(t5, t5, 10, '*')
+        self.place_operation(t5, t5, t0, '+ ')
+        self.place_operation(t4, t4, 10, '*')
+        self.place_operation(t1, t1, 1, '+')
+        self.place_goto(l1)
+        self.place_label(l2)
+        self.place_operation(t3, 1, '', '')
+        self.place_operation(t1, t1, 1, '+')
+        self.place_goto(l1)
+        self.place_label(exit)
+        self.place_operation(t5, t5, t4, '/')
+        self.insert_stack('P', t5)
+        self.end_function()
+        self.in_native = False
+        
     def f_length(self):
-        pass
+        if "f_length" in self.native_true:
+            return
+        self.native_true.append("f_length")
+        self.in_native = True
+        self.new_function('f_length')
+        t0 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.get_stack(t0, t0)
+        self.get_heap(t0, t0)
+        self.insert_stack('P', t0)
+        self.end_function()
+        self.in_native = False
     
     def uppercase(self):
-        pass
+        if "uppercase" in self.native_true:
+            return
+        self.native_true.append("uppercase")
+        self.in_native = True
+        self.new_function('uppercase')
+        ret = self.new_temporal()
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.place_operation(ret, 'H', '', '')
+        self.get_stack(t0, t0)
+        l0 = self.new_label()
+        l1 = self.new_label()
+        l2 = self.new_label()
+        self.place_label(l1)
+        self.get_heap(t1, t0)
+        self.place_operation(t0, t0, 1, '+')
+        self.place_if(t1, -1, '==', l0)
+        self.place_if(t1, 97, '<', l2)
+        self.place_if(t1, 122, '>', l2)
+        #cambio a mayuscula
+        self.place_operation(t1, t1, 32, '-')
+        self.insert_heap('H', t1)
+        self.next_heap()
+        self.place_goto(l1)
+        #si no cumple
+        self.place_label(l2)
+        self.insert_heap('H', t1)
+        self.next_heap()
+        self.place_goto(l1)
+        self.place_label(l0)
+        self.insert_heap('H', -1)
+        self.next_heap()
+        self.insert_stack('P', ret)
+        self.end_function()
+        self.in_native = False
     
     def lowercase(self):
-        pass
+        if "lowercase" in self.native_true:
+            return
+        self.native_true.append("lowercase")
+        self.in_native = True
+        self.new_function('lowercase')
+        ret = self.new_temporal()
+        t0 = self.new_temporal()
+        t1 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.place_operation(ret, 'H', '', '')
+        self.get_stack(t0, t0)
+        l0 = self.new_label()
+        l1 = self.new_label()
+        l2 = self.new_label()
+        self.place_label(l1)
+        self.get_heap(t1, t0)
+        self.place_operation(t0, t0, 1, '+')
+        self.place_if(t1, -1, '==', l0)
+        self.place_if(t1, 65, '<', l2)
+        self.place_if(t1, 90, '>', l2)
+        #cambio a mayuscula
+        self.place_operation(t1, t1, 32, '+')
+        self.insert_heap('H', t1)
+        self.next_heap()
+        self.place_goto(l1)
+        #si no cumple
+        self.place_label(l2)
+        self.insert_heap('H', t1)
+        self.next_heap()
+        self.place_goto(l1)
+        self.place_label(l0)
+        self.insert_heap('H', -1)
+        self.next_heap()
+        self.insert_stack('P', ret)
+        self.end_function()
+        self.in_native = False
     
     def trunc(self):
-        pass
+        if "trunc" in self.native_true:
+            return
+        if "math" not in self.imports:
+            self.imports.append('math')
+        self.native_true.append("trunc")
+        self.in_native = True
+        self.new_function('trunc')
+        t0 = self.new_temporal()
+        self.place_operation(t0, 'P', 1, '+')
+        self.get_stack(t0, t0)
+        t1 = self.new_temporal()
+        self.inser_code(f'{t1} = math.Mod({t0}, 1);')
+        self.place_operation(t0, t0, t1, '-')
+        self.insert_stack('P', t0)
+        self.end_function()
+        self.in_native = False
     
     

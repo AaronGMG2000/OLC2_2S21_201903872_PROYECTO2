@@ -9,6 +9,7 @@ reservadas = {
     "function": "r_function",
     "string": "r_string",
     "String": "r_stringT",
+    "Vector": "r_Vector",
     "nothing": "r_nothing",
     "Nothing": "r_nothingT",
     "struct" : "r_struct",
@@ -73,6 +74,8 @@ tokens = [
     "dospuntos",
     "cizq",
     "cder",
+    "lder",
+    "lizq",
 ] + list(reservadas.values())
 #t_token
 #condicionales y logicas
@@ -96,6 +99,8 @@ t_pder               = r'\)'
 t_igualT             = r'='
 t_cizq               = r'\['
 t_cder               = r'\]'
+t_lder               = r'\}'
+t_lizq               = r'\{'
 #aritmetica
 t_suma               = r'\+'
 t_resta              = r'\-'
@@ -208,6 +213,7 @@ from .EXPRESIONES.Relacional import Relacional
 from .GENERAL.error import Error
 from .INSTRUCCIONES.f_for import FOR
 from .INSTRUCCIONES.f_while import WHILE
+from .INSTRUCCIONES.struct import STRUCT
 from .INSTRUCCIONES.print import Imprimir
 from .INSTRUCCIONES.Asignar_Array import Asignar_Array
 from .INSTRUCCIONES.Asignacion_Variable import Asignar_Variable
@@ -221,7 +227,9 @@ from .EXPRESIONES.Nativa import Nativas
 from .EXPRESIONES.Rango import Rango
 from .INSTRUCCIONES.IF import IF
 from .INSTRUCCIONES.condicion import CONDICION
+from .EXPRESIONES.variable_struct import Variable_Struct
 from .EXPRESIONES.Array import ARRAY
+from .EXPRESIONES.llamada import LLAMADA_EXP
 
 start = 'init'
 lista = []
@@ -317,7 +325,7 @@ def p_if_elseif(t):
     
 def p_condicional(t):
     'condicional    : if'
-    t[0] = t[1]
+    t[0] = CONDICION(t[1], t[1].row, t[1].column)
  
 def p_break(t):
     '''BREAKk : r_break'''
@@ -365,8 +373,8 @@ def p_asignacion_array_struct(t):
     '''array : id number_array lista_id igualT expresion'''
 
 def p_asignacion_array(t):
-    '''array : id number_array igualT expresion'''
-    t[0] = Asignar_Array(t[1], t[2], t[4], t.lineno(1), col(t.slice[1]))
+    '''array : id number_array cder igualT expresion'''
+    t[0] = Asignar_Array(t[1], t[2], t[5], t.lineno(1), col(t.slice[1]))
     
 #Asignacion STRUCT
 def p_asignacion_STRUCT_variable(t):
@@ -400,7 +408,7 @@ def p_lista_id_u_lista(t):
         
 def p_llamada(t):
     '''llamada : id pizq parametro_print pder '''
-
+    t[0] = LLAMADA_EXP(t[1], t[3], t.lineno(1), col(t.slice[1]))
 def p_llamada_Solo(t):
     '''llamada : id pizq pder '''
 #function
@@ -454,9 +462,11 @@ def p_parametros_function_tipo_id(t):
 
 def p_struct(t):
     '''struct : r_struct id parametros_struct r_end'''
-
+    t[0] = STRUCT(t[2], t[3], t.lineno(1), col(t.slice[2]))
+    
 def p_mutable_struct(t):
     '''struct : r_mutable r_struct id parametros_struct r_end'''
+    t[0] = STRUCT(t[2], t[3], t.lineno(1), col(t.slice[2]))
     
 def p_parametros_struct(t):
     '''parametros_struct : parametros_struct parametro_struct'''
@@ -490,7 +500,7 @@ def p_parametro_struct_id(t):
     if t[1] == None:
         t[0] = []
     else:
-        t[0] = [t[1], Tipos.OBJECT]
+        t[0] = [t[1], t[4]]
 
 #impresiones
 ##impresiones
@@ -532,6 +542,21 @@ def p_tipo(t):
             | r_char'''
     t[0] = Tipos(t[1].upper())
 
+
+def p_vector(t):
+    '''tipo : r_Vector lizq tipo lder'''
+    if t[3] == None:
+        t[0] = []
+    else:
+        t[0] = [t[3]]
+
+def p_vector_id(t):
+    '''tipo : r_Vector lizq id lder'''
+    if t[3] == None:
+        t[0] = []
+    else:
+        t[0] = [t[3]]
+
 #Struct Exp
 def p_variable(t):
     '''expresion : exp_struct'''
@@ -539,10 +564,10 @@ def p_variable(t):
 
 def p_Expresion_Struct(t):
     '''exp_struct : exp_struct punto id'''
+    t[0] = Variable_Struct(t[1], t[3], t.lineno(3), col(t.slice[3]))
 
-
-def p_Expresion_Struct_lista(t):
-    '''exp_struct : exp_struct punto id number_array''' 
+# def p_Expresion_Struct_lista(t):
+    # '''exp_struct : exp_struct punto id number_array''' 
     
 
 def p_expresion_struct_id(t):
@@ -551,21 +576,21 @@ def p_expresion_struct_id(t):
 #Arrays
 #id array
 def p_expresion_array_id(t):
-    '''exp_struct : id number_array'''
-    t[0] = Variable_Array(t[1], t[2], t.lineno(1), col(t.slice[1]))
+    '''exp_struct : exp_struct number_array cder'''
+    t[0] = Variable_Array(t[1], t[2], t.lineno(3), col(t.slice[3]))
 #number array
 
 def p_expresion_id_content_unico(t):
-    '''number_array : cizq expresion cder'''
+    '''number_array : cizq expresion '''
     if t[2] == None:
         t[0] = []
     else:
         t[0] = [t[2]]
         
 def p_expresion_id_content(t):
-    '''number_array : number_array cizq expresion cder'''
-    if t[3] != None:
-        t[1].append(t[3])
+    '''number_array : number_array cder cizq expresion '''
+    if t[4] != None:
+        t[1].append(t[4])
     t[0] = t[1]
 
 #Expresion_Array
@@ -594,22 +619,22 @@ def p_coma_expresion_unico(t):
 
 def p_expresion_llamada(t):
     '''expresion : id pizq parametro_print pder'''
+    t[0] = LLAMADA_EXP(t[1], t[3], t.lineno(1), col(t.slice[1]))
 #nativas
 def p_nativa(t):
     '''expresion : r_parse pizq tipo coma expresion pder
                  | r_trunc pizq tipo coma expresion pder
                  '''
+    t[0] = Nativas(t.lineno(1), col(t.slice[6]), t[3], Tipos_Nativa(t[1].upper()),t[5])
 
     
-def p_length_expresion(t):
-    '''expresion : r_length pizq expresion pder'''
-
 def p_nativa_individual(t):
     '''expresion    : r_trunc pizq expresion pder
                     | r_float pizq expresion pder
                     | r_string pizq expresion pder
                     | r_uppercase pizq expresion pder
-                    | r_lowercase pizq expresion pder'''    
+                    | r_lowercase pizq expresion pder
+                    | r_length pizq expresion pder'''    
     t[0] = Nativas(t.lineno(1), col(t.slice[4]), t[3], Tipos_Nativa(t[1].upper()))  
 #Expresion Rango
 def p_expresion_rango(t):

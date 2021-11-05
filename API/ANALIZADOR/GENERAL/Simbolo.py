@@ -10,6 +10,7 @@ class Simbolo(object):
         self.in_Heap = in_Heap
         self.types = []
         self.auxiliar_type = None
+        self.struct_type = ""
         
     def getID(self):
         return self.id

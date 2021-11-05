@@ -67,8 +67,11 @@ class Aritmetica(Instruccion):
                                     generador.set_unused_temp(val2.value)
                                 ret = Retorno(temp, self.type, True)
                                 ret.valor = 0
-                                if val2.valor >0:
-                                    ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                                try:
+                                    if val2.valor >0:
+                                        ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                                except:
+                                    ret.valor = 0
                                 return ret
                             else:
                                 temp = generador.new_temporal()
@@ -78,7 +81,10 @@ class Aritmetica(Instruccion):
                                 if val2.is_temporal:
                                     generador.set_unused_temp(val2.value)
                                 ret = Retorno(temp, self.type, True)
-                                ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                                try:
+                                    ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                                except:
+                                    ret.valor = 0
                                 return ret
                         else:
                             
@@ -106,7 +112,10 @@ class Aritmetica(Instruccion):
                             generador.place_label(normal)
                             generador.return_evn(tabla.size)
                             ret = Retorno(temp3, self.type, True)
-                            ret.valor = math.pow(val1.valor, val2.valor)
+                            try:
+                                ret.valor = math.pow(val1.valor, val2.valor)
+                            except:
+                                ret.valor = 0
                             return ret
                             
                     else:
@@ -131,7 +140,10 @@ class Aritmetica(Instruccion):
                             generador.get_stack(temp2, 'P')
                             generador.return_evn(tabla.size)
                             ret = Retorno(temp2, self.type, True)
-                            ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                            try:
+                                ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                            except:
+                                ret.valor = ""
                             return ret
                         
                         
@@ -156,7 +168,10 @@ class Aritmetica(Instruccion):
                             generador.get_stack(temp3, 'P')
                             generador.return_evn(tabla.size)
                             ret = Retorno(temp3, self.type, True)
-                            ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                            try:
+                                ret.valor = eval(f'val1.valor {operation.value} val2.valor')
+                            except:
+                                ret.valor = 0
                             return ret
                 except:
                     return Error("Sintactico", f'No se pueden operar los tipos {self.val1.type.value} y el tipo {self.val2.type.value} con el operador {self.Operation.value}', self.row, self.column)
@@ -173,7 +188,10 @@ class Aritmetica(Instruccion):
                     if val1.is_temporal:
                         generador.set_unused_temp(val1.value)
                     ret = Retorno(temp, self.type, True)
-                    ret.valor = eval(f'{operation.value} val1.valor')
+                    try:
+                        ret.valor = eval(f'{operation.value} val1.valor')
+                    except:
+                        ret.valor = 0
                     return ret
                 except:
                     return Error("Sintactico","No se puede operar el negativo con el tipo "+self.val1.type.value, self.row, self.column)

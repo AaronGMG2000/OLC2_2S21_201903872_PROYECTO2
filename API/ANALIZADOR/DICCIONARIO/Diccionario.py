@@ -129,5 +129,5 @@ D_NATIVA = {
     'UPPERCASE-STRING':['valor.valor.upper()',Tipos.STRING],
     'LOWERCASE-STRING':['valor.valor.lower()',Tipos.STRING],
     
-    'LENGTH-ARREGLO':['hhh']
+    'LENGTH-ARREGLO':['0', Tipos.ENTERO]
 }

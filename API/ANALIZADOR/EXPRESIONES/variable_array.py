@@ -15,9 +15,9 @@ from ..GENERAL.Simbolo import Simbolo
 
 class Variable_Array(Instruccion):
 
-    def __init__(self, id, numbers:List, fila, columna):
+    def __init__(self, variable, numbers:List, fila, columna):
         super().__init__(Tipos.ARRAY, fila, columna)
-        self.id = id
+        self.variable = variable
         self.numbers:List = numbers
         self.types = []
         
@@ -25,27 +25,20 @@ class Variable_Array(Instruccion):
         genAux = Generador()
         generador = genAux.get_instance()
         if isinstance(generador, Generador):
-            valor = tabla.get_variable(self.id)
-            if  isinstance(valor, Simbolo):
-                if valor.type!= Tipos.ARRAY:
+            # valor = tabla.get_variable(self.id)
+            valor = self.variable.Ejecutar(arbol, tabla)
+            if  isinstance(valor, Retorno):
+                if self.variable.type != Tipos.ARRAY:
                     return Error("Sintactico","Se esperaba una variable tipo array", self.row, self.column)
                 generador.comment("Inicio de llamado de array")
                 a = 0
                 t_type = Tipos.ARRAY
                 types = []
                 aux = valor.types
-                temp = None
+                temp = valor.value
                 error = False
-                if tabla.previous == None:
-                    temp = valor.position
-                else:
-                    temp = generador.new_temporal()
-                    if len(arbol.function)>0:
-                        generador.place_operation(temp, 'P', valor.position-tabla.previous.size, '+')
-                    else:
-                        generador.place_operation(temp, 'P', valor.position,'+')
-                
                 exit = generador.new_label()
+                valor_nuevo = None
                 for x in self.numbers:
                     number = x.Ejecutar(arbol, tabla)
                     if isinstance(number,Error):
@@ -54,11 +47,18 @@ class Variable_Array(Instruccion):
                         return Error("Sintactico", "La posición de un array debe ser un valor Int64", self.row, self.column)
                     if (x.type == Tipos.RANGE and number.auxiliar_type!=Tipos.ENTERO):
                         return Error("Sintactico", "La posición de un array con un rango debe ser un valor Int64", self.row, self.column)
+                    if type(number.valor) == type(1) and type(valor.valor)==type([]):
+                        try:
+                            valor_nuevo = valor.valor[number.valor-1]
+                            valor.valor = valor.valor[number.valor-1]
+                        except:
+                            valor_nuevo = -1
                     if x.type!=Tipos.RANGE:
                         if a == 0:
                             aux = aux[0]
                         if a != len(self.numbers)-1 and type(aux)!=type([]):
                             return Error("Sintactico","Se esperaba un Array", self.row, self.column)
+                    
                     types = number.types
                     if type(aux)==type([]) and a > 0:
                         t_type = aux[0]
@@ -67,33 +67,41 @@ class Variable_Array(Instruccion):
                     aux = t_type
                     a +=1
                     #codigo para hacer el array#
+                    
                     if type(aux) == type([]):
                         types = aux
                     else:
                         types = None
-                    generador.set_unused_temp(temp)
                     if a == 1:
                         if number.type == Tipos.RANGE:  
-                            temp = self.get_position_array_range(number.value, temp, exit, True)
+                            temp = self.get_position_array_range(number.value, temp, exit, False)
                             types = aux
                         else:
-                            temp = self.get_position_array(number.value, temp, exit, True)
+                            temp = self.get_position_array(number.value, temp, exit, False)
                     else:
                         temp = self.get_position_array(number.value, temp, exit, False)
                     #fin de codigo para hacer array#
                 if type(t_type) != type([]):
                     self.type = t_type
+                    if type(t_type) == type(""):
+                        self.type = Tipos.OBJECT
+                        self.struct_type = t_type
                 if error:
                     self.type = Tipos.NOTHING
                 generador.place_label(exit)
                 generador.comment("Fin de llamado de array")
                 ret = Retorno(temp, self.type, True)
                 ret.types = types
+                ret.valor = valor_nuevo
                 self.types = types
-                ret.auxiliar_type = None
+                if self.type  == Tipos.OBJECT:
+                    ret.auxiliar_type = self.struct_type
+                else:
+                    ret.auxiliar_type = None
+                    self.struct_type = self.variable.struct_type
                 return ret
             else:
-                return Error("Sintactico","La variable indicada no existe", self.row, self.column)
+                return valor
                                           
     
     def get_position_array(self, num, valor, exit, in_stack):

@@ -22,6 +22,7 @@ class IF(Instruccion):
         self.elseif = elseif
         self.exit = ""
         self.new_tabla = None
+        self.els = False
 
     def Ejecutar(self, arbol: Arbol, tabla: Tabla):
         aux_tabla = {}
@@ -29,10 +30,14 @@ class IF(Instruccion):
             if isinstance(x, Simbolo):
                 nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
                 nuevo.value = x.value
+                nuevo.auxiliar_type = x.auxiliar_type
+                nuevo.types = x.types
+                nuevo.struct_type = x.struct_type
                 aux_tabla[x.id] = nuevo
         genAux = Generador()
         generador = genAux.get_instance()
         if self.elseif is not None:
+                self.elseif.els = self.els
                 res = self.elseif.Ejecutar(arbol, tabla)
                 if isinstance(res, Error): 
                     return res
@@ -51,7 +56,8 @@ class IF(Instruccion):
                     res = ins.Ejecutar(arbol, tabla)
                     if isinstance(res, Error):
                         arbol.errors.append(res)
-                generador.place_goto(self.exit)
+                if self.els:
+                    generador.place_goto(self.exit)
                 generador.place_label(condicion.false_tag)
                 if condicion.valor and self.new_tabla == None:
                     self.new_tabla = {}
@@ -59,11 +65,14 @@ class IF(Instruccion):
                         if isinstance(x, Simbolo):
                             nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)           
                             nuevo.value = x.value
+                            nuevo.auxiliar_type = x.auxiliar_type
+                            nuevo.types = x.types
+                            nuevo.struct_type = x.struct_type
                             self.new_tabla[x.id] = nuevo
             else:
                 return Error("Semantico","La condición de la función if debe ser un booleano",self.fila, self.columna)
         if self.new_tabla is not None:
-            tabla = self.new_tabla
+            tabla.variables = self.new_tabla
     def getNodo(self) -> NodoAST:
         nodo = NodoAST('IF')
         if self.elseif is None:

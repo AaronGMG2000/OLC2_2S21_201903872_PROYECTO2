@@ -46,8 +46,10 @@ class Relacional(Instruccion):
                             return val2
                         operation = D_Relacional[f'{self.val1.type.value}{self.Operation.value}{self.val2.type.value}']
                         temporal2 = generador.new_label()
-                        self.true_tag = generador.new_label()
-                        self.false_tag = generador.new_label()
+                        if self.true_tag == '':
+                            self.true_tag = generador.new_label()
+                        if self.false_tag == '':
+                            self.false_tag = generador.new_label()
                         generador.place_label(val2.true_tag)
                         generador.place_operation(t2, 1, '','')
                         generador.place_goto(temporal2)
@@ -58,18 +60,23 @@ class Relacional(Instruccion):
                         generador.place_goto(self.false_tag)
                         ret = Retorno(None, Tipos.BOOL, False, None, self.true_tag, self.false_tag)
                         ret.valor = eval(f'val1.valor {self.Operation.value} val2.valor')
-                        return 
+                        return ret
                     else:
                         val2 = self.val2.Ejecutar(arbol, tabla)
                         if isinstance(val2, Error):
                             return val2
                         operation = D_Relacional[f'{self.val1.type.value}{self.Operation.value}{self.val2.type.value}']
-                        self.true_tag = generador.new_label()
-                        self.false_tag = generador.new_label()
+                        if self.true_tag == '':
+                            self.true_tag = generador.new_label()
+                        if self.false_tag == '':
+                            self.false_tag = generador.new_label()
                         generador.place_if(val1.value, val2.value, self.Operation.value, self.true_tag)
                         generador.place_goto(self.false_tag)
                         ret = Retorno(None, Tipos.BOOL, False, None, self.true_tag, self.false_tag)
-                        ret.valor = eval(f'val1.valor {self.Operation.value} val2.valor')
+                        try:
+                            ret.valor = eval(f'val1.valor {self.Operation.value} val2.valor')
+                        except:
+                            ret.valor = True
                         return ret
                 else:
                     val2 = self.val2.Ejecutar(arbol, tabla)
@@ -88,13 +95,19 @@ class Relacional(Instruccion):
                     generador.call_function("compare_string")
                     ret = generador.new_temporal()
                     generador.get_stack(ret, 'P')
-                    self.true_tag = generador.new_label()
-                    self.false_tag = generador.new_label()
+                    if self.true_tag == '':
+                            self.true_tag = generador.new_label()
+                    if self.false_tag == '':
+                        self.false_tag = generador.new_label()
                     generador.return_evn(tabla.size)
                     generador.place_if(ret, 1, '==', self.true_tag)
                     generador.place_goto(self.false_tag)
                     ret = Retorno(None, Tipos.BOOL, False, None, self.true_tag, self.false_tag)
-                    ret.valor = eval(f'val1.valor {self.Operation.value} val2.valor')
+                    try:
+                        ret.valor = eval(f'val1.valor {self.Operation.value} val2.valor')
+                    except:
+                        ret.valor = True
                     return ret
-            except:
-                pass
+            except Exception as e:
+                print(e)
+                return Error("Sintactico","Error en la operación relacional", self.row, self.column)

@@ -42,6 +42,7 @@ class Variable(Instruccion):
                 ret.types = valor.types
                 self.types = valor.types
                 ret.auxiliar_type = valor.auxiliar_type
+                self.struct_type = valor.struct_type
                 return ret
             else:
                 return Error("Sintactico","La variable indicada no existe", self.row, self.column)

@@ -45,6 +45,7 @@ class Tipos_Nativa(Enum):
     FLOAT = 'FLOAT'
     STRING = 'STRING'
     # TYPEOF = 'TYPEOF'
+    LENGTH = 'LENGTH'
     UPPERCASE = 'UPPERCASE'
     LOWERCASE = 'LOWERCASE'
     # LOG10 = 'LOG10'

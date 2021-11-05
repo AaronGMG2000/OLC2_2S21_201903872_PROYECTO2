@@ -21,6 +21,7 @@ class CONDICION(Instruccion):
         self.InstrucionesElse = instrucionesElse
         self.exit = ""
         self.new_tabla = None
+        self.els = False
 
 
     def Ejecutar(self, arbol: Arbol, tabla: Tabla):
@@ -29,9 +30,16 @@ class CONDICION(Instruccion):
             if isinstance(x, Simbolo):
                 nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
                 nuevo.value = x.value
+                nuevo.value = x.value
+                nuevo.auxiliar_type = x.auxiliar_type
+                nuevo.types = x.types
+                nuevo.struct_type = x.struct_type
                 aux_tabla[x.id] = nuevo
         genAux = Generador()
         generador = genAux.get_instance()
+        if self.InstrucionesElse is not None:
+            self.funcion_if.els = True
+            self.els = True
         res = self.funcion_if.Ejecutar(arbol, tabla)
         if isinstance(res, Error): 
             generador.error_code()
@@ -51,8 +59,13 @@ class CONDICION(Instruccion):
                     if isinstance(x, Simbolo):
                         nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
                         nuevo.value = x.value
+                        nuevo.value = x.value
+                        nuevo.auxiliar_type = x.auxiliar_type
+                        nuevo.types = x.types
+                        nuevo.struct_type = x.struct_type
                         self.new_tabla[x.id] = nuevo
-        tabla.variables = self.new_tabla
+        if self.new_tabla is not None:
+            tabla.variables = self.new_tabla
         return True
                   
     def getNodo(self) -> NodoAST:

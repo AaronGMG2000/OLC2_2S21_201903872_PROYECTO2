@@ -46,7 +46,10 @@ class Logico(Instruccion):
                     return Error("Sintactico", "negación unicamente valida con valores booleanos",self.row, self.column)
                 self.type = Tipos.BOOL
                 op = "not"
-                resutl = eval(f'{op} val1.valor')
+                try:
+                    resutl = eval(f'{op} val1.valor')
+                except:
+                    resutl = True
                 val1.valor = resutl
                 return val1
             elif self.Operation == Logicas.AND:
@@ -64,6 +67,9 @@ class Logico(Instruccion):
                 return Error("Sintactico", "negación unicamente valida con valores booleanos",self.row, self.column)
             self.type = Tipos.BOOL
             ret = Retorno(None, Tipos.BOOL,False, None, self.true_tag, self.false_tag)
-            ret.valor = eval(f'val1.valor {op} val2.valor')
+            try:
+                ret.valor = eval(f'val1.valor {op} val2.valor')
+            except:
+                ret.valor = True
             return ret
             

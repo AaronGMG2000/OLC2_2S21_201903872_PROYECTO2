@@ -18,7 +18,7 @@ class Arbol(object):
     def ejecutar(self):
         instructions = NodoAST("INSTRUCCIONES")
         for inst in self.getInstrucciones():
-            res = inst.Ejecutar(self, self.getGlobal())
+            res = inst.Ejecutar(self, self.global_table)
             if isinstance(res, Error):
                 self.errors.append(res)
         #     try:
@@ -41,9 +41,6 @@ class Arbol(object):
     def updateconsole(self, update):
         self.console = f"{self.console}{update}"
 
-    def getGlobal(self):
-        return self.global_table
-    
     
     def graphAST(self):
         return self.getDot(self.root)

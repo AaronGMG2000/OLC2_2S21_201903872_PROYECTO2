@@ -31,7 +31,11 @@ class Asignar_Array(Instruccion):
                 if isinstance(valor, Error):
                     generador.error_code()
                     return valor
-                if self.expresion.type != self.required_type and self.required_type != None:
+                if type(self.required_type) == type([]):
+                    if self.expresion.types != self.required_type:
+                        generador.error_code()
+                        return Error("Sintactico", "tipo de Arreglo Invalido", self.row, self.column)
+                elif self.expresion.type != self.required_type and self.required_type != None:
                     generador.error_code()
                     return Error("Sintactico", "Se esperaba un valor tipo "+self.required_type.value+" y se obtuvo un valor tipo "+self.expresion.type.value, self.row, self.column)
                 self.type = self.expresion.type
@@ -99,6 +103,7 @@ class Asignar_Array(Instruccion):
                             #fin de codigo para hacer array#
                     generador.place_label(exit)
                     generador.comment("Fin de llamado de array")
+                variable.struct_type = self.expresion.struct_type
                 generador.set_anterior()
                 generador.comment("Terminando asignación de variable "+self.id)
                 

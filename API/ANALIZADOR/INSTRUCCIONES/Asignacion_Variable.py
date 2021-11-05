@@ -30,13 +30,26 @@ class Asignar_Variable(Instruccion):
                 if isinstance(valor, Error):
                     generador.error_code()
                     return valor
-                if self.expresion.type != self.required_type and self.required_type != None:
+                if type(self.required_type) == type([]):
+                    if self.expresion.types != self.required_type:
+                        generador.error_code()
+                        return Error("Sintactico", "tipo de Arreglo Invalido", self.row, self.column)
+                elif self.expresion.type != self.required_type and self.required_type != None:
                     generador.error_code()
                     return Error("Sintactico", "Se esperaba un valor tipo "+self.required_type.value+" y se obtuvo un valor tipo "+self.expresion.type.value, self.row, self.column)
                 self.type = self.expresion.type
                 if tabla.get_variable(self.id) == None:
                     if tabla.previous == None:
-                        generador.insert_stack(tabla.size, valor.value)
+                        if valor.type == Tipos.BOOL and not valor.is_temporal:
+                            exit = generador.new_label()
+                            generador.place_label(valor.true_tag)
+                            generador.insert_stack(tabla.size, 1)
+                            generador.place_goto(exit)
+                            generador.place_label(valor.false_tag)
+                            generador.insert_stack(tabla.size, 0)
+                            generador.place_label(exit)
+                        else:
+                            generador.insert_stack(tabla.size, valor.value)
                     else:
                         temp = generador.new_temporal()
                         generador.place_operation(temp, "P", tabla.size, '+')
@@ -50,11 +63,22 @@ class Asignar_Variable(Instruccion):
                     variable.aux_type = valor.auxiliar_type
                     if valor.is_temporal:
                         generador.set_unused_temp(valor.value)
+                    if self.type == Tipos.OBJECT:
+                        variable.struct_type = self.expresion.struct_type
                 else:
                     variable = tabla.get_variable(self.id)
                     if isinstance(variable, Simbolo):
                         if tabla.previous == None:
-                            generador.insert_stack(variable.position, valor.value)
+                            if valor.type == Tipos.BOOL and not valor.is_temporal:
+                                exit = generador.new_label()
+                                generador.place_label(valor.true_tag)
+                                generador.insert_stack(variable.position, 1)
+                                generador.place_goto(exit)
+                                generador.place_label(valor.false_tag)
+                                generador.insert_stack(variable.position, 0)
+                                generador.place_label(exit)
+                            else:
+                                generador.insert_stack(variable.position, valor.value)
                         else:
                             temp = generador.new_temporal()
                             generador.place_operation(temp, "P", variable.position, '+')
@@ -66,7 +90,8 @@ class Asignar_Variable(Instruccion):
                         variable.setValor(valor.valor)
                         if self.type == Tipos.ARRAY:
                             variable.types = self.expresion.types
-                        variable.aux_type = valor.auxiliar_type
+                        if self.type == Tipos.OBJECT:
+                            variable.struct_type = self.expresion.struct_type
                 generador.set_anterior()
                 generador.comment("Terminando asignación de variable "+self.id)
                 

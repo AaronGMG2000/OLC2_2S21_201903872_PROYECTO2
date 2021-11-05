@@ -8,3 +8,4 @@ class Retorno(object):
         self.false_tag = false_tag
         self.valor = ""
         self.types = []
+        self.valores = []
