@@ -1,12 +1,15 @@
 
+from ..ABSTRACT.Retorno import Retorno
 from ..GENERAL.error import Error
 from ..GENERAL.table import Tabla
 from ..ABSTRACT.NodoAST import NodoAST
+from ..GENERAL.generator import Generador
 import re
 import os
 class Arbol(object):
 
     def __init__(self, instructions):
+        
         self.instructions = instructions
         self.global_table = Tabla(None,"GLOBAL")
         self.errors = []
@@ -14,13 +17,22 @@ class Arbol(object):
         self.graph = ""
         self.function = []
         self.c = 0
+        self.PilaFunc = []
+        self.PilaCiclo = []
         
     def ejecutar(self):
+        genAux = Generador()
+        generador = genAux.get_instance()
         instructions = NodoAST("INSTRUCCIONES")
         for inst in self.getInstrucciones():
             res = inst.Ejecutar(self, self.global_table)
             if isinstance(res, Error):
                 self.errors.append(res)
+            if isinstance(res, Retorno):
+                generador.set_unused_temp(res.value)
+        print("final")
+        print(len(generador.use_temps))
+        print(len(generador.unused_temps))
         #     try:
         #         nodoInstruction = NodoAST("INSTRUCCION")
         #         nodoInstruction.agregarHijoNodo(inst.getNodo())

@@ -27,6 +27,7 @@ class Variable_Array(Instruccion):
         if isinstance(generador, Generador):
             # valor = tabla.get_variable(self.id)
             valor = self.variable.Ejecutar(arbol, tabla)
+            self.id = self.variable.id
             if  isinstance(valor, Retorno):
                 if self.variable.type != Tipos.ARRAY:
                     return Error("Sintactico","Se esperaba una variable tipo array", self.row, self.column)
@@ -81,6 +82,7 @@ class Variable_Array(Instruccion):
                     else:
                         temp = self.get_position_array(number.value, temp, exit, False)
                     #fin de codigo para hacer array#
+                    generador.set_unused_temp(number.value)
                 if type(t_type) != type([]):
                     self.type = t_type
                     if type(t_type) == type(""):

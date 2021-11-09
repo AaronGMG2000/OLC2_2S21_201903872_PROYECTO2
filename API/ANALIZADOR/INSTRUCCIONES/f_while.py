@@ -22,8 +22,8 @@ class WHILE(Instruccion):
         genAux = Generador()
         generador = genAux.get_instance()
         w = generador.new_label()
-        
         generador.place_label(w)
+        generador.in_ciclo = True
         condicion = self.expresion.Ejecutar(arbol, tabla)
         
         if isinstance(condicion, Error):
@@ -34,19 +34,28 @@ class WHILE(Instruccion):
             false_tag = condicion.false_tag
         else:
             generador.error_code()
+            generador.in_ciclo = False
             return Error("Sintactico", "Se esperaba un valor booleano en la expresion del while", self.fila, self.columna)
         if self.expresion.type == Tipos.BOOL:
             generador.place_label(true_tag)
             evaluado = True
             nuevo_entorno = Tabla(tabla, "WHILE")
+            arbol.PilaCiclo.append([w, false_tag])
+            generador.in_ciclo = False
             for inst in self.instruciones:
                 res = inst.Ejecutar(arbol, nuevo_entorno)
                 if isinstance(res, Error) and evaluado:
                     arbol.errors.append(res)
+                if isinstance(res, Retorno):
+                    generador.set_unused_temp(res.value)
             evaluado = False
+            generador.in_ciclo = True
             generador.place_goto(w)
             generador.place_label(false_tag)
             generador.set_anterior()
+            generador.set_unused_temp(condicion.value)
+            arbol.PilaCiclo.pop()
+            generador.in_ciclo = False
         else:
             return Error("Sintactico", "Se esperaba un valor booleano en la expresion del while", self.fila, self.columna)
                     

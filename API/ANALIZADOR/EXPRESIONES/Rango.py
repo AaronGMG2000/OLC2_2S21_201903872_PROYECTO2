@@ -50,4 +50,6 @@ class Rango(Instruccion):
             aux_type = Tipos.FLOAT
         else:
             aux_type = Tipos.ENTERO
+        generador.set_unused_temp(v1.value)
+        generador.set_unused_temp(v2.value)
         return Retorno(ret, self.type, True, aux_type)

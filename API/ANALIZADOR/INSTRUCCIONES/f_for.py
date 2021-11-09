@@ -29,6 +29,7 @@ class FOR(Instruccion):
         generador = genAux.get_instance()
         variable = tabla.get_variable(self.id)
         tip = None
+        generador.in_ciclo = True
         ciclo = self.expresion.Ejecutar(arbol, tabla)
         if isinstance(ciclo, Error):
             generador.error_code()
@@ -60,7 +61,6 @@ class FOR(Instruccion):
                 generador.get_heap(t1, ciclo.value)
                 generador.place_operation(ciclo.value, ciclo.value, 1, '+')
                 generador.get_heap(t2, ciclo.value)
-                generador.set_unused_temp(ciclo.value)
             elif self.expresion.type == Tipos.ENTERO or self.expresion.type == Tipos.FLOAT:
                 tip = self.expresion.type
                 t1 = generador.new_temporal()
@@ -69,6 +69,7 @@ class FOR(Instruccion):
                 generador.place_operation(t2, ciclo.value, '','')
             else:
                 generador.error_code()
+                generador.in_ciclo = False
                 return Error("Semantico","El for no puede efectuarse con el tipo "+str(self.expresion.tipo.value), self.fila, self.columna)
             nuevaTabla = Tabla(tabla, "FOR")
             var:Simbolo = None
@@ -82,7 +83,7 @@ class FOR(Instruccion):
                 var.auxiliar_type = variable.auxiliar_type
                 var.types = ciclo.types
             pos_temp = generador.new_temporal()
-            if len(arbol.function)>0:
+            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
                 generador.place_operation(pos_temp, 'P', var.position-tabla.previous.size, '+')
             else:
                 generador.place_operation(pos_temp, 'P', var.position, '+')
@@ -108,13 +109,22 @@ class FOR(Instruccion):
             else:
                 generador.place_if(t1, t2, '>', true_tag)
                 generador.insert_stack(pos_temp, t1)
-            
+            #######
+            suma = generador.new_label()
+            arbol.PilaCiclo.append([suma, true_tag])
+            #######
             #for-------------------------
+            generador.in_ciclo = False
             for ins in self.instruciones:
                 res = ins.Ejecutar(arbol, nuevaTabla)
                 if isinstance(res, Error):
                     arbol.errors.append(res)
+                if isinstance(res, Retorno):
+                    generador.set_unused_temp(res.value)
+            generador.in_ciclo = True
             ####
+            generador.place_goto(suma)
+            generador.place_label(suma)
             if types != None:
                 generador.place_operation(posicion, posicion, 1, '+')
                 generador.set_unused_temp(ciclo.value)
@@ -123,6 +133,7 @@ class FOR(Instruccion):
                 generador.set_unused_temp(posicion)
             elif aux != None:
                 generador.place_operation(t1, t1, 1, '+')
+                generador.set_unused_temp(ciclo.value)
                 generador.set_unused_temp(t1)
                 generador.set_unused_temp(t2)
             elif tip == Tipos.CHAR:
@@ -130,6 +141,7 @@ class FOR(Instruccion):
                 generador.set_unused_temp(ciclo.value)
             else:
                 generador.place_operation(t1, t1, 1, '+')
+                generador.set_unused_temp(ciclo.value)
                 generador.set_unused_temp(t1)
                 generador.set_unused_temp(t2)
             ###
@@ -137,6 +149,8 @@ class FOR(Instruccion):
             generador.place_goto(w)
             generador.place_label(true_tag)
             generador.set_anterior()
+            arbol.PilaCiclo.pop()
+            generador.in_ciclo = False
             return True
         
     def getNodo(self) -> NodoAST:

@@ -17,6 +17,7 @@ class Imprimir(Instruccion):
         super().__init__(Tipos.STRING, fila, columna)
         self.expresion = expresion
         self.println = println
+        self.c = 0
         
     def Ejecutar(self, arbol: Arbol, tabla: Tabla):
         for exp in self.expresion:
@@ -65,17 +66,21 @@ class Imprimir(Instruccion):
                     elif retorno.type == Tipos.STRING:
                         generador.F_print()
                         temp = generador.new_temporal()
-                        generador.place_operation(temp, "P",tabla.size,"+")
+                        generador.set_unused_temp(retorno.value)
+                        generador.set_unused_temp(temp)
+                        
+                        generador.temporary_storage()
+                        if tabla.previous is None or tabla.previous == arbol.global_table and not generador.in_function:
+                            generador.place_operation(temp, "P",tabla.size,"+")
+                        else:
+                            generador.place_operation(temp, "P",tabla.size-tabla.previous.size,"+")
                         generador.place_operation(temp, temp,"1","+")
                         generador.insert_stack(temp, retorno.value)
-                        generador.set_unused_temp(retorno.value)
-                        generador.new_env(tabla.size)
+                        
+                        generador.new_env(tabla.size, tabla.previous)
                         generador.call_function("F_print")
-                        temp3 = generador.new_temporal()
-                        generador.get_stack(temp3, 'P')
-                        generador.return_evn(tabla.size)
-                        generador.set_unused_temp(temp)
-                        generador.set_unused_temp(temp3)
+                        generador.return_evn(tabla.size, tabla.previous)
+                        generador.take_temporary()
                         continue
                     elif retorno.type == Tipos.RANGE:
                         aux = retorno.auxiliar_type
@@ -106,27 +111,62 @@ class Imprimir(Instruccion):
                             generador.next_heap()
                         generador.insert_heap('H',-1)
                         generador.next_heap()
+                        
                         temp2 = generador.new_temporal()
-                        generador.place_operation(temp2, 'P', tabla.size, '+')
-                        generador.place_operation(temp2, temp2, 1, '+')
-                        generador.insert_stack(temp2, temp)
-                        generador.new_env(tabla.size)
-                        generador.call_function("F_print")
-                        generador.return_evn(tabla.size)
                         generador.set_unused_temp(temp)
                         generador.set_unused_temp(temp2)
-                    elif type(retorno.type) == type(""):
-                        self.print_object(retorno.valor, retorno.value, tabla)
-                    elif retorno.type == Tipos.OBJECT:
-                        self.print_object(retorno.valor, retorno.value, tabla)
-                    if retorno.is_temporal:
                         generador.set_unused_temp(retorno.value)
+                        
+                        generador.temporary_storage()
+                        if tabla.previous is None or tabla.previous == arbol.global_table and not generador.in_function:
+                            generador.place_operation(temp2, "P",tabla.size,"+")
+                        else:
+                            generador.place_operation(temp2, "P",tabla.size-tabla.previous.size,"+")
+                        generador.place_operation(temp2, temp2, 1, '+')
+                        generador.insert_stack(temp2, temp)
+                        
+                        generador.new_env(tabla.size, tabla.previous)
+                        generador.call_function("F_print")
+                        generador.return_evn(tabla.size, tabla.previous)
+                        generador.take_temporary()
+                        continue
+                    
+                    elif type(retorno.type) == type(""):
+                        if type[retorno.valor]== type({}):
+                            self.print_object(retorno.valor, retorno.value, tabla)
+                        else:
+                            struct = tabla.get_variable(retorno.type)
+                            true_tag = generador.new_label()
+                            exit = generador.new_label()
+                            generador.place_if(retorno.value, -1, '==', true_tag)
+                            self.print_object(struct.value, retorno.value, tabla)
+                            generador.place_goto(exit)
+                            generador.place_label(true_tag)
+                            generador.nothing()
+                            generador.place_label(exit)
+                    elif retorno.type == Tipos.OBJECT:
+                        if type[retorno.valor]== type({}):
+                            self.print_object(retorno.valor, retorno.value, tabla, True)
+                        else:
+                            struct = tabla.get_variable(exp.struct_type)
+                            generador.comment("**STRUCT")
+                            true_tag = generador.new_label()
+                            exit = generador.new_label()
+                            generador.place_if(retorno.value, -1, '==', true_tag)
+                            self.print_object(struct.value, retorno.value, tabla, True)
+                            generador.place_goto(exit)
+                            generador.place_label(true_tag)
+                            generador.nothing()
+                            generador.place_label(exit)
+                            generador.comment("**STRUCT")
+                    generador.set_unused_temp(retorno.value)
         genAux = Generador()
         generador = genAux.get_instance()             
         if self.println:
             if isinstance(generador, Generador):
                 generador.place_print('c',ord('\n'))
         generador.set_anterior()              
+        self.c = 0
     
     def array(self, retorno, tabla):
         genAux = Generador()
@@ -159,6 +199,7 @@ class Imprimir(Instruccion):
         else:
             if tipo == Tipos.OBJECT or type(tipo) == type(""):
                 struct = tabla.get_variable(tipo)
+                
                 if isinstance(struct, Simbolo):
                     temp2 = generador.new_temporal()
                     generador.get_heap(temp2, comp)
@@ -247,18 +288,23 @@ class Imprimir(Instruccion):
             heap = generador.new_temporal()
             generador.get_heap(heap, variable)
             generador.F_print()
+            
             temp = generador.new_temporal()
-            generador.place_operation(temp, "P",tabla.size,"+")
+            generador.set_unused_temp(heap)
+            generador.set_unused_temp(temp)
+            
+            generador.temporary_storage()
+            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
+                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
+            else:
+                generador.place_operation(temp, 'P',tabla.size,'+')
             generador.place_operation(temp, temp,"1","+")
             generador.insert_stack(temp, heap)
-            generador.set_unused_temp(heap)
-            generador.new_env(tabla.size)
+            
+            generador.new_env(tabla.size, tabla.previous)
             generador.call_function("F_print")
-            temp3 = generador.new_temporal()
-            generador.get_stack(temp3, 'P')
-            generador.return_evn(tabla.size)
-            generador.set_unused_temp(temp)
-            generador.set_unused_temp(temp3)
+            generador.return_evn(tabla.size, tabla.previous)
+            generador.take_temporary()
             generador.place_print('c', 34)
             if condicion:
                 generador.place_print('c', 44)
@@ -299,7 +345,7 @@ class Imprimir(Instruccion):
         elif x == Tipos.NOTHING:
             generador.nothing()
     
-    def print_object(self, struct, retorno, tabla, array = False):
+    def print_object(self, struct, retorno, tabla, array = True):
         genAux = Generador()
         generador = genAux.get_instance()
         dic:Dict = struct
@@ -322,17 +368,22 @@ class Imprimir(Instruccion):
                         generador.place_operation(temp, retorno, lista[3], '+')
                         self.print_primitive(Tipos.NOTHING, temp,  False, tabla)
                 else:
-                    generador.place_operation(temp, retorno, lista[3], '+')
-                    generador.get_heap(temp, temp)
                     true_tag = None
                     exit = None
                     if array:
                         exit = generador.new_label()
                         true_tag = generador.new_label()
+                        generador.place_operation(temp, retorno, lista[3], '+')
+                        generador.get_heap(temp, temp)
                         generador.place_if(temp, -1, '==', true_tag)
-                        self.print_object(struct, temp, tabla)
+                        if self.c < 5:
+                            self.c+=1
+                            struct2 = tabla.get_variable(struct[key][1])
+                            self.print_object(struct2.value, temp, tabla, array)
                         generador.place_goto(exit)
                         generador.place_label(true_tag)
+                        if a >= len(dic.keys())-2:
+                            generador.place_print('c', ord(","))
                         generador.nothing()
                         generador.place_label(exit)
                     else:
@@ -348,6 +399,8 @@ class Imprimir(Instruccion):
                         self.array(ret, tabla)
                     else:
                         self.print_primitive(lista[0], temp,  True, tabla)
+                    # generador.place_operation(temp, temp, 1, '+')
+                    # generador.get_heap(retorno, temp)
                 else:
                     generador.place_operation(temp, retorno, lista[3], '+')
                     if type(lista[2]) == type([]):
@@ -357,6 +410,8 @@ class Imprimir(Instruccion):
                         self.array(ret, tabla)
                     else:
                         self.print_primitive(lista[0], temp,  False, tabla)
+                    # generador.place_operation(temp, temp, 1, '+')
+                    # generador.get_heap(retorno, temp)
             a = a + 1
         generador.place_print('c', ord(')'))
         generador.set_unused_temp(temp)

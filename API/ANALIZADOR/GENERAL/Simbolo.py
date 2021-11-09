@@ -11,6 +11,8 @@ class Simbolo(object):
         self.types = []
         self.auxiliar_type = None
         self.struct_type = ""
+        self.ret_flag = [False, -1]
+        self.retorno = ""
         
     def getID(self):
         return self.id

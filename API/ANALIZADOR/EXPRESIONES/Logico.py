@@ -71,5 +71,9 @@ class Logico(Instruccion):
                 ret.valor = eval(f'val1.valor {op} val2.valor')
             except:
                 ret.valor = True
+            if val1.is_temporal:
+                generador.set_unused_temp(val1.value)
+            if val2.is_temporal:
+                generador.set_unused_temp(val2.value)
             return ret
             

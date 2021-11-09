@@ -26,34 +26,44 @@ class CONDICION(Instruccion):
 
     def Ejecutar(self, arbol: Arbol, tabla: Tabla):
         aux_tabla = {}
-        for x in list(tabla.variables.values()):
-            if isinstance(x, Simbolo):
-                nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
-                nuevo.value = x.value
-                nuevo.value = x.value
-                nuevo.auxiliar_type = x.auxiliar_type
-                nuevo.types = x.types
-                nuevo.struct_type = x.struct_type
-                aux_tabla[x.id] = nuevo
         genAux = Generador()
         generador = genAux.get_instance()
+        if not generador.in_function:
+            for x in list(tabla.variables.values()):
+                if isinstance(x, Simbolo):
+                    nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
+                    nuevo.value = x.value
+                    nuevo.value = x.value
+                    nuevo.auxiliar_type = x.auxiliar_type
+                    nuevo.types = x.types
+                    nuevo.struct_type = x.struct_type
+                    aux_tabla[x.id] = nuevo
+            
         if self.InstrucionesElse is not None:
             self.funcion_if.els = True
             self.els = True
+        
         res = self.funcion_if.Ejecutar(arbol, tabla)
         if isinstance(res, Error): 
             generador.error_code()
             return res
+        if isinstance(res, Retorno):
+            generador.set_unused_temp(res)
+        
         self.new_tabla = self.funcion_if.new_tabla
-        self.exit = self.funcion_if.exit        
-        tabla.variables = aux_tabla
+        self.exit = self.funcion_if.exit
+        if not generador.in_function:        
+            tabla.variables = aux_tabla
         if self.InstrucionesElse is not None:
             for ins in self.InstrucionesElse:
                 res = ins.Ejecutar(arbol, tabla)
                 if isinstance(res, Error):
+                    generador.error_code()
                     arbol.errors.append(res)
+                if isinstance(res, Retorno):
+                    generador.set_unused_temp(res.value)
             generador.place_label(self.exit)
-            if self.new_tabla == None:
+            if self.new_tabla == None and not generador.in_function:
                 self.new_tabla = {}
                 for x in list(tabla.variables.values()):
                     if isinstance(x, Simbolo):
@@ -64,8 +74,11 @@ class CONDICION(Instruccion):
                         nuevo.types = x.types
                         nuevo.struct_type = x.struct_type
                         self.new_tabla[x.id] = nuevo
-        if self.new_tabla is not None:
+        if self.new_tabla is not None and not generador.in_function:
             tabla.variables = self.new_tabla
+        generador.set_anterior()
+        if isinstance(res, Simbolo):
+            generador.set_unused_temp(res.value)
         return True
                   
     def getNodo(self) -> NodoAST:

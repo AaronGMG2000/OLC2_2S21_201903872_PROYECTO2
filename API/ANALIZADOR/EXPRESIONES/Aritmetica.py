@@ -90,27 +90,29 @@ class Aritmetica(Instruccion):
                             
                             generador.potencia()
                             temp = generador.new_temporal()
-                            generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.set_unused_temp(val1.value)
+                            generador.set_unused_temp(val2.value)
+                            generador.set_unused_temp(temp)
+                            generador.temporary_storage()
+                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
+                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
+                            else:
+                                generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val2.value)
-                            #liberamos temporales
-                            if val1.is_temporal:
-                                    generador.set_unused_temp(val1.value)
-                            if val2.is_temporal:
-                                generador.set_unused_temp(val2.value)
-                            generador.set_unused_temp(temp)
-                            #terminamos de liberar temporales
-                            generador.new_env(tabla.size)
+                            generador.new_env(tabla.size, tabla.previous)
                             generador.call_function("potencia")
+                            
                             temp3 = generador.new_temporal()
                             generador.get_stack(temp3, 'P')
                             normal = generador.new_label()
                             generador.place_if(val2.value, 0, '>=',normal)
                             generador.place_operation(temp3, 1, temp3, '/')
                             generador.place_label(normal)
-                            generador.return_evn(tabla.size)
+                            generador.return_evn(tabla.size, tabla.previous)
+                            generador.take_temporary()
                             ret = Retorno(temp3, self.type, True)
                             try:
                                 ret.valor = math.pow(val1.valor, val2.valor)
@@ -122,11 +124,6 @@ class Aritmetica(Instruccion):
                         if operation == Aritmeticos.SUMA:
                             generador.concat_string()
                             temp = generador.new_temporal()
-                            generador.place_operation(temp, 'P',tabla.size,'+')
-                            generador.place_operation(temp, temp,1,'+')
-                            generador.insert_stack(temp, val1.value)
-                            generador.place_operation(temp, temp,1,'+')
-                            generador.insert_stack(temp, val2.value)
                             #liberamos los temporales
                             if val1.is_temporal:
                                 generador.set_unused_temp(val1.value)
@@ -134,11 +131,21 @@ class Aritmetica(Instruccion):
                                 generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
                             #teminamos de liberar temporales
-                            generador.new_env(tabla.size)
+                            generador.temporary_storage()
+                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
+                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
+                            else:
+                                generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.place_operation(temp, temp,1,'+')
+                            generador.insert_stack(temp, val1.value)
+                            generador.place_operation(temp, temp,1,'+')
+                            generador.insert_stack(temp, val2.value)
+                            generador.new_env(tabla.size, tabla.previous)
                             generador.call_function("concat_string")
                             temp2 = generador.new_temporal()
                             generador.get_stack(temp2, 'P')
-                            generador.return_evn(tabla.size)
+                            generador.return_evn(tabla.size, tabla.previous)
+                            generador.take_temporary()
                             ret = Retorno(temp2, self.type, True)
                             try:
                                 ret.valor = eval(f'val1.valor {operation.value} val2.valor')
@@ -150,23 +157,28 @@ class Aritmetica(Instruccion):
                         if self.Operation == Aritmeticos.POTENCIA:
                             generador.mult_string()
                             temp = generador.new_temporal()
-                            generador.place_operation(temp, 'P',tabla.size,'+')
-                            generador.place_operation(temp, temp,1,'+')
-                            generador.insert_stack(temp, val1.value)
-                            generador.place_operation(temp, temp,1,'+')
-                            generador.insert_stack(temp, val2.value)
                             #liberamos temporales
                             if val1.is_temporal:
-                                    generador.set_unused_temp(val1.value)
+                                generador.set_unused_temp(val1.value)
                             if val2.is_temporal:
                                 generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
                             #terminamos de liberar temporales
-                            generador.new_env(tabla.size)
+                            generador.temporary_storage()
+                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
+                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
+                            else:
+                                generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.place_operation(temp, temp,1,'+')
+                            generador.insert_stack(temp, val1.value)
+                            generador.place_operation(temp, temp,1,'+')
+                            generador.insert_stack(temp, val2.value)
+                            generador.new_env(tabla.size, tabla.previous)
                             generador.call_function("mult_string")
                             temp3 = generador.new_temporal()
                             generador.get_stack(temp3, 'P')
-                            generador.return_evn(tabla.size)
+                            generador.return_evn(tabla.size, tabla.previous)
+                            generador.take_temporary()
                             ret = Retorno(temp3, self.type, True)
                             try:
                                 ret.valor = eval(f'val1.valor {operation.value} val2.valor')

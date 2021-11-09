@@ -26,40 +26,53 @@ class IF(Instruccion):
 
     def Ejecutar(self, arbol: Arbol, tabla: Tabla):
         aux_tabla = {}
-        for x in list(tabla.variables.values()):
-            if isinstance(x, Simbolo):
-                nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
-                nuevo.value = x.value
-                nuevo.auxiliar_type = x.auxiliar_type
-                nuevo.types = x.types
-                nuevo.struct_type = x.struct_type
-                aux_tabla[x.id] = nuevo
         genAux = Generador()
         generador = genAux.get_instance()
+        
+        if not generador.in_function:
+            for x in list(tabla.variables.values()):
+                if isinstance(x, Simbolo):
+                    nuevo = Simbolo(x.id, x.type, x.position, x.is_global, x.in_Heap)
+                    nuevo.value = x.value
+                    nuevo.auxiliar_type = x.auxiliar_type
+                    nuevo.types = x.types
+                    nuevo.struct_type = x.struct_type
+                    aux_tabla[x.id] = nuevo
+        
         if self.elseif is not None:
                 self.elseif.els = self.els
                 res = self.elseif.Ejecutar(arbol, tabla)
-                if isinstance(res, Error): 
+                if isinstance(res, Error):
+                    generador.error_code() 
                     return res
+                if isinstance(res, Retorno):
+                    generador.set_unused_temp(res.value)
                 self.exit = self.elseif.exit
         
-        tabla.variables = aux_tabla
+        if not generador.in_function:
+            tabla.variables = aux_tabla
         condicion = self.ExpresionIf.Ejecutar(arbol, tabla)
-        if isinstance(condicion, Error): 
-            return condicion     
+        if isinstance(condicion, Error):
+            generador.error_code() 
+            return condicion 
         if isinstance(condicion, Retorno):
             if self.ExpresionIf.type == Tipos.BOOL:
                 if self.exit == "":
                     self.exit = generador.new_label()
                 generador.place_label(condicion.true_tag)
+                generador.set_anterior()    
                 for ins in self.InstrucionesIf:
                     res = ins.Ejecutar(arbol, tabla)
                     if isinstance(res, Error):
+                        generador.error_code()
                         arbol.errors.append(res)
+                    if isinstance(res, Retorno):
+                        generador.set_unused_temp(res.value)
                 if self.els:
                     generador.place_goto(self.exit)
                 generador.place_label(condicion.false_tag)
-                if condicion.valor and self.new_tabla == None:
+                generador.set_unused_temp(condicion.value)
+                if condicion.valor and self.new_tabla == None and not generador.in_function:
                     self.new_tabla = {}
                     for x in list(tabla.variables.values()):
                         if isinstance(x, Simbolo):
@@ -70,9 +83,14 @@ class IF(Instruccion):
                             nuevo.struct_type = x.struct_type
                             self.new_tabla[x.id] = nuevo
             else:
+                generador.error_code()
                 return Error("Semantico","La condición de la función if debe ser un booleano",self.fila, self.columna)
-        if self.new_tabla is not None:
+        if self.new_tabla is not None and not generador.in_function:
             tabla.variables = self.new_tabla
+        
+        generador.set_anterior()
+        
+        
     def getNodo(self) -> NodoAST:
         nodo = NodoAST('IF')
         if self.elseif is None:

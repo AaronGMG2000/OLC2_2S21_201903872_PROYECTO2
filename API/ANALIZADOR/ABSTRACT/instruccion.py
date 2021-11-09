@@ -15,6 +15,8 @@ class Instruccion(ABC):
         self.true_tag = ""
         self.types = []
         self.struct_type = ""
+        self.id = ""
+        self.id_superior = ""
         super().__init__()
 
     @abstractmethod

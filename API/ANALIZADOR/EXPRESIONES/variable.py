@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from ..GENERAL.generator import Generador
@@ -24,17 +25,34 @@ class Variable(Instruccion):
         if isinstance(generador, Generador):
             valor = tabla.get_variable(self.id)
             if  isinstance(valor, Simbolo):
+                temp_stack = generador.new_temporal()
                 self.type = valor.type
-                if tabla.previous == None:
-                    temp_stack = generador.new_temporal()
+                if tabla.previous == None or valor.is_global:
                     generador.get_stack(temp_stack, valor.position)
                 else:
                     temp = generador.new_temporal()
-                    if len(arbol.function)>0:
-                        generador.place_operation(temp, 'P', valor.position-tabla.previous.size, '+')
+                    if generador.in_function:
+                        anterio = tabla
+                        if tabla.name == "WHILE" or tabla.name == "FOR":
+                            while (anterio.name == "WHILE" or anterio.name == "FOR"):
+                                anterio = anterio.previous
+                        resta = anterio.previous.size + generador.count_save
+                        resta = valor.position- resta
+                        if resta < 0 and generador.count_save == 0:
+                            resta = 0
+                        if resta < 0:
+                            generador.place_operation(temp, 'P', resta, '')
+                        else:
+                            generador.place_operation(temp, 'P', resta, '+')
                     else:
-                        generador.place_operation(temp, 'P', valor.position,'+')
-                    temp_stack = generador.new_temporal()
+                        if tabla.previous == arbol.global_table:
+                            generador.place_operation(temp, 'P', valor.position,'+')
+                        else:
+                            resta = valor.position - generador.count_save
+                            if resta < 0:
+                                generador.place_operation(temp, 'P', resta,'')
+                            else:
+                                generador.place_operation(temp, 'P', resta,'+')
                     generador.get_stack(temp_stack, temp)
                     generador.set_unused_temp(temp)
                 ret = Retorno(temp_stack, self.type, True)

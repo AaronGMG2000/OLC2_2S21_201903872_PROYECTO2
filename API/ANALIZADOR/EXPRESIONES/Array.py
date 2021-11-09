@@ -62,6 +62,7 @@ class ARRAY(Instruccion):
                 generador.insert_heap(temp2, 0)
                 generador.place_label(aux)
             generador.place_operation(temp2, temp2, 1, '+')
+            generador.set_unused_temp(res.value)
         generador.set_unused_temp(temp2)
         self.type = Tipos.ARRAY
         ret = Retorno(temp, Tipos.ARRAY, True, t_type)

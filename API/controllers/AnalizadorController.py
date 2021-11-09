@@ -10,7 +10,6 @@ router = APIRouter()
 
 @router.post('/Compilar')
 async def analysis(req: RequestModel):
-    try:
         sys.setrecursionlimit(10**6)
         h = gramatica.parse(req.Contenido)
         genAux = Generador()
@@ -21,8 +20,6 @@ async def analysis(req: RequestModel):
         consola = generador.get_code()
         gramatica.start = ""
         return {"consola": consola, "Simbolo": [], "Errores": ast.errors, "AST": ""}
-    except Exception as e:
-        return {"error": str(e)}
     
 @router.get('/Prueba')
 async def analysis():

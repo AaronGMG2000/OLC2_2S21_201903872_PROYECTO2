@@ -214,6 +214,8 @@ from .GENERAL.error import Error
 from .INSTRUCCIONES.f_for import FOR
 from .INSTRUCCIONES.f_while import WHILE
 from .INSTRUCCIONES.struct import STRUCT
+from .INSTRUCCIONES.Asignacion_Object import Asignar_Objeto
+from .INSTRUCCIONES.funcion import FUNCION
 from .INSTRUCCIONES.print import Imprimir
 from .INSTRUCCIONES.Asignar_Array import Asignar_Array
 from .INSTRUCCIONES.Asignacion_Variable import Asignar_Variable
@@ -226,6 +228,9 @@ from .EXPRESIONES.Aritmetica import Aritmetica
 from .EXPRESIONES.Nativa import Nativas
 from .EXPRESIONES.Rango import Rango
 from .INSTRUCCIONES.IF import IF
+from .INSTRUCCIONES.f_break import BREAK
+from .INSTRUCCIONES.f_continue import CONTINUE
+from .INSTRUCCIONES.f_return import RETURN
 from .INSTRUCCIONES.condicion import CONDICION
 from .EXPRESIONES.variable_struct import Variable_Struct
 from .EXPRESIONES.Array import ARRAY
@@ -329,16 +334,19 @@ def p_condicional(t):
  
 def p_break(t):
     '''BREAKk : r_break'''
-
+    t[0] = BREAK(t.lineno(1), col(t.slice[1])) 
+    
 def p_continue(t):
     '''CONTINUEE : r_continue'''
-
+    t[0] = CONTINUE(t.lineno(1), col(t.slice[1])) 
+    
 def p_return(t):
     '''RETURNN : r_return'''
-
+    t[0] = RETURN(t.lineno(1), col(t.slice[1])) 
+    
 def p_return_expresion(t):
     '''RETURNN : r_return expresion'''
-
+    t[0] = RETURN(t.lineno(1), col(t.slice[1]), t[2])
   
 
 
@@ -369,55 +377,50 @@ def p_asignacionTipo_id(t):
 
 #ASIGNACION ARRAY
 #Arrays
-def p_asignacion_array_struct(t):
-    '''array : id number_array lista_id igualT expresion'''
+# def p_asignacion_array_struct(t):
+    # '''array : id number_array lista_id igualT expresion'''
 
 def p_asignacion_array(t):
-    '''array : id number_array cder igualT expresion'''
-    t[0] = Asignar_Array(t[1], t[2], t[5], t.lineno(1), col(t.slice[1]))
+    '''array : exp_struct number_array cder igualT expresion'''
+    t[0] = Asignar_Array(t[1], t[2], t[5], t.lineno(3), col(t.slice[3]))
     
 #Asignacion STRUCT
 def p_asignacion_STRUCT_variable(t):
-    '''asignacion : id lista_id igualT expresion'''
-
-def p_lista_id(t):
-    '''lista_id : lista_id punto id'''
-    if t[3] != None:
-        t[1].append([t[3], None])
-    t[0] = t[1]
+    '''asignacion : exp_struct punto id igualT expresion'''
+    t[0] = Asignar_Objeto(t[1], t[3], t[5], t.lineno(3), col(t.slice[3]))
     
-def p_lista_id_array(t):
-    '''lista_id : lista_id punto id number_array'''
-    if t[3] != None:
-        t[1].append([t[3], t[4]])
-    t[0] = t[1]
-    
-def p_lista_id_u(t):
-    '''lista_id : punto id'''
-    if t[2] == None:
-        t[0] = []
-    else:
-        t[0] = [[t[2], None]]
-
-def p_lista_id_u_lista(t):
-    '''lista_id : punto id number_array'''
-    if t[2] == None:
-        t[0] = []
-    else:
-        t[0] = [[t[2], t[3]]]
-        
 def p_llamada(t):
     '''llamada : id pizq parametro_print pder '''
     t[0] = LLAMADA_EXP(t[1], t[3], t.lineno(1), col(t.slice[1]))
 def p_llamada_Solo(t):
     '''llamada : id pizq pder '''
+    t[0] = LLAMADA_EXP(t[1], [], t.lineno(1), col(t.slice[1]))
 #function
 
 def p_function(t):
     '''funtionn : r_function id pizq pder instrucciones'''
-
+    t[0] = FUNCION(t[2],t[5], t.lineno(1), col(t.slice[1]))
+    
 def p_function_parametro(t):
     '''funtionn : r_function id pizq parametros_function pder instrucciones'''
+    t[0] = FUNCION(t[2],t[6], t.lineno(1), col(t.slice[1]), t[4])
+    
+def p_function_type(t):
+    '''funtionn : r_function id pizq pder dospuntos dospuntos tipo instrucciones '''
+    t[0] = FUNCION(t[2],t[8], t.lineno(1), col(t.slice[1]), [], t[7])
+    
+def p_function_parametro_type(t):
+    '''funtionn : r_function id pizq parametros_function pder dospuntos dospuntos tipo instrucciones '''
+    t[0] = FUNCION(t[2],t[9], t.lineno(1), col(t.slice[1]), t[4], t[8])
+
+def p_function_type_struct(t):
+    '''funtionn : r_function id pizq pder dospuntos dospuntos id instrucciones '''
+    t[0] = FUNCION(t[2],t[8], t.lineno(1), col(t.slice[1]), [], t[7])
+    
+def p_function_parametro_type_struct(t):
+    '''funtionn : r_function id pizq parametros_function pder dospuntos dospuntos id instrucciones '''
+    t[0] = FUNCION(t[2],t[9], t.lineno(1), col(t.slice[1]), t[4], t[8])
+    
     
 def p_parametros_function(t):
     '''parametros_function : parametros_function coma id'''
@@ -429,12 +432,6 @@ def p_parametros_function2(t):
     '''parametros_function : parametros_function coma id dospuntos dospuntos tipo'''
     if t[3] != None:
         t[1].append([t[3], t[6]])
-    t[0] = t[1]
-    
-def p_parametros_function2_id(t):
-    '''parametros_function : parametros_function coma id dospuntos dospuntos id'''
-    if t[3] != None:
-        t[1].append([t[3], Tipos.OBJECT])
     t[0] = t[1]
     
 def p_parametros_function_unico(t):
@@ -456,7 +453,13 @@ def p_parametros_function_tipo_id(t):
     if t[1] == None:
         t[0] = []
     else:
-        t[0] = [[t[1], Tipos.OBJECT]]
+        t[0] = [[t[1], t[4]]]
+    
+def p_parametros_function2_id(t):
+    '''parametros_function : parametros_function coma id dospuntos dospuntos id'''
+    if t[3] != None:
+        t[1].append([t[3], t[6]])
+    t[0] = t[1]
 
 #Structs
 
@@ -466,7 +469,7 @@ def p_struct(t):
     
 def p_mutable_struct(t):
     '''struct : r_mutable r_struct id parametros_struct r_end'''
-    t[0] = STRUCT(t[2], t[3], t.lineno(1), col(t.slice[2]))
+    t[0] = STRUCT(t[3], t[4], t.lineno(1), col(t.slice[2]), True)
     
 def p_parametros_struct(t):
     '''parametros_struct : parametros_struct parametro_struct'''

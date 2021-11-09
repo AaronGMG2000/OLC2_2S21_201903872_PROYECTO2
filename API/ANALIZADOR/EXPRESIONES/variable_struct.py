@@ -10,7 +10,7 @@ from ..GENERAL.table import Tabla
 from ..GENERAL.Tipo import Tipos
 from ..GENERAL.error import Error
 from ..GENERAL.Simbolo import Simbolo
-
+from ..EXPRESIONES.variable import Variable
 class Variable_Struct(Instruccion):
 
     def __init__(self, variable, id, fila, columna):
@@ -22,11 +22,16 @@ class Variable_Struct(Instruccion):
         genAux = Generador()
         generador = genAux.get_instance()
         if isinstance(generador, Generador):
+            self.variable.id_superior = self.id
             valor:Retorno = self.variable.Ejecutar(arbol, tabla)
+            
             if  isinstance(valor, Retorno):
-                if self.variable.type != Tipos.OBJECT:
+                if self.variable.type != Tipos.OBJECT and type(self.variable.type) != type("") :
                     return Error("Sintactico", "Se esperaba una variable tipo Struct", self.row, self.column)
-                dic:Simbolo = tabla.get_variable(self.variable.struct_type)
+                if type(self.variable.type) == type(""):
+                    dic:Simbolo = tabla.get_variable(self.variable.type)
+                else:
+                    dic:Simbolo = tabla.get_variable(self.variable.struct_type)
                 dic:Dict = dic.value
                 try:
                     array = dic[self.id]
@@ -54,16 +59,18 @@ class Variable_Struct(Instruccion):
                     if self.type == Tipos.OBJECT:
                         
                         ret.auxiliar_type = array[1]
-                        if not valor.valor[self.id][4]:
-                            ret.auxiliar_type = None
-                            ret.types = []
-                            ret.valor = -1
-                            ret.type = Tipos.NOTHING
-                            self.type = Tipos.NOTHING
-                            self.types = []
-                            self.struct_type = None
-                        else:
-                            ret.valor = valor.valor[self.id][4]
+                        # if type(valor.valor) == type({}) and not generador.in_function:
+                        #     if not valor.valor[self.id][4]:
+                        #         ret.auxiliar_type = None
+                        #         ret.types = []
+                        #         ret.valor = -1
+                        #         ret.type = Tipos.NOTHING
+                        #         self.type = Tipos.NOTHING
+                        #         self.types = []
+                        #         self.struct_type = None
+                        #     else:
+                        #         ret.valor = valor.valor[self.id][4]
+                        ret.valor = None
                     return ret
                 except:
                     return Error("Sintactico", "Error en el Struct", self.row, self.column)
