@@ -239,31 +239,15 @@ class Generador(object):
     ENTORNO
     '''
     def new_env(self, tamano, anterior):
-        if anterior is None:
-            self.inser_code(f'P=P+{tamano};\n')
-        else:
-            if self.in_function:
-                self.inser_code(f'P=P+{tamano - anterior.size};\n')
-            else:
-                if anterior.previous == None:
-                    self.inser_code(f'P=P+{tamano};\n')
-                else:
-                    self.inser_code(f'P=P+{tamano - anterior.size};\n')
+        self.inser_code(f'P=P+{tamano};\n')
+        
     def call_function(self, id):
         self.inser_code(f'{id}();\n')
 
 
     def return_evn(self, tamano, anterior):
-        if anterior is None:
-            self.inser_code(f'P=P-{tamano};\n')
-        else:
-            if self.in_function:
-                self.inser_code(f'P=P-{tamano - anterior.size};\n')
-            else:
-                if anterior.previous == None:
-                    self.inser_code(f'P=P-{tamano};\n')
-                else:
-                    self.inser_code(f'P=P-{tamano - anterior.size};\n')
+        self.inser_code(f'P=P-{tamano};\n')
+        
     # Añadir print de go 
     def place_print(self, tipo, valor):
         if tipo != 'f':
@@ -398,11 +382,11 @@ class Generador(object):
         self.place_operation(mult, 1, '','')
         self.place_if(comp, pot, '>=', exit)
         self.get_stack(mult, pos_value)
-        self.place_operation(value, mult, value, '*')
+        self.place_operation(mult, value, value, '*')
         self.place_operation(comp, comp, 1, '+')
         self.place_goto(w1)
         self.place_label(exit)
-        self.insert_stack('P', value)
+        self.insert_stack('P', mult)
         self.end_function()
         self.in_native = False    
         self.set_unused_temp(pos_value)

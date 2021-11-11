@@ -10,17 +10,19 @@ router = APIRouter()
 
 @router.post('/Compilar')
 async def analysis(req: RequestModel):
-        sys.setrecursionlimit(10**6)
-        h = gramatica.parse(req.Contenido)
-        genAux = Generador()
-        genAux.limpiar()
-        generador = genAux.get_instance()
-        ast = Arbol(h)
-        ast.ejecutar()
-        consola = generador.get_code()
-        gramatica.start = ""
-        return {"consola": consola, "Simbolo": [], "Errores": ast.errors, "AST": ""}
-    
+        try:
+                sys.setrecursionlimit(10**6)
+                h = gramatica.parse(req.Contenido)
+                genAux = Generador()
+                genAux.limpiar()
+                generador = genAux.get_instance()
+                ast = Arbol(h)
+                ast.ejecutar()
+                consola = generador.get_code()
+                gramatica.start = ""
+                return {"consola": consola, "Simbolo": [], "Errores": ast.errors, "AST": ""}
+        except:
+                pass
 @router.get('/Prueba')
 async def analysis():
     return {"prueba": "hola"}

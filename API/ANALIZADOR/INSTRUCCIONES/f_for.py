@@ -39,8 +39,12 @@ class FOR(Instruccion):
             aux = None
             if self.expresion.type == Tipos.STRING:
                 tip = Tipos.CHAR
-            elif self.expresion.type == Tipos.ARRAY:
-                types = ciclo.types
+            elif self.expresion.type == Tipos.ARRAY or type(self.expresion.type) == type([]):
+                if type(self.expresion.type) == type([]):
+                    types = self.expresion.type
+                    ciclo.types = types
+                else:
+                    types = ciclo.types
                 heap = generador.new_temporal()
                 size = generador.new_temporal()
                 generador.get_heap(heap, ciclo.value)
@@ -70,7 +74,7 @@ class FOR(Instruccion):
             else:
                 generador.error_code()
                 generador.in_ciclo = False
-                return Error("Semantico","El for no puede efectuarse con el tipo "+str(self.expresion.tipo.value), self.fila, self.columna)
+                return Error("Semantico","El for no puede efectuarse con el tipo "+str(self.expresion.type), self.row, self.column)
             nuevaTabla = Tabla(tabla, "FOR")
             var:Simbolo = None
             if variable == None:
@@ -83,10 +87,7 @@ class FOR(Instruccion):
                 var.auxiliar_type = variable.auxiliar_type
                 var.types = ciclo.types
             pos_temp = generador.new_temporal()
-            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                generador.place_operation(pos_temp, 'P', var.position-tabla.previous.size, '+')
-            else:
-                generador.place_operation(pos_temp, 'P', var.position, '+')
+            generador.place_operation(pos_temp, 'P', var.position, '+')
             w = generador.new_label()
             true_tag = generador.new_label()
             generador.place_label(w)

@@ -98,10 +98,7 @@ class Nativas(Instruccion):
                         generador.set_unused_temp(valor.value)
                         #combinamos con el self.anterior
                         generador.temporary_storage()
-                        if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                            generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                        else:
-                            generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
                         generador.place_operation(ret_temp, ret_temp, 1, '+')
                         generador.insert_stack(ret_temp, self.anterior)
                         generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -137,10 +134,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(temp_arr)
                     generador.set_unused_temp(self.anterior)
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.insert_stack(ret_temp, self.anterior)
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, temp_arr)
@@ -203,10 +197,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(ret_temp)
                     generador.temporary_storage()
                     #volviendo t1 a string
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t1)
                     generador.new_env(tabla.size, tabla.previous)
@@ -235,10 +226,7 @@ class Nativas(Instruccion):
                     generador.temporary_storage()
                     ##
                     ##concatenando t1 y :
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t1)
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -255,10 +243,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(t2)
                     generador.set_unused_temp(ret_temp)
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t2)
                     generador.new_env(tabla.size, tabla.previous)    
@@ -276,10 +261,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(t1)
                     generador.set_unused_temp(t2)
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t1)
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -305,10 +287,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(ret_temp)
                     generador.set_unused_temp(valor.value)
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, valor.value)
                     generador.new_env(tabla.size, tabla.previous)
@@ -329,10 +308,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(valor.value)
                 generador.set_unused_temp(temp)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                    generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(temp, 'P',tabla.size,'+')
+                generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
                 generador.new_env(tabla.size, tabla.previous)
@@ -348,10 +324,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                    generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(temp, 'P',tabla.size,'+')
+                generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
                 generador.new_env(tabla.size, tabla.previous)
@@ -371,10 +344,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                    generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(temp, 'P',tabla.size,'+')
+                generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
                 ##    
@@ -396,10 +366,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(valor.value)
                 generador.temporary_storage()
                 
-                if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                    generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(temp, 'P',tabla.size,'+')
+                generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
                 
@@ -417,11 +384,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(valor.value)
                 generador.temporary_storage()
                 
-                if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                    generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.comment("hola")
-                    generador.place_operation(temp, 'P',tabla.size,'+')
+                generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
                 
@@ -471,10 +434,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(temp_arr)
                     generador.set_unused_temp(self.anterior)
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                        generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, self.anterior)
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -523,10 +483,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -561,10 +518,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(ret_temp)
             generador.set_unused_temp(self.anterior)
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(ret_temp, 'P',tabla.size,'+')
+            generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, temp)
             
@@ -583,10 +537,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -614,10 +565,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -645,10 +593,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(self.anterior)
                 
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -672,10 +617,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(variable)
             generador.set_unused_temp(self.anterior)
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(ret_temp, 'P',tabla.size,'+')
+            generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
             generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -704,10 +646,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(self.anterior)
             
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(ret_temp, 'P',tabla.size,'+')
+            generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
             generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -733,10 +672,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -793,10 +729,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(variable)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -824,10 +757,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -855,10 +785,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()       
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -891,10 +818,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(variable)
             
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
+            generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
             generador.place_operation(ret_temp, 'P', 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
             generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -924,10 +848,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(self.anterior)
             
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
+            generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
             generador.place_operation(ret_temp, 'P', 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
             generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -953,10 +874,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -996,10 +914,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(self.anterior)
                 
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -1029,10 +944,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 generador.temporary_storage()
-                if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                    generador.place_operation(ret_temp, 'P',tabla.size-tabla.previous.size,'+')
-                else:
-                    generador.place_operation(ret_temp, 'P',tabla.size,'+')
+                generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
                 generador.place_operation(ret_temp, ret_temp, 1, '+')

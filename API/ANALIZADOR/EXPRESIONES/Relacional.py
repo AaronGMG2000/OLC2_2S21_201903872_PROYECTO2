@@ -102,10 +102,7 @@ class Relacional(Instruccion):
                         generador.set_unused_temp(val2.value)
                     
                     generador.temporary_storage()
-                    if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                        generador.place_operation(temp1, 'P',tabla.size-tabla.previous.size,'+')
-                    else:
-                        generador.place_operation(temp1, 'P',tabla.size,'+')
+                    generador.place_operation(temp1, 'P',tabla.size,'+')
                     generador.place_operation(temp1, temp1, 1, '+')
                     generador.insert_stack(temp1, val1.value)
                     generador.place_operation(temp1, temp1, 1, '+')

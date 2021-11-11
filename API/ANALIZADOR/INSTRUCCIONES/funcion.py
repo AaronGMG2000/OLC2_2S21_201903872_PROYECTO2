@@ -27,30 +27,34 @@ class FUNCION(Instruccion):
         ret_flag = False
         if variable == None:
             exit = generador.new_label()
-            nombre = self.id+"("
-            para = False
-            for par in self.parametros:
-                if type(par[1]) == type(""):
-                    nombre+=par[1]+","
-                else:
-                    nombre+=par[1].value+","
-                para = True
-            if para:
-                nombre = nombre[0:len(nombre)-1]
-            nombre+=")"
-            tabla.set_variable(nombre, Tipos.FUNCTION, False)
-            vari = tabla.get_variable(nombre)
+            # nombre = self.id+"("
+            # para = False
+            # for par in self.parametros:
+            #     if type(par[1]) == type(""):
+            #         nombre+=par[1]+","
+            #     else:
+            #         nombre+=par[1].value+","
+            #     para = True
+            # if para:
+            #     nombre = nombre[0:len(nombre)-1]
+            # nombre+=")"
+            tabla.set_variable(self.id, Tipos.FUNCTION, False)
+            vari = tabla.get_variable(self.id)
             vari.value = self.parametros
             vari.auxiliar_type = self.auxiliar_type
             generador.new_function(self.id)
             generador.set_anterior()
             tabla.size-=1
             newTable = Tabla(tabla, self.id)
-            newTable.size+=1
+            newTable.size=1
             arbol.PilaFunc.append([False, -1, exit])
             for par in self.parametros:
-                if type(par[1]) != type(""):
+                if type(par[1]) != type("") and type(par[1])!=type([]):
                     newTable.set_variable(par[0], par[1], False)
+                elif type(par[1])==type([]):
+                    newTable.set_variable(par[0], Tipos.ARRAY, False)
+                    var = newTable.get_variable(par[0])
+                    var.types = par[1]
                 else:
                     newTable.set_variable(par[0], Tipos.OBJECT, False)
                     var = newTable.get_variable(par[0])

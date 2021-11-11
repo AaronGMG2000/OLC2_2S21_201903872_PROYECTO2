@@ -20,32 +20,30 @@ class LLAMADA_EXP(Instruccion):
         generador = genAux.get_instance()
         variable = tabla.get_variable(self.id)
         if variable is None:
-            nombre = self.id+"("
-            para = False
-            generador.set_anterior()
-            for par in self.parametros:
-                res = par.Ejecutar(arbol, tabla)
-                if isinstance(res, Error):
-                    return res
-                if type(res.type) == type(""):
-                    nombre+=res.type+","
-                else:
-                    if res.type == Tipos.OBJECT:
-                        nombre+=res.auxiliar_type+","
-                    else:
-                        nombre+=res.type.value+","
-                para = True
-                generador.set_unused_temp(res.value)
-                generador.error_code()
-            if para:
-                nombre = nombre[0:len(nombre)-1]
-            nombre+=")"
-            variable = tabla.get_variable(nombre)
-            if nombre == "encontrarValor(Node,INT64)":
-                print(nombre)
-            if variable is None:
-                generador.error_code()
-                return Error("Sintactico","La función o struct indicado no existe", self.row, self.column)
+            # nombre = self.id+"("
+            # para = False
+            # generador.set_anterior()
+            # for par in self.parametros:
+            #     res = par.Ejecutar(arbol, tabla)
+            #     if isinstance(res, Error):
+            #         return res
+            #     if type(res.type) == type(""):
+            #         nombre+=res.type+","
+            #     else:
+            #         if res.type == Tipos.OBJECT:
+            #             nombre+=res.auxiliar_type+","
+            #         else:
+            #             nombre+=res.type.value+","
+            #     para = True
+            #     generador.set_unused_temp(res.value)
+            #     generador.error_code()
+            # if para:
+            #     nombre = nombre[0:len(nombre)-1]
+            # nombre+=")"
+            # variable = tabla.get_variable(nombre)
+            # if variable is None:
+            generador.error_code()
+            return Error("Sintactico","La función o struct indicado no existe", self.row, self.column)
         if variable.getTipo() == Tipos.STRUCT:
             generador.comment("Iniciando Struct")
             a = 0
@@ -103,22 +101,22 @@ class LLAMADA_EXP(Instruccion):
                 return Error("Sintactico","La función requiere "+str(len(contenido))+"Parametros y esta recibiendo "+str(len(self.parametros), self.row, self.column) )
             generador.temporary_storage()
             temp = generador.new_temporal()
-            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                generador.place_operation(temp, 'P', tabla.size-tabla.previous.size, '+')
-            else:
-                print(temp, tabla.size)
-                generador.place_operation(temp, 'P', tabla.size, '+')
+            generador.place_operation(temp, 'P', tabla.size, '+')
             for par in contenido:
                 generador.place_operation(temp, temp, 1, '+')
                 variable2 = self.parametros[x].Ejecutar(arbol, tabla)
-                if type(contenido[x][1]) != type(""):
+                if isinstance(variable2, Error):
+                    generador.error_code()
+                    return variable2
+                if type(contenido[x][1]) != type("") and type(contenido[x][1]) != type([]):
                     if variable2.type != contenido[x][1]:
                         generador.error_code()
                         return Error("Sintactico", "Se esperaba un tipo "+contenido[x][1].value, self.row, self.column)
                 else:
-                    if variable2.type != contenido[x][1] and variable2.auxiliar_type != contenido[x][1]:
+                    if variable2.type != contenido[x][1] and variable2.auxiliar_type != contenido[x][1] and self.parametros[x].struct_type != contenido[x][1] and self.parametros[x].types != contenido[x][1]:
                         generador.error_code()
-                        return Error("Sintactico", "Se esperaba un tipo "+contenido[x][1].value, self.row, self.column)
+                        print(contenido[x][1])
+                        return Error("Sintactico", "Se esperaba un tipo "+str(contenido[x][1]), self.row, self.column)
                 x+=1
                 generador.insert_stack(temp, variable2.value)
                 generador.set_unused_temp(variable2.value)

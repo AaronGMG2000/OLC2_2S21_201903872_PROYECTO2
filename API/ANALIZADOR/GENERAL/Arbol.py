@@ -30,6 +30,9 @@ class Arbol(object):
                 self.errors.append(res)
             if isinstance(res, Retorno):
                 generador.set_unused_temp(res.value)
+            # print(inst)
+            # print(len(generador.use_temps))
+            # print(len(generador.unused_temps))
         print("final")
         print(len(generador.use_temps))
         print(len(generador.unused_temps))

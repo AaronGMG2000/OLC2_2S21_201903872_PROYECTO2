@@ -60,6 +60,7 @@ class Asignar_Array(Instruccion):
                     for x in self.numbers:
                         number = x.Ejecutar(arbol, tabla)
                         if isinstance(number,Error):
+                            generador.error_code()
                             return number
                         if x.type != Tipos.ENTERO:
                             generador.error_code()
@@ -110,11 +111,11 @@ class Asignar_Array(Instruccion):
                                     temp = self.get_position_array(number.value, temp, exit, False, True, valor.value)
                             else:
                                     temp = self.get_position_array(number.value, temp, exit, False, False, valor.value)
-                        generador.set_unused_temp(temp)
                         generador.set_unused_temp(number.value)
                         #fin de codigo para hacer array#
                     generador.place_label(exit)
                     generador.comment("Fin de llamado de array")
+                generador.set_unused_temp(valor.value)
                 variable.struct_type = self.expresion.struct_type
                 generador.set_unused_temp(var.value)
                 generador.set_anterior()
@@ -124,14 +125,9 @@ class Asignar_Array(Instruccion):
         genAux = Generador()
         generador = genAux.get_instance()
         generador.comment("iniciando obtención valor dentro de array")
-        if in_stack:
-            heap = generador.new_temporal()
         size = generador.new_temporal()
         comp = generador.new_temporal()
-        if in_stack:
-            generador.get_stack(heap, valor)
-        else:
-            heap = valor
+        heap = valor
         generador.get_heap(size, heap)
         generador.place_operation(comp, heap, size, '+')
         number = generador.new_temporal()

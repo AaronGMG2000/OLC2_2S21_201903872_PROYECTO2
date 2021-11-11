@@ -87,17 +87,13 @@ class Aritmetica(Instruccion):
                                     ret.valor = 0
                                 return ret
                         else:
-                            
                             generador.potencia()
                             temp = generador.new_temporal()
                             generador.set_unused_temp(val1.value)
                             generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
                             generador.temporary_storage()
-                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                            else:
-                                generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
                             generador.place_operation(temp, temp,1,'+')
@@ -132,10 +128,7 @@ class Aritmetica(Instruccion):
                             generador.set_unused_temp(temp)
                             #teminamos de liberar temporales
                             generador.temporary_storage()
-                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                            else:
-                                generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
                             generador.place_operation(temp, temp,1,'+')
@@ -165,10 +158,7 @@ class Aritmetica(Instruccion):
                             generador.set_unused_temp(temp)
                             #terminamos de liberar temporales
                             generador.temporary_storage()
-                            if tabla.previous is not None and tabla.previous!=arbol.global_table or generador.in_function:
-                                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-                            else:
-                                generador.place_operation(temp, 'P',tabla.size,'+')
+                            generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
                             generador.place_operation(temp, temp,1,'+')

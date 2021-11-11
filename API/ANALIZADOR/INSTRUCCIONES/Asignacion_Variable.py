@@ -43,7 +43,7 @@ class Asignar_Variable(Instruccion):
                     return Error("Sintactico", "Se esperaba un valor tipo "+self.required_type.value+" y se obtuvo un valor tipo "+self.expresion.type.value, self.row, self.column)
                 self.type = self.expresion.type
                 if tabla.get_variable(self.id) == None:
-                    if tabla.previous == None or tabla.previous == arbol.global_table and not generador.in_function:
+                    if tabla.previous == None:
                         if valor.type == Tipos.BOOL and not valor.is_temporal:
                             exit = generador.new_label()
                             generador.place_label(valor.true_tag)
@@ -56,30 +56,12 @@ class Asignar_Variable(Instruccion):
                             generador.insert_stack(tabla.size, valor.value)
                     else:
                         temp = generador.new_temporal()
-                        if generador.in_function:
-                            anterio = tabla
-                            if tabla.name == "WHILE" or tabla.name == "FOR":
-                                while (anterio.name == "WHILE" or anterio.name == "FOR"):
-                                    anterio = anterio.previous
-                            resta = anterio.previous.size + generador.count_save
-                            resta = tabla.size - resta
-                            if resta < 0 and generador.count_save == 0:
-                                resta = 0
-                            if resta<0:
-                                generador.place_operation(temp, "P", resta,'')
-                            else:
-                                generador.place_operation(temp, "P", resta, '+')
-                            generador.insert_stack(temp, valor.value)
+                        resta = tabla.size - generador.count_save
+                        if resta<0:
+                            generador.place_operation(temp, "P", resta, '')
                         else:
-                            if tabla.previous == arbol.global_table:
-                                generador.place_operation(temp, 'P', tabla.size,'+')
-                            else:
-                                resta = tabla.size + generador.count_save
-                                if resta<0:
-                                    generador.place_operation(temp, "P", resta, '')
-                                else:
-                                    generador.place_operation(temp, "P", resta, '+')
-                            generador.insert_stack(temp, valor.value)
+                            generador.place_operation(temp, "P", resta, '+')
+                        generador.insert_stack(temp, valor.value)
                         generador.set_unused_temp(temp)
                     tabla.set_variable(self.id, self.expresion.type, False)
                     variable = tabla.get_variable(self.id)
@@ -94,7 +76,7 @@ class Asignar_Variable(Instruccion):
                 else:
                     variable = tabla.get_variable(self.id)
                     if isinstance(variable, Simbolo):
-                        if tabla.previous == None  or variable.is_global and not generador.in_function:
+                        if tabla.previous == None  or variable.is_global:
                             if valor.type == Tipos.BOOL and not valor.is_temporal:
                                 exit = generador.new_label()
                                 generador.place_label(valor.true_tag)
@@ -106,34 +88,14 @@ class Asignar_Variable(Instruccion):
                             else:
                                 generador.insert_stack(variable.position, valor.value)
                         else:
-                            if generador.in_function:
-                                anterio = tabla
-                                if tabla.name == "WHILE" or tabla.name == "FOR":
-                                    while (anterio.name == "WHILE" or anterio.name == "FOR"):
-                                        anterio = anterio.previous
-                                resta = anterio.previous.size+generador.count_save
-                                resta = variable.position-resta
-                                if resta < 0 and generador.count_save == 0:
-                                    resta = 0
-                                temp = generador.new_temporal()
-                                if resta < 0:
-                                    generador.place_operation(temp, "P", resta, '')
-                                else:
-                                    generador.place_operation(temp, "P", resta, '+')
-                                generador.insert_stack(temp, valor.value)
-                                generador.set_unused_temp(temp)
+                            temp = generador.new_temporal()
+                            resta = variable.position - generador.count_save
+                            if resta < 0:
+                                generador.place_operation(temp, 'P', resta,'')
                             else:
-                                temp = generador.new_temporal()
-                                if tabla.previous == arbol.global_table:
-                                    generador.place_operation(temp, 'P', variable.position,'+')
-                                else:
-                                    resta = variable.position - generador.count_save
-                                    if resta < 0:
-                                        generador.place_operation(temp, 'P', resta,'')
-                                    else:
-                                        generador.place_operation(temp, 'P', resta,'+')
-                                generador.insert_stack(temp, valor.value)
-                                generador.set_unused_temp(temp)
+                                generador.place_operation(temp, 'P', resta,'+')
+                            generador.insert_stack(temp, valor.value)
+                            generador.set_unused_temp(temp)
                         variable.type = self.expresion.type
                         variable.auxiliar_type = valor.auxiliar_type
                         if valor.is_temporal:

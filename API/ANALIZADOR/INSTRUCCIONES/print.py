@@ -70,10 +70,7 @@ class Imprimir(Instruccion):
                         generador.set_unused_temp(temp)
                         
                         generador.temporary_storage()
-                        if tabla.previous is None or tabla.previous == arbol.global_table and not generador.in_function:
-                            generador.place_operation(temp, "P",tabla.size,"+")
-                        else:
-                            generador.place_operation(temp, "P",tabla.size-tabla.previous.size,"+")
+                        generador.place_operation(temp, "P",tabla.size,"+")
                         generador.place_operation(temp, temp,"1","+")
                         generador.insert_stack(temp, retorno.value)
                         
@@ -118,10 +115,7 @@ class Imprimir(Instruccion):
                         generador.set_unused_temp(retorno.value)
                         
                         generador.temporary_storage()
-                        if tabla.previous is None or tabla.previous == arbol.global_table and not generador.in_function:
-                            generador.place_operation(temp2, "P",tabla.size,"+")
-                        else:
-                            generador.place_operation(temp2, "P",tabla.size-tabla.previous.size,"+")
+                        generador.place_operation(temp2, "P",tabla.size,"+")
                         generador.place_operation(temp2, temp2, 1, '+')
                         generador.insert_stack(temp2, temp)
                         
@@ -294,10 +288,7 @@ class Imprimir(Instruccion):
             generador.set_unused_temp(temp)
             
             generador.temporary_storage()
-            if tabla.previous is not None and tabla.previous.previous is not None or generador.in_function:
-                generador.place_operation(temp, 'P',tabla.size-tabla.previous.size,'+')
-            else:
-                generador.place_operation(temp, 'P',tabla.size,'+')
+            generador.place_operation(temp, 'P',tabla.size,'+')
             generador.place_operation(temp, temp,"1","+")
             generador.insert_stack(temp, heap)
             

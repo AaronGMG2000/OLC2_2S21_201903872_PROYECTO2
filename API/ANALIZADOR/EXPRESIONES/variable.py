@@ -31,28 +31,11 @@ class Variable(Instruccion):
                     generador.get_stack(temp_stack, valor.position)
                 else:
                     temp = generador.new_temporal()
-                    if generador.in_function:
-                        anterio = tabla
-                        if tabla.name == "WHILE" or tabla.name == "FOR":
-                            while (anterio.name == "WHILE" or anterio.name == "FOR"):
-                                anterio = anterio.previous
-                        resta = anterio.previous.size + generador.count_save
-                        resta = valor.position- resta
-                        if resta < 0 and generador.count_save == 0:
-                            resta = 0
-                        if resta < 0:
-                            generador.place_operation(temp, 'P', resta, '')
-                        else:
-                            generador.place_operation(temp, 'P', resta, '+')
+                    resta = valor.position - generador.count_save
+                    if resta < 0:
+                        generador.place_operation(temp, 'P', resta,'')
                     else:
-                        if tabla.previous == arbol.global_table:
-                            generador.place_operation(temp, 'P', valor.position,'+')
-                        else:
-                            resta = valor.position - generador.count_save
-                            if resta < 0:
-                                generador.place_operation(temp, 'P', resta,'')
-                            else:
-                                generador.place_operation(temp, 'P', resta,'+')
+                        generador.place_operation(temp, 'P', resta,'+')
                     generador.get_stack(temp_stack, temp)
                     generador.set_unused_temp(temp)
                 ret = Retorno(temp_stack, self.type, True)
