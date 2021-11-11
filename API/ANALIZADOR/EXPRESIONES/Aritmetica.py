@@ -92,7 +92,7 @@ class Aritmetica(Instruccion):
                             generador.set_unused_temp(val1.value)
                             generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
-                            generador.temporary_storage()
+                            generador.temporary_storage(tabla.size)
                             generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
@@ -108,7 +108,7 @@ class Aritmetica(Instruccion):
                             generador.place_operation(temp3, 1, temp3, '/')
                             generador.place_label(normal)
                             generador.return_evn(tabla.size, tabla.previous)
-                            generador.take_temporary()
+                            generador.take_temporary(tabla.size)
                             ret = Retorno(temp3, self.type, True)
                             try:
                                 ret.valor = math.pow(val1.valor, val2.valor)
@@ -127,7 +127,7 @@ class Aritmetica(Instruccion):
                                 generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
                             #teminamos de liberar temporales
-                            generador.temporary_storage()
+                            generador.temporary_storage(tabla.size)
                             generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
@@ -138,7 +138,7 @@ class Aritmetica(Instruccion):
                             temp2 = generador.new_temporal()
                             generador.get_stack(temp2, 'P')
                             generador.return_evn(tabla.size, tabla.previous)
-                            generador.take_temporary()
+                            generador.take_temporary(tabla.size)
                             ret = Retorno(temp2, self.type, True)
                             try:
                                 ret.valor = eval(f'val1.valor {operation.value} val2.valor')
@@ -157,7 +157,7 @@ class Aritmetica(Instruccion):
                                 generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
                             #terminamos de liberar temporales
-                            generador.temporary_storage()
+                            generador.temporary_storage(tabla.size)
                             generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
                             generador.insert_stack(temp, val1.value)
@@ -168,7 +168,7 @@ class Aritmetica(Instruccion):
                             temp3 = generador.new_temporal()
                             generador.get_stack(temp3, 'P')
                             generador.return_evn(tabla.size, tabla.previous)
-                            generador.take_temporary()
+                            generador.take_temporary(tabla.size)
                             ret = Retorno(temp3, self.type, True)
                             try:
                                 ret.valor = eval(f'val1.valor {operation.value} val2.valor')

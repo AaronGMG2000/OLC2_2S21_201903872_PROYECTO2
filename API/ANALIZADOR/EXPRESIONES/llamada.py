@@ -99,12 +99,17 @@ class LLAMADA_EXP(Instruccion):
             if len(self.parametros)!=len(contenido):
                 generador.error_code()
                 return Error("Sintactico","La función requiere "+str(len(contenido))+"Parametros y esta recibiendo "+str(len(self.parametros), self.row, self.column) )
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             temp = generador.new_temporal()
             generador.place_operation(temp, 'P', tabla.size, '+')
+            n = 1
             for par in contenido:
                 generador.place_operation(temp, temp, 1, '+')
+                if isinstance(self.parametros[x], LLAMADA_EXP):
+                    tabla.size+=n
                 variable2 = self.parametros[x].Ejecutar(arbol, tabla)
+                if isinstance(self.parametros[x], LLAMADA_EXP):
+                    tabla.size-=n
                 if isinstance(variable2, Error):
                     generador.error_code()
                     return variable2
@@ -118,6 +123,7 @@ class LLAMADA_EXP(Instruccion):
                         print(contenido[x][1])
                         return Error("Sintactico", "Se esperaba un tipo "+str(contenido[x][1]), self.row, self.column)
                 x+=1
+                n+=1
                 generador.insert_stack(temp, variable2.value)
                 generador.set_unused_temp(variable2.value)
             generador.set_unused_temp(temp)
@@ -133,7 +139,7 @@ class LLAMADA_EXP(Instruccion):
                 ret:Retorno = Retorno(-1, Tipos.NOTHING, False)
                 ret.valor = -1
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             generador.set_anterior()
             return ret
         else:

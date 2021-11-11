@@ -101,7 +101,7 @@ class Relacional(Instruccion):
                     if val2.is_temporal:
                         generador.set_unused_temp(val2.value)
                     
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(temp1, 'P',tabla.size,'+')
                     generador.place_operation(temp1, temp1, 1, '+')
                     generador.insert_stack(temp1, val1.value)
@@ -117,7 +117,7 @@ class Relacional(Instruccion):
                     if self.false_tag == '':
                         self.false_tag = generador.new_label()
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     
                     generador.place_if(ret, 1, '==', self.true_tag)
                     generador.place_goto(self.false_tag)

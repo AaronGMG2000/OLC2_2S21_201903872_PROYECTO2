@@ -69,7 +69,7 @@ class Imprimir(Instruccion):
                         generador.set_unused_temp(retorno.value)
                         generador.set_unused_temp(temp)
                         
-                        generador.temporary_storage()
+                        generador.temporary_storage(tabla.size)
                         generador.place_operation(temp, "P",tabla.size,"+")
                         generador.place_operation(temp, temp,"1","+")
                         generador.insert_stack(temp, retorno.value)
@@ -77,7 +77,7 @@ class Imprimir(Instruccion):
                         generador.new_env(tabla.size, tabla.previous)
                         generador.call_function("F_print")
                         generador.return_evn(tabla.size, tabla.previous)
-                        generador.take_temporary()
+                        generador.take_temporary(tabla.size)
                         continue
                     elif retorno.type == Tipos.RANGE:
                         aux = retorno.auxiliar_type
@@ -114,7 +114,7 @@ class Imprimir(Instruccion):
                         generador.set_unused_temp(temp2)
                         generador.set_unused_temp(retorno.value)
                         
-                        generador.temporary_storage()
+                        generador.temporary_storage(tabla.size)
                         generador.place_operation(temp2, "P",tabla.size,"+")
                         generador.place_operation(temp2, temp2, 1, '+')
                         generador.insert_stack(temp2, temp)
@@ -122,7 +122,7 @@ class Imprimir(Instruccion):
                         generador.new_env(tabla.size, tabla.previous)
                         generador.call_function("F_print")
                         generador.return_evn(tabla.size, tabla.previous)
-                        generador.take_temporary()
+                        generador.take_temporary(tabla.size)
                         continue
                     
                     elif type(retorno.type) == type(""):
@@ -287,7 +287,7 @@ class Imprimir(Instruccion):
             generador.set_unused_temp(heap)
             generador.set_unused_temp(temp)
             
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(temp, 'P',tabla.size,'+')
             generador.place_operation(temp, temp,"1","+")
             generador.insert_stack(temp, heap)
@@ -295,7 +295,7 @@ class Imprimir(Instruccion):
             generador.new_env(tabla.size, tabla.previous)
             generador.call_function("F_print")
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             generador.place_print('c', 34)
             if condicion:
                 generador.place_print('c', 44)

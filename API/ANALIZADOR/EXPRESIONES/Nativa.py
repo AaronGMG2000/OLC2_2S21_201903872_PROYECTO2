@@ -97,7 +97,7 @@ class Nativas(Instruccion):
                         generador.set_unused_temp(comp)
                         generador.set_unused_temp(valor.value)
                         #combinamos con el self.anterior
-                        generador.temporary_storage()
+                        generador.temporary_storage(tabla.size)
                         generador.place_operation(ret_temp, 'P',tabla.size,'+')
                         generador.place_operation(ret_temp, ret_temp, 1, '+')
                         generador.insert_stack(ret_temp, self.anterior)
@@ -109,7 +109,7 @@ class Nativas(Instruccion):
                         generador.use_temps[self.anterior] = self.anterior
                         generador.get_stack(self.anterior, 'P')
                         generador.return_evn(tabla.size, tabla.previous)
-                        generador.take_temporary()
+                        generador.take_temporary(tabla.size)
                         ####
                     generador.place_goto(w)
                     generador.place_label(true_tag)
@@ -133,7 +133,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(ret_temp)
                     generador.set_unused_temp(temp_arr)
                     generador.set_unused_temp(self.anterior)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.insert_stack(ret_temp, self.anterior)
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -144,7 +144,7 @@ class Nativas(Instruccion):
                     generador.use_temps[self.anterior] = self.anterior
                     generador.get_stack(self.anterior, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     ##
                     ret_temp = self.anterior
                     generador.comment("final to_string(array)")
@@ -195,7 +195,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(t1)
                     generador.set_unused_temp(valor.value)
                     generador.set_unused_temp(ret_temp)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     #volviendo t1 a string
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
@@ -208,7 +208,7 @@ class Nativas(Instruccion):
                     t1 = generador.new_temporal()
                     generador.get_stack(t1, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     ####
                     #generando el :
                     dp = generador.new_temporal()
@@ -223,7 +223,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(ret_temp)
                     generador.set_unused_temp(dp)
                     generador.set_unused_temp(t1)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     ##
                     ##concatenando t1 y :
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
@@ -236,13 +236,13 @@ class Nativas(Instruccion):
                     t1 = generador.new_temporal()
                     generador.get_stack(t1, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     ###
                     ###enviando t2 a convertir a string
                     ret_temp = generador.new_temporal()
                     generador.set_unused_temp(t2)
                     generador.set_unused_temp(ret_temp)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t2)
@@ -254,13 +254,13 @@ class Nativas(Instruccion):
                     t2 = generador.new_temporal()
                     generador.get_stack(t2, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     ###
                     ret_temp = generador.new_temporal()
                     generador.set_unused_temp(ret_temp)
                     generador.set_unused_temp(t1)
                     generador.set_unused_temp(t2)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, t1)
@@ -272,7 +272,7 @@ class Nativas(Instruccion):
                     ret_temp = generador.new_temporal()
                     generador.get_stack(ret_temp, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                     ###
                 elif valor.type == Tipos.STRUCT:
                     pass
@@ -286,7 +286,7 @@ class Nativas(Instruccion):
                     ret_temp = generador.new_temporal()
                     generador.set_unused_temp(ret_temp)
                     generador.set_unused_temp(valor.value)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, valor.value)
@@ -298,7 +298,7 @@ class Nativas(Instruccion):
                     ret_temp = generador.new_temporal()
                     generador.get_stack(ret_temp, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
             if self.Nativa == Tipos_Nativa.FLOAT:
                 ret_temp = generador.new_temporal()
                 generador.place_operation(ret_temp, valor.value, '1.0', '*')
@@ -307,7 +307,7 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.set_unused_temp(valor.value)
                 generador.set_unused_temp(temp)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
@@ -316,14 +316,14 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.get_stack(temp, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ret_temp = temp
             if self.Nativa == Tipos_Nativa.UPPERCASE:
                 generador.uppercase()
                 temp = generador.new_temporal()
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
@@ -332,7 +332,7 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.get_stack(temp, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ret_temp = temp
             if self.Nativa == Tipos_Nativa.PARSE:
                 if self.expresion == Tipos.FLOAT:
@@ -343,7 +343,7 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
                 generador.insert_stack(temp, valor.value)
@@ -357,14 +357,14 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.get_stack(temp, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ret_temp = temp
             if self.Nativa == Tipos_Nativa.TRUNC:
                 generador.trunc()
                 temp = generador.new_temporal()
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 
                 generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
@@ -375,14 +375,14 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.get_stack(temp, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ret_temp = temp
             if self.Nativa == Tipos_Nativa.LENGTH:
                 generador.f_length()
                 temp = generador.new_temporal()
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(valor.value)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 
                 generador.place_operation(temp, 'P',tabla.size,'+')
                 generador.place_operation(temp, temp, 1, '+')
@@ -393,7 +393,7 @@ class Nativas(Instruccion):
                 temp = generador.new_temporal()
                 generador.get_stack(temp, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ret_temp = temp
             try: 
                 self.type = inst[1]
@@ -433,7 +433,7 @@ class Nativas(Instruccion):
                     generador.set_unused_temp(temp)
                     generador.set_unused_temp(temp_arr)
                     generador.set_unused_temp(self.anterior)
-                    generador.temporary_storage()
+                    generador.temporary_storage(tabla.size)
                     generador.place_operation(ret_temp, 'P',tabla.size,'+')
                     generador.place_operation(ret_temp, ret_temp, 1, '+')
                     generador.insert_stack(ret_temp, self.anterior)
@@ -445,7 +445,7 @@ class Nativas(Instruccion):
                     generador.use_temps[self.anterior] = self.anterior
                     generador.get_stack(self.anterior, 'P')
                     generador.return_evn(tabla.size, tabla.previous)
-                    generador.take_temporary()
+                    generador.take_temporary(tabla.size)
                 else:
                     self.anterior = temp_arr
                 ##
@@ -482,7 +482,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -494,7 +494,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 ##
                 return tipo
             else:
@@ -517,7 +517,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(temp)
             generador.set_unused_temp(ret_temp)
             generador.set_unused_temp(self.anterior)
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, temp)
@@ -527,7 +527,7 @@ class Nativas(Instruccion):
             temp = generador.new_temporal()
             generador.get_stack(temp, 'P')
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             ### 
             ## Concatenamos el valor int con el self.anterior si existe
             if self.anterior is not None:
@@ -536,7 +536,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(self.anterior)
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -548,7 +548,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
             else:
                 self.anterior = temp
             ##
@@ -564,7 +564,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -577,7 +577,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
         elif x == Tipos.STRING:
             temp_arr = generador.new_temporal()
             generador.place_operation(temp_arr, 'H', '', '')
@@ -592,7 +592,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
                 
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -604,7 +604,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
             else:
                 self.anterior = temp_arr
             ####
@@ -616,7 +616,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(temp_arr)
             generador.set_unused_temp(variable)
             generador.set_unused_temp(self.anterior)
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
@@ -629,7 +629,7 @@ class Nativas(Instruccion):
             generador.use_temps[self.anterior] = self.anterior
             generador.get_stack(self.anterior, 'P')
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             #generamos "
             temp_arr = generador.new_temporal()
             generador.place_operation(temp_arr, 'H', '', '')
@@ -645,7 +645,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(temp_arr)
             generador.set_unused_temp(self.anterior)
             
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(ret_temp, 'P',tabla.size,'+')
             generador.place_operation(ret_temp, ret_temp, 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
@@ -657,7 +657,7 @@ class Nativas(Instruccion):
             generador.use_temps[self.anterior] = self.anterior
             generador.get_stack(self.anterior, 'P')
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             ##
             if condicion:
                 #generamos la ,
@@ -671,7 +671,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -684,7 +684,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
         elif x == Tipos.BOOL:
             temp = generador.new_temporal()
             generador.get_heap(temp, variable)
@@ -728,7 +728,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(variable)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -740,7 +740,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
             else:
                 self.anterior = temp
             ###
@@ -756,7 +756,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -769,7 +769,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
         elif x == Tipos.CHAR:
             #generamos '
             temp_arr = generador.new_temporal()
@@ -784,7 +784,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()       
+                generador.temporary_storage(tabla.size)       
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -796,7 +796,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
             else:
                 self.anterior = temp_arr
                 
@@ -817,7 +817,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(self.anterior)
             generador.set_unused_temp(variable)
             
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
             generador.place_operation(ret_temp, 'P', 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
@@ -831,7 +831,7 @@ class Nativas(Instruccion):
             generador.use_temps[self.anterior] = self.anterior
             generador.get_stack(self.anterior, 'P')
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
            
             #generamos '
             temp_arr = generador.new_temporal()
@@ -847,7 +847,7 @@ class Nativas(Instruccion):
             generador.set_unused_temp(temp_arr)
             generador.set_unused_temp(self.anterior)
             
-            generador.temporary_storage()
+            generador.temporary_storage(tabla.size)
             generador.place_operation(ret_temp, ret_temp,tabla.size,'+')
             generador.place_operation(ret_temp, 'P', 1, '+')
             generador.insert_stack(ret_temp, self.anterior)
@@ -859,7 +859,7 @@ class Nativas(Instruccion):
             generador.use_temps[self.anterior] = self.anterior
             generador.get_stack(self.anterior, 'P')
             generador.return_evn(tabla.size, tabla.previous)
-            generador.take_temporary()
+            generador.take_temporary(tabla.size)
             ##
             if condicion:
                 #generamos la ,
@@ -873,7 +873,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -886,7 +886,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
         elif x == Tipos.NOTHING:
             temp = generador.new_temporal()
             generador.place_operation(temp, 'H', '', '')
@@ -913,7 +913,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(temp)
                 generador.set_unused_temp(self.anterior)
                 
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -926,7 +926,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
                 
             else:
                 self.anterior = temp
@@ -943,7 +943,7 @@ class Nativas(Instruccion):
                 generador.set_unused_temp(ret_temp)
                 generador.set_unused_temp(temp_arr)
                 generador.set_unused_temp(self.anterior)
-                generador.temporary_storage()
+                generador.temporary_storage(tabla.size)
                 generador.place_operation(ret_temp, 'P',tabla.size,'+')
                 generador.place_operation(ret_temp, ret_temp, 1, '+')
                 generador.insert_stack(ret_temp, self.anterior)
@@ -956,7 +956,7 @@ class Nativas(Instruccion):
                 generador.use_temps[self.anterior] = self.anterior
                 generador.get_stack(self.anterior, 'P')
                 generador.return_evn(tabla.size, tabla.previous)
-                generador.take_temporary()
+                generador.take_temporary(tabla.size)
         generador.set_unused_temp(self.anterior)
         return x
     

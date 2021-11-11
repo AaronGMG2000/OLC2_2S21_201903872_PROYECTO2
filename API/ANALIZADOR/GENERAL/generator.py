@@ -114,23 +114,41 @@ class Generador(object):
     def jump(self):
         self.inser_code('\n')
 
-    def temporary_storage(self):
-        self.comment("*****GUARDANDO TEMPORALES***********")
-        self.save_temps.append(list(self.use_temps.keys()))
-        for tempo in sorted(list(self.use_temps.keys())):
-            self.insert_stack("P", tempo)
-            self.next_stack()
-            self.count_save += 1
-        self.comment("************************************")
+    def temporary_storage(self, tamano):
+        lista = list(self.use_temps.keys())
+        self.save_temps.append(lista)
+        if len(lista)>0:
+            self.comment("*****GUARDANDO TEMPORALES***********")
+            ##
+            temp = self.new_temporal()
+            self.set_unused_temp(temp)
+            self.place_operation(temp, 'P', tamano, '+')
+            ##
+            for tempo in sorted(lista):
+                self.insert_stack(temp, tempo)
+                self.place_operation(temp, temp, 1, '+')
+                self.next_stack()
+                self.count_save += 1
+            self.comment("************************************")
     
-    def take_temporary(self):
-        self.count_save = 0
-        self.comment("*****SACANDO TEMPORALES***********")
+    def take_temporary(self, tamano):
         lista = self.save_temps.pop()
-        for tempo in sorted(lista, reverse=True):
-            self.previous_stack()
-            self.get_stack(tempo, "P")
-        self.comment("************************************")
+        if len(lista)>0:
+            self.comment("*****SACANDO TEMPORALES***********")
+            ##
+            temp = self.new_temporal()
+            self.set_unused_temp(temp)
+            ##
+            fist = True
+            for tempo in sorted(lista, reverse=True):
+                self.previous_stack()
+                if fist:
+                    self.place_operation(temp, 'P', tamano + self.count_save, '+')
+                self.place_operation(temp, temp, 1, '-')
+                self.get_stack(tempo, temp)
+                fist = False
+            self.comment("************************************")
+        self.count_save = 0
     '''
     TEMPORALES
     '''
