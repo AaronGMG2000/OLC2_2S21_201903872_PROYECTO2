@@ -78,11 +78,11 @@ class FOR(Instruccion):
             nuevaTabla = Tabla(tabla, "FOR")
             var:Simbolo = None
             if variable == None:
-                nuevaTabla.set_variable(self.id, tip, False)
+                nuevaTabla.set_variable(arbol, self.row, self.column, self.id, tip, False)
                 var = nuevaTabla.get_variable(self.id)
                 var.types = types
             else:
-                nuevaTabla.set_variable(variable.id, variable.type, variable.in_Heap)
+                nuevaTabla.set_variable(arbol, self.row, self.column, variable.id, variable.type, variable.in_Heap)
                 var = nuevaTabla.get_variable(variable.id)
                 var.auxiliar_type = variable.auxiliar_type
                 var.types = ciclo.types

@@ -33,7 +33,7 @@ class STRUCT(Instruccion):
                 else:
                     content[par[0]] = [par[1], None, par[1], a, False]
                 a = a + 1
-            tabla.set_variable(self.id, self.type, False)
+            tabla.set_variable(arbol, self.row, self.column, self.id, self.type, False)
             self.struct_type = self.id
             var = tabla.get_variable(self.id)
             tabla.size -=1

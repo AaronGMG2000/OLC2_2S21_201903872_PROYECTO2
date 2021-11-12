@@ -21,4 +21,8 @@ export class COMPILADORService {
   GRAFICAR(Contenidos: Contenido): any{
     return this.http.post<any>(`${this.API_URI}/GRAFICAR/`, Contenidos);
   }
+
+  MIRILLA(Contenidos: Contenido): any{
+    return this.http.post<any>(`${this.API_URI}/Mirilla/`, Contenidos);
+  }
 }

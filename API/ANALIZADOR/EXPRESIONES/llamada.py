@@ -6,6 +6,7 @@ from ..GENERAL.Tipo import CICLICO, Tipos
 from ..GENERAL.error import Error
 from ..GENERAL.generator import Generador
 from ..GENERAL.table import Tabla
+from .Nativa import Nativas
 from ..ABSTRACT.Retorno import Retorno
 
 class LLAMADA_EXP(Instruccion):
@@ -105,10 +106,10 @@ class LLAMADA_EXP(Instruccion):
             n = 1
             for par in contenido:
                 generador.place_operation(temp, temp, 1, '+')
-                if isinstance(self.parametros[x], LLAMADA_EXP):
+                if isinstance(self.parametros[x], LLAMADA_EXP) or isinstance(self.parametros[x], Nativas):
                     tabla.size+=n
                 variable2 = self.parametros[x].Ejecutar(arbol, tabla)
-                if isinstance(self.parametros[x], LLAMADA_EXP):
+                if isinstance(self.parametros[x], LLAMADA_EXP) or isinstance(self.parametros[x], Nativas):
                     tabla.size-=n
                 if isinstance(variable2, Error):
                     generador.error_code()

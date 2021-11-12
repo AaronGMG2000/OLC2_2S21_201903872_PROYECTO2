@@ -1,0 +1,1528 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> start
+Rule 1     start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList
+Rule 2     IMPORTS -> STRINGLITERAL
+Rule 3     IMPORTS -> STRINGLITERAL PTCOMA STRINGLITERAL PTCOMA
+Rule 4     declarations -> declarations declaration
+Rule 5     declarations -> declaration
+Rule 6     declaration -> VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA
+Rule 7     declaration -> VAR idList type PTCOMA
+Rule 8     type -> INT
+Rule 9     type -> FLOAT64
+Rule 10    idList -> idList COMMA ID
+Rule 11    idList -> ID
+Rule 12    codeList -> codeList code
+Rule 13    codeList -> code
+Rule 14    code -> FUNC ID PIZQ PDER statement
+Rule 15    statement -> LIZQ instructions LDER
+Rule 16    instructions -> instructions instruction
+Rule 17    instructions -> instruction
+Rule 18    instruction -> assign PTCOMA
+Rule 19    instruction -> print PTCOMA
+Rule 20    instruction -> if
+Rule 21    instruction -> gotoSt PTCOMA
+Rule 22    instruction -> label
+Rule 23    instruction -> callFunc PTCOMA
+Rule 24    instruction -> retSt PTCOMA
+Rule 25    retSt -> RETURN
+Rule 26    callFunc -> ID PIZQ PDER
+Rule 27    label -> ID COLON
+Rule 28    gotoSt -> GOTO ID
+Rule 29    if -> IF expression LIZQ GOTO ID PTCOMA LDER
+Rule 30    assign -> access EQUALS finalExp
+Rule 31    assign -> ID EQUALS expression
+Rule 32    assign -> ID EQUALS access
+Rule 33    print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER
+Rule 34    printValue -> INT PIZQ finalExp PDER
+Rule 35    printValue -> finalExp
+Rule 36    expression -> finalExp PLUS finalExp
+Rule 37    expression -> finalExp MINUS finalExp
+Rule 38    expression -> finalExp MULTI finalExp
+Rule 39    expression -> finalExp DIV finalExp
+Rule 40    expression -> finalExp GREATER finalExp
+Rule 41    expression -> finalExp LESS finalExp
+Rule 42    expression -> finalExp GREATEREQUAL finalExp
+Rule 43    expression -> finalExp LESSEQUAL finalExp
+Rule 44    expression -> finalExp EQUALSEQUALS finalExp
+Rule 45    expression -> finalExp DISTINT finalExp
+Rule 46    expression -> MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER
+Rule 47    expression -> finalExp
+Rule 48    finalExp -> ID
+Rule 49    finalExp -> INTLITERAL
+Rule 50    finalExp -> MINUS INTLITERAL
+Rule 51    finalExp -> FLOATLITERAL
+Rule 52    access -> ID CIZQ INT PIZQ finalExp PDER CDER
+Rule 53    access -> ID CIZQ finalExp CDER
+
+Terminals, with rules where they appear
+
+CDER                 : 6 52 53
+CIZQ                 : 6 52 53
+COLON                : 27
+COMMA                : 10 33 46
+DISTINT              : 45
+DIV                  : 39
+EQUALS               : 30 31 32
+EQUALSEQUALS         : 44
+FLOAT64              : 6 9
+FLOATLITERAL         : 51
+FMT                  : 33
+FUNC                 : 14
+GOTO                 : 28 29
+GREATER              : 40
+GREATEREQUAL         : 42
+ID                   : 1 10 11 14 26 27 28 29 31 32 48 52 53
+IF                   : 29
+IMPORT               : 1
+INT                  : 8 34 52
+INTLITERAL           : 6 49 50
+LDER                 : 15 29
+LESS                 : 41
+LESSEQUAL            : 43
+LIZQ                 : 15 29
+MATH                 : 46
+MINUS                : 37 50
+MOD                  : 46
+MULTI                : 38
+PACKAGE              : 1
+PDER                 : 1 14 26 33 34 46 52
+PIZQ                 : 1 14 26 33 34 46 52
+PLUS                 : 36
+PRINTF               : 33
+PTCOMA               : 1 1 3 3 6 7 18 19 21 23 24 29
+PUNTO                : 33 46
+RETURN               : 25
+STRINGLITERAL        : 2 3 3 33
+VAR                  : 6 7
+error                : 
+
+Nonterminals, with rules where they appear
+
+IMPORTS              : 1
+access               : 30 32
+assign               : 18
+callFunc             : 23
+code                 : 12 13
+codeList             : 1 12
+declaration          : 4 5
+declarations         : 1 4
+expression           : 29 31
+finalExp             : 30 34 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 52 53
+gotoSt               : 21
+idList               : 6 7 10
+if                   : 20
+instruction          : 16 17
+instructions         : 15 16
+label                : 22
+print                : 19
+printValue           : 33
+retSt                : 24
+start                : 0
+statement            : 14
+type                 : 7
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . start
+    (1) start -> . PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList
+
+    PACKAGE         shift and go to state 2
+
+    start                          shift and go to state 1
+
+state 1
+
+    (0) S' -> start .
+
+
+
+state 2
+
+    (1) start -> PACKAGE . ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) start -> PACKAGE ID . PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList
+
+    PTCOMA          shift and go to state 4
+
+
+state 4
+
+    (1) start -> PACKAGE ID PTCOMA . IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList
+
+    IMPORT          shift and go to state 5
+
+
+state 5
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT . PIZQ IMPORTS PDER PTCOMA declarations codeList
+
+    PIZQ            shift and go to state 6
+
+
+state 6
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ . IMPORTS PDER PTCOMA declarations codeList
+    (2) IMPORTS -> . STRINGLITERAL
+    (3) IMPORTS -> . STRINGLITERAL PTCOMA STRINGLITERAL PTCOMA
+
+    STRINGLITERAL   shift and go to state 8
+
+    IMPORTS                        shift and go to state 7
+
+state 7
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS . PDER PTCOMA declarations codeList
+
+    PDER            shift and go to state 9
+
+
+state 8
+
+    (2) IMPORTS -> STRINGLITERAL .
+    (3) IMPORTS -> STRINGLITERAL . PTCOMA STRINGLITERAL PTCOMA
+
+    PDER            reduce using rule 2 (IMPORTS -> STRINGLITERAL .)
+    PTCOMA          shift and go to state 10
+
+
+state 9
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER . PTCOMA declarations codeList
+
+    PTCOMA          shift and go to state 11
+
+
+state 10
+
+    (3) IMPORTS -> STRINGLITERAL PTCOMA . STRINGLITERAL PTCOMA
+
+    STRINGLITERAL   shift and go to state 12
+
+
+state 11
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA . declarations codeList
+    (4) declarations -> . declarations declaration
+    (5) declarations -> . declaration
+    (6) declaration -> . VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA
+    (7) declaration -> . VAR idList type PTCOMA
+
+    VAR             shift and go to state 15
+
+    declarations                   shift and go to state 13
+    declaration                    shift and go to state 14
+
+state 12
+
+    (3) IMPORTS -> STRINGLITERAL PTCOMA STRINGLITERAL . PTCOMA
+
+    PTCOMA          shift and go to state 16
+
+
+state 13
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations . codeList
+    (4) declarations -> declarations . declaration
+    (12) codeList -> . codeList code
+    (13) codeList -> . code
+    (6) declaration -> . VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA
+    (7) declaration -> . VAR idList type PTCOMA
+    (14) code -> . FUNC ID PIZQ PDER statement
+
+    VAR             shift and go to state 15
+    FUNC            shift and go to state 20
+
+    codeList                       shift and go to state 17
+    declaration                    shift and go to state 18
+    code                           shift and go to state 19
+
+state 14
+
+    (5) declarations -> declaration .
+
+    VAR             reduce using rule 5 (declarations -> declaration .)
+    FUNC            reduce using rule 5 (declarations -> declaration .)
+
+
+state 15
+
+    (6) declaration -> VAR . idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA
+    (7) declaration -> VAR . idList type PTCOMA
+    (10) idList -> . idList COMMA ID
+    (11) idList -> . ID
+
+    ID              shift and go to state 22
+
+    idList                         shift and go to state 21
+
+state 16
+
+    (3) IMPORTS -> STRINGLITERAL PTCOMA STRINGLITERAL PTCOMA .
+
+    PDER            reduce using rule 3 (IMPORTS -> STRINGLITERAL PTCOMA STRINGLITERAL PTCOMA .)
+
+
+state 17
+
+    (1) start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList .
+    (12) codeList -> codeList . code
+    (14) code -> . FUNC ID PIZQ PDER statement
+
+    $end            reduce using rule 1 (start -> PACKAGE ID PTCOMA IMPORT PIZQ IMPORTS PDER PTCOMA declarations codeList .)
+    FUNC            shift and go to state 20
+
+    code                           shift and go to state 23
+
+state 18
+
+    (4) declarations -> declarations declaration .
+
+    VAR             reduce using rule 4 (declarations -> declarations declaration .)
+    FUNC            reduce using rule 4 (declarations -> declarations declaration .)
+
+
+state 19
+
+    (13) codeList -> code .
+
+    FUNC            reduce using rule 13 (codeList -> code .)
+    $end            reduce using rule 13 (codeList -> code .)
+
+
+state 20
+
+    (14) code -> FUNC . ID PIZQ PDER statement
+
+    ID              shift and go to state 24
+
+
+state 21
+
+    (6) declaration -> VAR idList . CIZQ INTLITERAL CDER FLOAT64 PTCOMA
+    (7) declaration -> VAR idList . type PTCOMA
+    (10) idList -> idList . COMMA ID
+    (8) type -> . INT
+    (9) type -> . FLOAT64
+
+    CIZQ            shift and go to state 25
+    COMMA           shift and go to state 28
+    INT             shift and go to state 29
+    FLOAT64         shift and go to state 26
+
+    type                           shift and go to state 27
+
+state 22
+
+    (11) idList -> ID .
+
+    CIZQ            reduce using rule 11 (idList -> ID .)
+    COMMA           reduce using rule 11 (idList -> ID .)
+    INT             reduce using rule 11 (idList -> ID .)
+    FLOAT64         reduce using rule 11 (idList -> ID .)
+
+
+state 23
+
+    (12) codeList -> codeList code .
+
+    FUNC            reduce using rule 12 (codeList -> codeList code .)
+    $end            reduce using rule 12 (codeList -> codeList code .)
+
+
+state 24
+
+    (14) code -> FUNC ID . PIZQ PDER statement
+
+    PIZQ            shift and go to state 30
+
+
+state 25
+
+    (6) declaration -> VAR idList CIZQ . INTLITERAL CDER FLOAT64 PTCOMA
+
+    INTLITERAL      shift and go to state 31
+
+
+state 26
+
+    (9) type -> FLOAT64 .
+
+    PTCOMA          reduce using rule 9 (type -> FLOAT64 .)
+
+
+state 27
+
+    (7) declaration -> VAR idList type . PTCOMA
+
+    PTCOMA          shift and go to state 32
+
+
+state 28
+
+    (10) idList -> idList COMMA . ID
+
+    ID              shift and go to state 33
+
+
+state 29
+
+    (8) type -> INT .
+
+    PTCOMA          reduce using rule 8 (type -> INT .)
+
+
+state 30
+
+    (14) code -> FUNC ID PIZQ . PDER statement
+
+    PDER            shift and go to state 34
+
+
+state 31
+
+    (6) declaration -> VAR idList CIZQ INTLITERAL . CDER FLOAT64 PTCOMA
+
+    CDER            shift and go to state 35
+
+
+state 32
+
+    (7) declaration -> VAR idList type PTCOMA .
+
+    VAR             reduce using rule 7 (declaration -> VAR idList type PTCOMA .)
+    FUNC            reduce using rule 7 (declaration -> VAR idList type PTCOMA .)
+
+
+state 33
+
+    (10) idList -> idList COMMA ID .
+
+    CIZQ            reduce using rule 10 (idList -> idList COMMA ID .)
+    COMMA           reduce using rule 10 (idList -> idList COMMA ID .)
+    INT             reduce using rule 10 (idList -> idList COMMA ID .)
+    FLOAT64         reduce using rule 10 (idList -> idList COMMA ID .)
+
+
+state 34
+
+    (14) code -> FUNC ID PIZQ PDER . statement
+    (15) statement -> . LIZQ instructions LDER
+
+    LIZQ            shift and go to state 37
+
+    statement                      shift and go to state 36
+
+state 35
+
+    (6) declaration -> VAR idList CIZQ INTLITERAL CDER . FLOAT64 PTCOMA
+
+    FLOAT64         shift and go to state 38
+
+
+state 36
+
+    (14) code -> FUNC ID PIZQ PDER statement .
+
+    FUNC            reduce using rule 14 (code -> FUNC ID PIZQ PDER statement .)
+    $end            reduce using rule 14 (code -> FUNC ID PIZQ PDER statement .)
+
+
+state 37
+
+    (15) statement -> LIZQ . instructions LDER
+    (16) instructions -> . instructions instruction
+    (17) instructions -> . instruction
+    (18) instruction -> . assign PTCOMA
+    (19) instruction -> . print PTCOMA
+    (20) instruction -> . if
+    (21) instruction -> . gotoSt PTCOMA
+    (22) instruction -> . label
+    (23) instruction -> . callFunc PTCOMA
+    (24) instruction -> . retSt PTCOMA
+    (30) assign -> . access EQUALS finalExp
+    (31) assign -> . ID EQUALS expression
+    (32) assign -> . ID EQUALS access
+    (33) print -> . FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER
+    (29) if -> . IF expression LIZQ GOTO ID PTCOMA LDER
+    (28) gotoSt -> . GOTO ID
+    (27) label -> . ID COLON
+    (26) callFunc -> . ID PIZQ PDER
+    (25) retSt -> . RETURN
+    (52) access -> . ID CIZQ INT PIZQ finalExp PDER CDER
+    (53) access -> . ID CIZQ finalExp CDER
+
+    ID              shift and go to state 49
+    FMT             shift and go to state 50
+    IF              shift and go to state 51
+    GOTO            shift and go to state 52
+    RETURN          shift and go to state 53
+
+    instructions                   shift and go to state 39
+    instruction                    shift and go to state 40
+    assign                         shift and go to state 41
+    print                          shift and go to state 42
+    if                             shift and go to state 43
+    gotoSt                         shift and go to state 44
+    label                          shift and go to state 45
+    callFunc                       shift and go to state 46
+    retSt                          shift and go to state 47
+    access                         shift and go to state 48
+
+state 38
+
+    (6) declaration -> VAR idList CIZQ INTLITERAL CDER FLOAT64 . PTCOMA
+
+    PTCOMA          shift and go to state 54
+
+
+state 39
+
+    (15) statement -> LIZQ instructions . LDER
+    (16) instructions -> instructions . instruction
+    (18) instruction -> . assign PTCOMA
+    (19) instruction -> . print PTCOMA
+    (20) instruction -> . if
+    (21) instruction -> . gotoSt PTCOMA
+    (22) instruction -> . label
+    (23) instruction -> . callFunc PTCOMA
+    (24) instruction -> . retSt PTCOMA
+    (30) assign -> . access EQUALS finalExp
+    (31) assign -> . ID EQUALS expression
+    (32) assign -> . ID EQUALS access
+    (33) print -> . FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER
+    (29) if -> . IF expression LIZQ GOTO ID PTCOMA LDER
+    (28) gotoSt -> . GOTO ID
+    (27) label -> . ID COLON
+    (26) callFunc -> . ID PIZQ PDER
+    (25) retSt -> . RETURN
+    (52) access -> . ID CIZQ INT PIZQ finalExp PDER CDER
+    (53) access -> . ID CIZQ finalExp CDER
+
+    LDER            shift and go to state 55
+    ID              shift and go to state 49
+    FMT             shift and go to state 50
+    IF              shift and go to state 51
+    GOTO            shift and go to state 52
+    RETURN          shift and go to state 53
+
+    instruction                    shift and go to state 56
+    assign                         shift and go to state 41
+    print                          shift and go to state 42
+    if                             shift and go to state 43
+    gotoSt                         shift and go to state 44
+    label                          shift and go to state 45
+    callFunc                       shift and go to state 46
+    retSt                          shift and go to state 47
+    access                         shift and go to state 48
+
+state 40
+
+    (17) instructions -> instruction .
+
+    LDER            reduce using rule 17 (instructions -> instruction .)
+    ID              reduce using rule 17 (instructions -> instruction .)
+    FMT             reduce using rule 17 (instructions -> instruction .)
+    IF              reduce using rule 17 (instructions -> instruction .)
+    GOTO            reduce using rule 17 (instructions -> instruction .)
+    RETURN          reduce using rule 17 (instructions -> instruction .)
+
+
+state 41
+
+    (18) instruction -> assign . PTCOMA
+
+    PTCOMA          shift and go to state 57
+
+
+state 42
+
+    (19) instruction -> print . PTCOMA
+
+    PTCOMA          shift and go to state 58
+
+
+state 43
+
+    (20) instruction -> if .
+
+    LDER            reduce using rule 20 (instruction -> if .)
+    ID              reduce using rule 20 (instruction -> if .)
+    FMT             reduce using rule 20 (instruction -> if .)
+    IF              reduce using rule 20 (instruction -> if .)
+    GOTO            reduce using rule 20 (instruction -> if .)
+    RETURN          reduce using rule 20 (instruction -> if .)
+
+
+state 44
+
+    (21) instruction -> gotoSt . PTCOMA
+
+    PTCOMA          shift and go to state 59
+
+
+state 45
+
+    (22) instruction -> label .
+
+    LDER            reduce using rule 22 (instruction -> label .)
+    ID              reduce using rule 22 (instruction -> label .)
+    FMT             reduce using rule 22 (instruction -> label .)
+    IF              reduce using rule 22 (instruction -> label .)
+    GOTO            reduce using rule 22 (instruction -> label .)
+    RETURN          reduce using rule 22 (instruction -> label .)
+
+
+state 46
+
+    (23) instruction -> callFunc . PTCOMA
+
+    PTCOMA          shift and go to state 60
+
+
+state 47
+
+    (24) instruction -> retSt . PTCOMA
+
+    PTCOMA          shift and go to state 61
+
+
+state 48
+
+    (30) assign -> access . EQUALS finalExp
+
+    EQUALS          shift and go to state 62
+
+
+state 49
+
+    (31) assign -> ID . EQUALS expression
+    (32) assign -> ID . EQUALS access
+    (27) label -> ID . COLON
+    (26) callFunc -> ID . PIZQ PDER
+    (52) access -> ID . CIZQ INT PIZQ finalExp PDER CDER
+    (53) access -> ID . CIZQ finalExp CDER
+
+    EQUALS          shift and go to state 63
+    COLON           shift and go to state 64
+    PIZQ            shift and go to state 65
+    CIZQ            shift and go to state 66
+
+
+state 50
+
+    (33) print -> FMT . PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER
+
+    PUNTO           shift and go to state 67
+
+
+state 51
+
+    (29) if -> IF . expression LIZQ GOTO ID PTCOMA LDER
+    (36) expression -> . finalExp PLUS finalExp
+    (37) expression -> . finalExp MINUS finalExp
+    (38) expression -> . finalExp MULTI finalExp
+    (39) expression -> . finalExp DIV finalExp
+    (40) expression -> . finalExp GREATER finalExp
+    (41) expression -> . finalExp LESS finalExp
+    (42) expression -> . finalExp GREATEREQUAL finalExp
+    (43) expression -> . finalExp LESSEQUAL finalExp
+    (44) expression -> . finalExp EQUALSEQUALS finalExp
+    (45) expression -> . finalExp DISTINT finalExp
+    (46) expression -> . MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER
+    (47) expression -> . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    MATH            shift and go to state 72
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    expression                     shift and go to state 68
+    finalExp                       shift and go to state 70
+
+state 52
+
+    (28) gotoSt -> GOTO . ID
+
+    ID              shift and go to state 75
+
+
+state 53
+
+    (25) retSt -> RETURN .
+
+    PTCOMA          reduce using rule 25 (retSt -> RETURN .)
+
+
+state 54
+
+    (6) declaration -> VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA .
+
+    VAR             reduce using rule 6 (declaration -> VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA .)
+    FUNC            reduce using rule 6 (declaration -> VAR idList CIZQ INTLITERAL CDER FLOAT64 PTCOMA .)
+
+
+state 55
+
+    (15) statement -> LIZQ instructions LDER .
+
+    FUNC            reduce using rule 15 (statement -> LIZQ instructions LDER .)
+    $end            reduce using rule 15 (statement -> LIZQ instructions LDER .)
+
+
+state 56
+
+    (16) instructions -> instructions instruction .
+
+    LDER            reduce using rule 16 (instructions -> instructions instruction .)
+    ID              reduce using rule 16 (instructions -> instructions instruction .)
+    FMT             reduce using rule 16 (instructions -> instructions instruction .)
+    IF              reduce using rule 16 (instructions -> instructions instruction .)
+    GOTO            reduce using rule 16 (instructions -> instructions instruction .)
+    RETURN          reduce using rule 16 (instructions -> instructions instruction .)
+
+
+state 57
+
+    (18) instruction -> assign PTCOMA .
+
+    LDER            reduce using rule 18 (instruction -> assign PTCOMA .)
+    ID              reduce using rule 18 (instruction -> assign PTCOMA .)
+    FMT             reduce using rule 18 (instruction -> assign PTCOMA .)
+    IF              reduce using rule 18 (instruction -> assign PTCOMA .)
+    GOTO            reduce using rule 18 (instruction -> assign PTCOMA .)
+    RETURN          reduce using rule 18 (instruction -> assign PTCOMA .)
+
+
+state 58
+
+    (19) instruction -> print PTCOMA .
+
+    LDER            reduce using rule 19 (instruction -> print PTCOMA .)
+    ID              reduce using rule 19 (instruction -> print PTCOMA .)
+    FMT             reduce using rule 19 (instruction -> print PTCOMA .)
+    IF              reduce using rule 19 (instruction -> print PTCOMA .)
+    GOTO            reduce using rule 19 (instruction -> print PTCOMA .)
+    RETURN          reduce using rule 19 (instruction -> print PTCOMA .)
+
+
+state 59
+
+    (21) instruction -> gotoSt PTCOMA .
+
+    LDER            reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+    ID              reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+    FMT             reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+    IF              reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+    GOTO            reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+    RETURN          reduce using rule 21 (instruction -> gotoSt PTCOMA .)
+
+
+state 60
+
+    (23) instruction -> callFunc PTCOMA .
+
+    LDER            reduce using rule 23 (instruction -> callFunc PTCOMA .)
+    ID              reduce using rule 23 (instruction -> callFunc PTCOMA .)
+    FMT             reduce using rule 23 (instruction -> callFunc PTCOMA .)
+    IF              reduce using rule 23 (instruction -> callFunc PTCOMA .)
+    GOTO            reduce using rule 23 (instruction -> callFunc PTCOMA .)
+    RETURN          reduce using rule 23 (instruction -> callFunc PTCOMA .)
+
+
+state 61
+
+    (24) instruction -> retSt PTCOMA .
+
+    LDER            reduce using rule 24 (instruction -> retSt PTCOMA .)
+    ID              reduce using rule 24 (instruction -> retSt PTCOMA .)
+    FMT             reduce using rule 24 (instruction -> retSt PTCOMA .)
+    IF              reduce using rule 24 (instruction -> retSt PTCOMA .)
+    GOTO            reduce using rule 24 (instruction -> retSt PTCOMA .)
+    RETURN          reduce using rule 24 (instruction -> retSt PTCOMA .)
+
+
+state 62
+
+    (30) assign -> access EQUALS . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 76
+
+state 63
+
+    (31) assign -> ID EQUALS . expression
+    (32) assign -> ID EQUALS . access
+    (36) expression -> . finalExp PLUS finalExp
+    (37) expression -> . finalExp MINUS finalExp
+    (38) expression -> . finalExp MULTI finalExp
+    (39) expression -> . finalExp DIV finalExp
+    (40) expression -> . finalExp GREATER finalExp
+    (41) expression -> . finalExp LESS finalExp
+    (42) expression -> . finalExp GREATEREQUAL finalExp
+    (43) expression -> . finalExp LESSEQUAL finalExp
+    (44) expression -> . finalExp EQUALSEQUALS finalExp
+    (45) expression -> . finalExp DISTINT finalExp
+    (46) expression -> . MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER
+    (47) expression -> . finalExp
+    (52) access -> . ID CIZQ INT PIZQ finalExp PDER CDER
+    (53) access -> . ID CIZQ finalExp CDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    MATH            shift and go to state 72
+    ID              shift and go to state 77
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    expression                     shift and go to state 78
+    access                         shift and go to state 79
+    finalExp                       shift and go to state 70
+
+state 64
+
+    (27) label -> ID COLON .
+
+    LDER            reduce using rule 27 (label -> ID COLON .)
+    ID              reduce using rule 27 (label -> ID COLON .)
+    FMT             reduce using rule 27 (label -> ID COLON .)
+    IF              reduce using rule 27 (label -> ID COLON .)
+    GOTO            reduce using rule 27 (label -> ID COLON .)
+    RETURN          reduce using rule 27 (label -> ID COLON .)
+
+
+state 65
+
+    (26) callFunc -> ID PIZQ . PDER
+
+    PDER            shift and go to state 80
+
+
+state 66
+
+    (52) access -> ID CIZQ . INT PIZQ finalExp PDER CDER
+    (53) access -> ID CIZQ . finalExp CDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    INT             shift and go to state 81
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 82
+
+state 67
+
+    (33) print -> FMT PUNTO . PRINTF PIZQ STRINGLITERAL COMMA printValue PDER
+
+    PRINTF          shift and go to state 83
+
+
+state 68
+
+    (29) if -> IF expression . LIZQ GOTO ID PTCOMA LDER
+
+    LIZQ            shift and go to state 84
+
+
+state 69
+
+    (48) finalExp -> ID .
+
+    PLUS            reduce using rule 48 (finalExp -> ID .)
+    MINUS           reduce using rule 48 (finalExp -> ID .)
+    MULTI           reduce using rule 48 (finalExp -> ID .)
+    DIV             reduce using rule 48 (finalExp -> ID .)
+    GREATER         reduce using rule 48 (finalExp -> ID .)
+    LESS            reduce using rule 48 (finalExp -> ID .)
+    GREATEREQUAL    reduce using rule 48 (finalExp -> ID .)
+    LESSEQUAL       reduce using rule 48 (finalExp -> ID .)
+    EQUALSEQUALS    reduce using rule 48 (finalExp -> ID .)
+    DISTINT         reduce using rule 48 (finalExp -> ID .)
+    LIZQ            reduce using rule 48 (finalExp -> ID .)
+    PTCOMA          reduce using rule 48 (finalExp -> ID .)
+    CDER            reduce using rule 48 (finalExp -> ID .)
+    PDER            reduce using rule 48 (finalExp -> ID .)
+    COMMA           reduce using rule 48 (finalExp -> ID .)
+
+
+state 70
+
+    (36) expression -> finalExp . PLUS finalExp
+    (37) expression -> finalExp . MINUS finalExp
+    (38) expression -> finalExp . MULTI finalExp
+    (39) expression -> finalExp . DIV finalExp
+    (40) expression -> finalExp . GREATER finalExp
+    (41) expression -> finalExp . LESS finalExp
+    (42) expression -> finalExp . GREATEREQUAL finalExp
+    (43) expression -> finalExp . LESSEQUAL finalExp
+    (44) expression -> finalExp . EQUALSEQUALS finalExp
+    (45) expression -> finalExp . DISTINT finalExp
+    (47) expression -> finalExp .
+
+    PLUS            shift and go to state 85
+    MINUS           shift and go to state 86
+    MULTI           shift and go to state 87
+    DIV             shift and go to state 88
+    GREATER         shift and go to state 89
+    LESS            shift and go to state 90
+    GREATEREQUAL    shift and go to state 91
+    LESSEQUAL       shift and go to state 92
+    EQUALSEQUALS    shift and go to state 93
+    DISTINT         shift and go to state 94
+    LIZQ            reduce using rule 47 (expression -> finalExp .)
+    PTCOMA          reduce using rule 47 (expression -> finalExp .)
+
+
+state 71
+
+    (50) finalExp -> MINUS . INTLITERAL
+
+    INTLITERAL      shift and go to state 95
+
+
+state 72
+
+    (46) expression -> MATH . PUNTO MOD PIZQ finalExp COMMA finalExp PDER
+
+    PUNTO           shift and go to state 96
+
+
+state 73
+
+    (49) finalExp -> INTLITERAL .
+
+    PLUS            reduce using rule 49 (finalExp -> INTLITERAL .)
+    MINUS           reduce using rule 49 (finalExp -> INTLITERAL .)
+    MULTI           reduce using rule 49 (finalExp -> INTLITERAL .)
+    DIV             reduce using rule 49 (finalExp -> INTLITERAL .)
+    GREATER         reduce using rule 49 (finalExp -> INTLITERAL .)
+    LESS            reduce using rule 49 (finalExp -> INTLITERAL .)
+    GREATEREQUAL    reduce using rule 49 (finalExp -> INTLITERAL .)
+    LESSEQUAL       reduce using rule 49 (finalExp -> INTLITERAL .)
+    EQUALSEQUALS    reduce using rule 49 (finalExp -> INTLITERAL .)
+    DISTINT         reduce using rule 49 (finalExp -> INTLITERAL .)
+    LIZQ            reduce using rule 49 (finalExp -> INTLITERAL .)
+    PTCOMA          reduce using rule 49 (finalExp -> INTLITERAL .)
+    CDER            reduce using rule 49 (finalExp -> INTLITERAL .)
+    PDER            reduce using rule 49 (finalExp -> INTLITERAL .)
+    COMMA           reduce using rule 49 (finalExp -> INTLITERAL .)
+
+
+state 74
+
+    (51) finalExp -> FLOATLITERAL .
+
+    PLUS            reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    MINUS           reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    MULTI           reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    DIV             reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    GREATER         reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    LESS            reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    GREATEREQUAL    reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    LESSEQUAL       reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    EQUALSEQUALS    reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    DISTINT         reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    LIZQ            reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    PTCOMA          reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    CDER            reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    PDER            reduce using rule 51 (finalExp -> FLOATLITERAL .)
+    COMMA           reduce using rule 51 (finalExp -> FLOATLITERAL .)
+
+
+state 75
+
+    (28) gotoSt -> GOTO ID .
+
+    PTCOMA          reduce using rule 28 (gotoSt -> GOTO ID .)
+
+
+state 76
+
+    (30) assign -> access EQUALS finalExp .
+
+    PTCOMA          reduce using rule 30 (assign -> access EQUALS finalExp .)
+
+
+state 77
+
+    (52) access -> ID . CIZQ INT PIZQ finalExp PDER CDER
+    (53) access -> ID . CIZQ finalExp CDER
+    (48) finalExp -> ID .
+
+    CIZQ            shift and go to state 66
+    PLUS            reduce using rule 48 (finalExp -> ID .)
+    MINUS           reduce using rule 48 (finalExp -> ID .)
+    MULTI           reduce using rule 48 (finalExp -> ID .)
+    DIV             reduce using rule 48 (finalExp -> ID .)
+    GREATER         reduce using rule 48 (finalExp -> ID .)
+    LESS            reduce using rule 48 (finalExp -> ID .)
+    GREATEREQUAL    reduce using rule 48 (finalExp -> ID .)
+    LESSEQUAL       reduce using rule 48 (finalExp -> ID .)
+    EQUALSEQUALS    reduce using rule 48 (finalExp -> ID .)
+    DISTINT         reduce using rule 48 (finalExp -> ID .)
+    PTCOMA          reduce using rule 48 (finalExp -> ID .)
+
+
+state 78
+
+    (31) assign -> ID EQUALS expression .
+
+    PTCOMA          reduce using rule 31 (assign -> ID EQUALS expression .)
+
+
+state 79
+
+    (32) assign -> ID EQUALS access .
+
+    PTCOMA          reduce using rule 32 (assign -> ID EQUALS access .)
+
+
+state 80
+
+    (26) callFunc -> ID PIZQ PDER .
+
+    PTCOMA          reduce using rule 26 (callFunc -> ID PIZQ PDER .)
+
+
+state 81
+
+    (52) access -> ID CIZQ INT . PIZQ finalExp PDER CDER
+
+    PIZQ            shift and go to state 97
+
+
+state 82
+
+    (53) access -> ID CIZQ finalExp . CDER
+
+    CDER            shift and go to state 98
+
+
+state 83
+
+    (33) print -> FMT PUNTO PRINTF . PIZQ STRINGLITERAL COMMA printValue PDER
+
+    PIZQ            shift and go to state 99
+
+
+state 84
+
+    (29) if -> IF expression LIZQ . GOTO ID PTCOMA LDER
+
+    GOTO            shift and go to state 100
+
+
+state 85
+
+    (36) expression -> finalExp PLUS . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 101
+
+state 86
+
+    (37) expression -> finalExp MINUS . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 102
+
+state 87
+
+    (38) expression -> finalExp MULTI . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 103
+
+state 88
+
+    (39) expression -> finalExp DIV . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 104
+
+state 89
+
+    (40) expression -> finalExp GREATER . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 105
+
+state 90
+
+    (41) expression -> finalExp LESS . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 106
+
+state 91
+
+    (42) expression -> finalExp GREATEREQUAL . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 107
+
+state 92
+
+    (43) expression -> finalExp LESSEQUAL . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 108
+
+state 93
+
+    (44) expression -> finalExp EQUALSEQUALS . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 109
+
+state 94
+
+    (45) expression -> finalExp DISTINT . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 110
+
+state 95
+
+    (50) finalExp -> MINUS INTLITERAL .
+
+    PLUS            reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    MINUS           reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    MULTI           reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    DIV             reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    GREATER         reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    LESS            reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    GREATEREQUAL    reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    LESSEQUAL       reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    EQUALSEQUALS    reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    DISTINT         reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    LIZQ            reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    PTCOMA          reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    CDER            reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    PDER            reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+    COMMA           reduce using rule 50 (finalExp -> MINUS INTLITERAL .)
+
+
+state 96
+
+    (46) expression -> MATH PUNTO . MOD PIZQ finalExp COMMA finalExp PDER
+
+    MOD             shift and go to state 111
+
+
+state 97
+
+    (52) access -> ID CIZQ INT PIZQ . finalExp PDER CDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 112
+
+state 98
+
+    (53) access -> ID CIZQ finalExp CDER .
+
+    EQUALS          reduce using rule 53 (access -> ID CIZQ finalExp CDER .)
+    PTCOMA          reduce using rule 53 (access -> ID CIZQ finalExp CDER .)
+
+
+state 99
+
+    (33) print -> FMT PUNTO PRINTF PIZQ . STRINGLITERAL COMMA printValue PDER
+
+    STRINGLITERAL   shift and go to state 113
+
+
+state 100
+
+    (29) if -> IF expression LIZQ GOTO . ID PTCOMA LDER
+
+    ID              shift and go to state 114
+
+
+state 101
+
+    (36) expression -> finalExp PLUS finalExp .
+
+    LIZQ            reduce using rule 36 (expression -> finalExp PLUS finalExp .)
+    PTCOMA          reduce using rule 36 (expression -> finalExp PLUS finalExp .)
+
+
+state 102
+
+    (37) expression -> finalExp MINUS finalExp .
+
+    LIZQ            reduce using rule 37 (expression -> finalExp MINUS finalExp .)
+    PTCOMA          reduce using rule 37 (expression -> finalExp MINUS finalExp .)
+
+
+state 103
+
+    (38) expression -> finalExp MULTI finalExp .
+
+    LIZQ            reduce using rule 38 (expression -> finalExp MULTI finalExp .)
+    PTCOMA          reduce using rule 38 (expression -> finalExp MULTI finalExp .)
+
+
+state 104
+
+    (39) expression -> finalExp DIV finalExp .
+
+    LIZQ            reduce using rule 39 (expression -> finalExp DIV finalExp .)
+    PTCOMA          reduce using rule 39 (expression -> finalExp DIV finalExp .)
+
+
+state 105
+
+    (40) expression -> finalExp GREATER finalExp .
+
+    LIZQ            reduce using rule 40 (expression -> finalExp GREATER finalExp .)
+    PTCOMA          reduce using rule 40 (expression -> finalExp GREATER finalExp .)
+
+
+state 106
+
+    (41) expression -> finalExp LESS finalExp .
+
+    LIZQ            reduce using rule 41 (expression -> finalExp LESS finalExp .)
+    PTCOMA          reduce using rule 41 (expression -> finalExp LESS finalExp .)
+
+
+state 107
+
+    (42) expression -> finalExp GREATEREQUAL finalExp .
+
+    LIZQ            reduce using rule 42 (expression -> finalExp GREATEREQUAL finalExp .)
+    PTCOMA          reduce using rule 42 (expression -> finalExp GREATEREQUAL finalExp .)
+
+
+state 108
+
+    (43) expression -> finalExp LESSEQUAL finalExp .
+
+    LIZQ            reduce using rule 43 (expression -> finalExp LESSEQUAL finalExp .)
+    PTCOMA          reduce using rule 43 (expression -> finalExp LESSEQUAL finalExp .)
+
+
+state 109
+
+    (44) expression -> finalExp EQUALSEQUALS finalExp .
+
+    LIZQ            reduce using rule 44 (expression -> finalExp EQUALSEQUALS finalExp .)
+    PTCOMA          reduce using rule 44 (expression -> finalExp EQUALSEQUALS finalExp .)
+
+
+state 110
+
+    (45) expression -> finalExp DISTINT finalExp .
+
+    LIZQ            reduce using rule 45 (expression -> finalExp DISTINT finalExp .)
+    PTCOMA          reduce using rule 45 (expression -> finalExp DISTINT finalExp .)
+
+
+state 111
+
+    (46) expression -> MATH PUNTO MOD . PIZQ finalExp COMMA finalExp PDER
+
+    PIZQ            shift and go to state 115
+
+
+state 112
+
+    (52) access -> ID CIZQ INT PIZQ finalExp . PDER CDER
+
+    PDER            shift and go to state 116
+
+
+state 113
+
+    (33) print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL . COMMA printValue PDER
+
+    COMMA           shift and go to state 117
+
+
+state 114
+
+    (29) if -> IF expression LIZQ GOTO ID . PTCOMA LDER
+
+    PTCOMA          shift and go to state 118
+
+
+state 115
+
+    (46) expression -> MATH PUNTO MOD PIZQ . finalExp COMMA finalExp PDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 119
+
+state 116
+
+    (52) access -> ID CIZQ INT PIZQ finalExp PDER . CDER
+
+    CDER            shift and go to state 120
+
+
+state 117
+
+    (33) print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA . printValue PDER
+    (34) printValue -> . INT PIZQ finalExp PDER
+    (35) printValue -> . finalExp
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    INT             shift and go to state 122
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    printValue                     shift and go to state 121
+    finalExp                       shift and go to state 123
+
+state 118
+
+    (29) if -> IF expression LIZQ GOTO ID PTCOMA . LDER
+
+    LDER            shift and go to state 124
+
+
+state 119
+
+    (46) expression -> MATH PUNTO MOD PIZQ finalExp . COMMA finalExp PDER
+
+    COMMA           shift and go to state 125
+
+
+state 120
+
+    (52) access -> ID CIZQ INT PIZQ finalExp PDER CDER .
+
+    EQUALS          reduce using rule 52 (access -> ID CIZQ INT PIZQ finalExp PDER CDER .)
+    PTCOMA          reduce using rule 52 (access -> ID CIZQ INT PIZQ finalExp PDER CDER .)
+
+
+state 121
+
+    (33) print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue . PDER
+
+    PDER            shift and go to state 126
+
+
+state 122
+
+    (34) printValue -> INT . PIZQ finalExp PDER
+
+    PIZQ            shift and go to state 127
+
+
+state 123
+
+    (35) printValue -> finalExp .
+
+    PDER            reduce using rule 35 (printValue -> finalExp .)
+
+
+state 124
+
+    (29) if -> IF expression LIZQ GOTO ID PTCOMA LDER .
+
+    LDER            reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+    ID              reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+    FMT             reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+    IF              reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+    GOTO            reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+    RETURN          reduce using rule 29 (if -> IF expression LIZQ GOTO ID PTCOMA LDER .)
+
+
+state 125
+
+    (46) expression -> MATH PUNTO MOD PIZQ finalExp COMMA . finalExp PDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 128
+
+state 126
+
+    (33) print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER .
+
+    PTCOMA          reduce using rule 33 (print -> FMT PUNTO PRINTF PIZQ STRINGLITERAL COMMA printValue PDER .)
+
+
+state 127
+
+    (34) printValue -> INT PIZQ . finalExp PDER
+    (48) finalExp -> . ID
+    (49) finalExp -> . INTLITERAL
+    (50) finalExp -> . MINUS INTLITERAL
+    (51) finalExp -> . FLOATLITERAL
+
+    ID              shift and go to state 69
+    INTLITERAL      shift and go to state 73
+    MINUS           shift and go to state 71
+    FLOATLITERAL    shift and go to state 74
+
+    finalExp                       shift and go to state 129
+
+state 128
+
+    (46) expression -> MATH PUNTO MOD PIZQ finalExp COMMA finalExp . PDER
+
+    PDER            shift and go to state 130
+
+
+state 129
+
+    (34) printValue -> INT PIZQ finalExp . PDER
+
+    PDER            shift and go to state 131
+
+
+state 130
+
+    (46) expression -> MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER .
+
+    LIZQ            reduce using rule 46 (expression -> MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER .)
+    PTCOMA          reduce using rule 46 (expression -> MATH PUNTO MOD PIZQ finalExp COMMA finalExp PDER .)
+
+
+state 131
+
+    (34) printValue -> INT PIZQ finalExp PDER .
+
+    PDER            reduce using rule 34 (printValue -> INT PIZQ finalExp PDER .)
+

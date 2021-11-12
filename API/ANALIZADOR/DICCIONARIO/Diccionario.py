@@ -111,7 +111,7 @@ D_NATIVA = {
     'PARSE-FLOAT64-STRING':['float(valor.valor)', Tipos.FLOAT],
     #trunc
     'TRUNC-INT64-FLOAT64':['math.trunc(valor.valor)', Tipos.ENTERO],
-    'TRUNC-FLOAT64':['float(math.trunc(valor.valor))', Tipos.FLOAT],
+    'TRUNC-FLOAT64':['float(math.trunc(valor.valor))', Tipos.ENTERO],
     #float
     'FLOAT-INT64':['float(valor.valor)', Tipos.FLOAT],
     #string

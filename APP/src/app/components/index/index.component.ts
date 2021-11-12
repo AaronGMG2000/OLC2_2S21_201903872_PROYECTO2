@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IndexService } from 'src/app/services/index.service';
-import {Pestaña} from 'src/app/models/pestaña';
+import { Pestaña } from 'src/app/models/pestaña';
 import 'codemirror/mode/go/go';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/xml/xml';
@@ -17,33 +17,33 @@ import 'codemirror/addon/edit/matchbrackets';
 import 'codemirror/addon/lint/lint';
 import 'codemirror/addon/lint/json-lint';
 import 'codemirror/addon/fold/xml-fold';
-import {graphviz} from 'd3-graphviz'
+import { graphviz } from 'd3-graphviz';
 import { COMPILADORService } from 'src/app/services/compilador.service';
 import { Contenido } from 'src/app/models/contenido';
-
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss']
+  styleUrls: ['./index.component.scss'],
 })
 export class IndexComponent implements OnInit {
-  
   @ViewChild('graphContainer', { static: false }) graph: ElementRef;
 
   Pestanas: Array<Pestaña> = [];
   NumTab = 0;
   NumError = 1;
-  AST = ''
+  AST = '';
   ContenidoTab = '';
-  actual:any = undefined;
+  actual: any = undefined;
   showSecondPopup2 = false;
   showSecondPopup3 = false;
+  showSecondPopup4 = false;
   showSecondPopup = false;
   CONTENT = '';
   CONSOLA = '';
   errores: any;
-  simbolos:any;
+  simbolos: any;
+  opti: any;
   buttons: Array<any> = [
     {
       location: 'after',
@@ -69,7 +69,7 @@ export class IndexComponent implements OnInit {
       location: 'after',
       widget: 'dxButton',
       options: {
-        icon: 'contentlayout',
+        icon: 'warning',
         hint: 'ERROR',
         stylingMode: 'contained',
         onClick: this.GRAFICAR2.bind(this),
@@ -89,8 +89,38 @@ export class IndexComponent implements OnInit {
       location: 'after',
       widget: 'dxButton',
       options: {
+        icon: 'contentlayout',
+        hint: 'SIMBOLOS',
+        stylingMode: 'contained',
+        onClick: this.GRAFICAR4.bind(this),
+      },
+    },
+    {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
         icon: 'video',
         hint: 'Compilar',
+        stylingMode: 'contained',
+        onClick: this.Compilar.bind(this),
+      },
+    },
+    {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+        icon: 'variable',
+        hint: 'Mirilla',
+        stylingMode: 'contained',
+        onClick: this.Mirilla.bind(this),
+      },
+    },
+    {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+        icon: 'codeblock',
+        hint: 'Bloque',
         stylingMode: 'contained',
         onClick: this.Compilar.bind(this),
       },
@@ -114,12 +144,12 @@ export class IndexComponent implements OnInit {
         stylingMode: 'contained',
         onClick: this.EliminarTodas.bind(this),
       },
-    }
+    },
   ];
   constructor(
     private Interacion: IndexService,
     public compilador: COMPILADORService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.Pestanas = [];
@@ -129,7 +159,7 @@ export class IndexComponent implements OnInit {
     this.ContenidoTab = 'Pestaña 0';
   }
 
-  AnadirPestana(): void{
+  AnadirPestana(): void {
     if (this.Pestanas.length === 0) {
       this.NumTab = 0;
     }
@@ -143,35 +173,41 @@ export class IndexComponent implements OnInit {
     let reader = new FileReader();
     reader.readAsText(input.files[0]);
     reader.onload = async () => {
-      let nueva = new Pestaña('TAB_' + (this.NumTab++) + ' ' + files[0].name);
+      let nueva = new Pestaña('TAB_' + this.NumTab++ + ' ' + files[0].name);
       this.Pestanas.push(nueva);
       this.ContenidoTab = nueva.name;
-      nueva.content = (reader.result as string);
+      nueva.content = reader.result as string;
       nueva.consola = '';
     };
   }
 
-  async removerPestana(): Promise<void>{
+  async removerPestana(): Promise<void> {
     if (!this.Pestanas.length) {
       await this.Interacion.Notificacion('No hay pestañas para remover');
       return;
     }
-    const p = await this.Interacion.confirmacion('¿Eliminar Pestaña ' + this.ContenidoTab + '?');
+    const p = await this.Interacion.confirmacion(
+      '¿Eliminar Pestaña ' + this.ContenidoTab + '?'
+    );
     if (!p) {
       return;
     }
     this.errores = [];
     this.simbolos = [];
+    this.opti = [];
     this.Pestanas = this.Pestanas.filter((obj) => {
       return obj.name !== this.ContenidoTab;
     });
   }
 
-  async EliminarTodas(): Promise<void>{
-    const p = await this.Interacion.confirmacion('¿Desea eliminar todas las Pestañas?');
+  async EliminarTodas(): Promise<void> {
+    const p = await this.Interacion.confirmacion(
+      '¿Desea eliminar todas las Pestañas?'
+    );
     if (p) {
       this.errores = [];
       this.simbolos = [];
+      this.opti = [];
       this.ngOnInit();
     }
   }
@@ -182,13 +218,13 @@ export class IndexComponent implements OnInit {
 
   saveAsProject() {
     //you can enter your own file name and extension
-    if (this.NumTab!=0) {
-      this.writeContents(this.CONTENT, this.ContenidoTab + ".jl", "text/plain");
+    if (this.NumTab != 0) {
+      this.writeContents(this.CONTENT, this.ContenidoTab + '.jl', 'text/plain');
     }
   }
 
-  writeContents(content:string, fileName:string, contentType:string) {
-    var a = document.createElement("a");
+  writeContents(content: string, fileName: string, contentType: string) {
+    var a = document.createElement('a');
     var file = new Blob([content], { type: contentType });
     a.href = URL.createObjectURL(file);
     a.download = fileName;
@@ -202,19 +238,20 @@ export class IndexComponent implements OnInit {
     this.actual = e.addedItems[0];
     this.errores = e.addedItems[0].errores;
     this.simbolos = e.addedItems[0].simbolo;
+    this.opti = e.addedItems[0].opti;
   }
 
-  LlenarContent(text: string): void{
+  LlenarContent(text: string): void {
     this.CONTENT = text;
   }
 
-  getNumero():number{
+  getNumero(): number {
     return this.NumError++;
   }
 
-  Compilar(): void{
+  Compilar(): void {
     const cont: Contenido = {
-      Contenido: this.CONTENT
+      Contenido: this.CONTENT,
     };
     this.compilador.COMPILAR(cont).subscribe(
       (res: any) => {
@@ -232,6 +269,22 @@ export class IndexComponent implements OnInit {
     );
   }
 
+  Mirilla(): void {
+    const cont: Contenido = {
+      Contenido: this.CONSOLA,
+    };
+    this.compilador.MIRILLA(cont).subscribe(
+      (res: any) => {
+        this.CONSOLA = '';
+        this.CONSOLA = res.consola;
+        this.actual.consola = this.CONSOLA;
+        this.actual.opti = res.mirilla;
+        this.opti = res.mirilla;
+      },
+      (err: any) => console.log(err)
+    );
+  }
+
   reports() {
     let width = this.graph.nativeElement.offsetWidth;
     let height = this.graph.nativeElement.offsetHeight;
@@ -243,16 +296,19 @@ export class IndexComponent implements OnInit {
       .renderDot(this.AST);
   }
 
-  GRAFICAR(): void{
-    this.showSecondPopup = true
+  GRAFICAR(): void {
+    this.showSecondPopup = true;
   }
 
-  GRAFICAR2(): void{
-    this.showSecondPopup2 = true
+  GRAFICAR2(): void {
+    this.showSecondPopup2 = true;
   }
 
-  GRAFICAR3(): void{
-    this.showSecondPopup3 = true
+  GRAFICAR3(): void {
+    this.showSecondPopup3 = true;
   }
 
+  GRAFICAR4(): void {
+    this.showSecondPopup4 = true;
+  }
 }

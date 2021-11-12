@@ -1,8 +1,7 @@
 from typing import List
 
-
+from ..GENERAL.lista_simbolo import Lista_Simbolo
 from ..GENERAL.generator import Generador
-
 from ..ABSTRACT.Retorno import Retorno
 from ..ABSTRACT.instruccion import Instruccion
 from ..ABSTRACT.NodoAST import NodoAST
@@ -63,7 +62,7 @@ class Asignar_Variable(Instruccion):
                             generador.place_operation(temp, "P", resta, '+')
                         generador.insert_stack(temp, valor.value)
                         generador.set_unused_temp(temp)
-                    tabla.set_variable(self.id, self.expresion.type, False)
+                    tabla.set_variable(arbol, self.row, self.column, self.id, self.expresion.type, False)
                     variable = tabla.get_variable(self.id)
                     variable.setValor(valor.valor)
                     if self.type == Tipos.ARRAY:

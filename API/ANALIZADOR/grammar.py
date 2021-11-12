@@ -234,8 +234,8 @@ from .INSTRUCCIONES.f_return import RETURN
 from .INSTRUCCIONES.condicion import CONDICION
 from .EXPRESIONES.variable_struct import Variable_Struct
 from .EXPRESIONES.Array import ARRAY
+from .INSTRUCCIONES.T_Global import TGLOBAL
 from .EXPRESIONES.llamada import LLAMADA_EXP
-
 start = 'init'
 lista = []
 
@@ -293,27 +293,35 @@ def p_lengthh(t):
 #Global y Local
 def p_global(t):
     '''GLOBAL : r_global id'''
+    t[0] = TGLOBAL(t[2], t.lineno(1), col(t.slice[2]))
 
 def p_global_exp(t):
     '''GLOBAL : r_global id igualT expresion'''
+    t[0] = TGLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4])
 
 def p_global_tipo(t):
     '''GLOBAL : r_global id igualT expresion dospuntos dospuntos tipo'''
+    t[0] = TGLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4], t[7])
 
 def p_global_tipo_id(t):
     '''GLOBAL : r_global id igualT expresion dospuntos dospuntos id'''
+    t[0] = TGLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4], Tipos.OBJECT)
 
 def p_local(t):
     '''LOCAL : r_local id'''
+    # t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]))
     
 def p_local_exp(t):
     '''LOCAL : r_local id igualT expresion'''
+    # t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]), t[4])
 
 def p_local_tipo(t):
     '''LOCAL : r_local id igualT expresion dospuntos dospuntos tipo'''
+    # t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]),t[7])
     
 def p_local_tipo_id(t):
     '''LOCAL : r_local id igualT expresion dospuntos dospuntos id'''
+    # t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]),Tipos.OBJECT)
     
 # Condicionales
 def p_condicional_else(t):

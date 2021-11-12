@@ -1,3 +1,4 @@
+from ..GENERAL.lista_simbolo import Lista_Simbolo
 from .Simbolo import Simbolo
 
 class Tabla(object):
@@ -14,10 +15,11 @@ class Tabla(object):
         self.structs = {}
 
 
-    def set_variable(self, id, type, in_heap) -> bool:
+    def set_variable(self, arbol, row, column, id, type, in_heap) -> bool:
         if id in self.variables.keys():
             return False
         else:
+            arbol.Lista_Simbolo.append(Lista_Simbolo(len(arbol.Lista_Simbolo)+1, id, type, self.size, self.name, row, column))
             new_symbol = Simbolo(id, type, self.size, self.previous == None, in_heap)
             self.size += 1
             self.variables[id] = new_symbol

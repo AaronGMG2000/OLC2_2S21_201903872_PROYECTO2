@@ -63,8 +63,6 @@ class Asignar_Objeto(Instruccion):
                     generador.set_unused_temp(valor.value)
                     if expre.is_temporal:
                         generador.set_unused_temp(expre.value)
-                    if self.type == Tipos.OBJECT:
-                        valor.valor[self.id][4] = expre.valor
                     generador.set_anterior()
                     return
                 except:

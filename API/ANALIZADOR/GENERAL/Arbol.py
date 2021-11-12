@@ -19,6 +19,7 @@ class Arbol(object):
         self.c = 0
         self.PilaFunc = []
         self.PilaCiclo = []
+        self.Lista_Simbolo = []
         
     def ejecutar(self):
         genAux = Generador()

@@ -1,10 +1,11 @@
-export class Pestaña{
+export class Pestaña {
   name!: string;
   content = '';
   consola = '';
   simbolo = [];
   errores = [];
-  constructor(name: string, content:string=""){
-      this.name = name;
+  opti = [];
+  constructor(name: string, content: string = '') {
+    this.name = name;
   }
 }

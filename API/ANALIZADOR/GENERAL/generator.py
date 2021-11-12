@@ -52,12 +52,12 @@ class Generador(object):
     '''
     def generate_header(self) -> str:
         if len(self.imports) == 0:
-            c = 'package main;\n\nimport (\n\t"fmt"\n)\n\n'
+            c = 'package main;\n\nimport (\n\t"fmt"\n);\n\n'
         else:
-            c = 'package main;\n\nimport (\n\t"fmt"\n'
+            c = 'package main;\n\nimport (\n\t"fmt";\n'
             for im in self.imports:
-                c+=f'\t"{im}"\n'
-            c += ')\n\n'
+                c+=f'\t"{im}";\n'
+            c += ');\n\n'
         if len(self.temps) > 0:
             c += 'var '
             for temp in range(len(self.temps)):
@@ -140,8 +140,8 @@ class Generador(object):
             self.set_unused_temp(temp)
             ##
             fist = True
+            self.place_operation('P', 'P', self.count_save, '-')
             for tempo in sorted(lista, reverse=True):
-                self.previous_stack()
                 if fist:
                     self.place_operation(temp, 'P', tamano + self.count_save, '+')
                 self.place_operation(temp, temp, 1, '-')
@@ -928,7 +928,7 @@ class Generador(object):
         self.place_operation(t0, 'P', 1, '+')
         self.get_stack(t0, t0)
         t1 = self.new_temporal()
-        self.inser_code(f'{t1} = math.Mod({t0}, 1);')
+        self.inser_code(f'{t1} = math.Mod({t0}, 1);\n')
         self.place_operation(t0, t0, t1, '-')
         self.insert_stack('P', t0)
         self.end_function()

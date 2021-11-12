@@ -92,6 +92,7 @@ class Aritmetica(Instruccion):
                             generador.set_unused_temp(val1.value)
                             generador.set_unused_temp(val2.value)
                             generador.set_unused_temp(temp)
+                            
                             generador.temporary_storage(tabla.size)
                             generador.place_operation(temp, 'P',tabla.size,'+')
                             generador.place_operation(temp, temp,1,'+')
