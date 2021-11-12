@@ -1,15 +1,11 @@
 from ..GENERAL.reglas import Rule as Rules
 from ..instructions.asignacion import Asignacion
 from ..instructions.etiqueta import Etiqueta
-from ..instructions.funcion import Funcion
 from ..instructions.goto import Goto
 from ..instructions.I_IF import If
-from ..instructions.I_FUNCION import LlamadaFuncion
-from ..instructions.I_RETURN import Return
 from ..Expresiones.acceso import Acceso
-from ..Expresiones.expresion import Expresion
 from ..Expresiones.literal import Literal
-from .blocks import Blocks
+# from .blocks import Blocks
 
 
 class Optimizador:
@@ -40,7 +36,7 @@ class Optimizador:
             size = 20
             if len(func.instrunctions) < 20:
                 size = len(func.instrunctions)
-            for i in range(25):
+            for i in range(10):
                 opt = False
                 n = 0
                 while (size +  n) <= len(func.instrunctions):
@@ -310,41 +306,41 @@ class Optimizador:
     ########################
     #########BLOQUES########
     ########################
-    def Bloques(self):
-        self.blocks = []
-        self.GenerarBloques()
+    # def Bloques(self):
+    #     self.blocks = []
+    #     self.GenerarBloques()
 
-    def GenerarBloques(self):
-        self.GenerarLideres()
-        self.CrearBloques()
-        self.ConnectBloques()
-        print('Prueba')
+    # def GenerarBloques(self):
+    #     self.GenerarLideres()
+    #     self.CrearBloques()
+    #     self.ConnectBloques()
+    #     print('Prueba')
 
-    def GenerarLideres(self):
-        for func in self.code:
-            func.instr[0].isLeader = True
-            flag = False
-            for instr in func.instr:
-                if flag:
-                    instr.isLeader = True
-                    flag = False
-                if type(instr) is Goto or type(instr) is If:
-                    flag = True
+    # def GenerarLideres(self):
+    #     for func in self.code:
+    #         func.instr[0].isLeader = True
+    #         flag = False
+    #         for instr in func.instr:
+    #             if flag:
+    #                 instr.isLeader = True
+    #                 flag = False
+    #             if type(instr) is Goto or type(instr) is If:
+    #                 flag = True
 
-    def CrearBloques(self):
-        for func in self.code:
-            blocks = []
-            block = None
-            for instr in func.instr:
-                if instr.isLeader:
-                    if block != None:
-                        blocks.append(block)
-                    block = Blocks(instr)
-                block.code.append(instr)
-            blocks.append(block)
-            self.blocks.append(blocks)
+    # def CrearBloques(self):
+    #     for func in self.code:
+    #         blocks = []
+    #         block = None
+    #         for instr in func.instr:
+    #             if instr.isLeader:
+    #                 if block != None:
+    #                     blocks.append(block)
+    #                 block = Blocks(instr)
+    #             block.code.append(instr)
+    #         blocks.append(block)
+    #         self.blocks.append(blocks)
 
-    def ConnectBloques(self):
+    # def ConnectBloques(self):
         for func in self.blocks:
             prevBlock = None
             for block in func:

@@ -8,8 +8,8 @@ import { Contenido } from '../models/contenido';
 })
 export class COMPILADORService {
 
-  // API_URI = 'https://cryptic-wildwood-53384.herokuapp.com';
-  API_URI = 'http://localhost:3000';
+  API_URI = 'https://immense-savannah-71310.herokuapp.com';
+  // API_URI = 'http://localhost:3000';
 
 
   constructor(private http: HttpClient, private router: Router) { }

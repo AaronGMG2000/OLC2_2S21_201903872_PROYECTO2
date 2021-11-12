@@ -24,18 +24,20 @@ async def analysis(req: RequestModel):
         return {"consola": consola, "Simbolo": ast.Lista_Simbolo, "Errores": ast.errors, "AST": ""}
     except Exception as e:
         print(e)
-        return{"consola": e, "Simbolo":[], "Errores": [], "AST": ""}
+        return{"consola": str(e), "Simbolo":[], "Errores": [], "AST": ""}
+    
+    
 @router.get('/Prueba')
 async def analysis():
     return {"prueba": "hola"}
 
 
 @router.post('/Mirilla')
-async def optimizar(req: RequestModel):
+async def analysis(req: RequestModel):
     try:
         opti = Optimizador.parse(req.Contenido)
         opti.Mirilla()
         return {'consola': opti.get_code(), 'mirilla': opti.rules}
     except Exception as e:
         print(e)
-        return {'consola': e, 'mirilla': []}
+        return {'consola': str(e), 'mirilla': []}

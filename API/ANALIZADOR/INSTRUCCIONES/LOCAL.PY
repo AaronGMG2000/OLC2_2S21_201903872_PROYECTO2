@@ -51,8 +51,7 @@ class LOCAL(Instruccion):
                 else:
                     tabla.set_variable(arbol, self.row, self.column, self.id, Tipos.NOTHING, False)
                 generador.set_anterior()
-                        
-                    
+                
     def getNodo(self) -> NodoAST:
         nodo = NodoAST('GLOBAL')
         nodo.agregarHijo("global")
