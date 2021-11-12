@@ -42,6 +42,15 @@ class TGLOBAL(Instruccion):
                             and exp.types != self.tipoA and exp.auxiliar_type!= self.tipoA):
                             generador.error_code()
                             return Error("Sintactico", "El tipo ingresado no coincide con el solicitado", self.row, self.column)
+                    variable.types = exp.types
+                    if type(exp.auxiliar_type) == type(""):
+                        variable.struct_type = exp.auxiliar_type
+                        variable.type = Tipos.OBJECT
+                    elif type(exp.auxiliar_type) == type([]):
+                        variable.types = exp.auxiliar_type
+                        variable.type = Tipos.STRUCT
+                    else:
+                        variable.auxiliar_type = exp.auxiliar_type
                     generador.insert_stack(variable.position, exp.value)
                     generador.set_unused_temp(exp.value)
                 generador.set_anterior()
