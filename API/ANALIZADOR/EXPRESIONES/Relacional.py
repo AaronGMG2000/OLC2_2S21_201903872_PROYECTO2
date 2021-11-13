@@ -93,14 +93,23 @@ class Relacional(Instruccion):
                     if isinstance(val2, Error):
                         return val2
                     operation = D_Relacional[f'{self.val1.type.value}{self.Operation.value}{self.val2.type.value}']
-                    generador.compare_string()
+                    if self.Operation == Relacionales.IGUAL or self.Operation == Relacionales.DISTINTO:
+                        generador.compare_string()
+                    elif self.Operation == Relacionales.MAYOR:
+                        generador.mayor_string()
+                    elif self.Operation == Relacionales.MAYORIGUAL:
+                        generador.mayor_igual_string()
+                    elif self.Operation == Relacionales.MENOR:
+                        generador.menor_string()
+                    elif self.Operation == Relacionales.MENORIGUAL:
+                        generador.menor_igual_string()
                     temp1 = generador.new_temporal()
                     generador.set_unused_temp(temp1)
                     if val1.is_temporal:
                         generador.set_unused_temp(val1.value)
                     if val2.is_temporal:
                         generador.set_unused_temp(val2.value)
-                    
+
                     generador.temporary_storage(tabla.size)
                     generador.place_operation(temp1, 'P',tabla.size,'+')
                     generador.place_operation(temp1, temp1, 1, '+')
@@ -108,8 +117,19 @@ class Relacional(Instruccion):
                     generador.place_operation(temp1, temp1, 1, '+')
                     generador.insert_stack(temp1, val2.value)
                     
+                        
                     generador.new_env(tabla.size, tabla.previous)
-                    generador.call_function("compare_string")
+                    if self.Operation == Relacionales.IGUAL or self.Operation == Relacionales.DISTINTO:
+                        generador.call_function("compare_string")
+                    elif self.Operation == Relacionales.MAYOR:
+                        generador.call_function("mayor_string")
+                    elif self.Operation == Relacionales.MAYORIGUAL:
+                        generador.call_function("mayor_igual_string")
+                    elif self.Operation == Relacionales.MENOR:
+                        generador.call_function("menor_string")
+                    elif self.Operation == Relacionales.MENORIGUAL:
+                        generador.call_function("menor_igual_string")
+                        
                     ret = generador.new_temporal()
                     generador.get_stack(ret, 'P')
                     if self.true_tag == '':
@@ -118,8 +138,10 @@ class Relacional(Instruccion):
                         self.false_tag = generador.new_label()
                     generador.return_evn(tabla.size, tabla.previous)
                     generador.take_temporary(tabla.size)
-                    
-                    generador.place_if(ret, 1, '==', self.true_tag)
+                    if Relacionales.DISTINTO != self.Operation:
+                        generador.place_if(ret, 1, '==', self.true_tag)
+                    else:
+                        generador.place_if(ret, 1, '!=', self.true_tag)
                     generador.place_goto(self.false_tag)
                     generador.set_unused_temp(ret)
                     reto = Retorno(None, Tipos.BOOL, False, None, self.true_tag, self.false_tag)
